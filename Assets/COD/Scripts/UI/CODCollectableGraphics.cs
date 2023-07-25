@@ -35,6 +35,18 @@ namespace COD.UI
             this.collectable = collectable;
             spriteRenderer.sprite = collectableSprites[collectable.Type];
         }
+        public CollectableType GetCollectableType()
+        {
+            return collectable.Type;
+        }
+        public int GetScoreValue()
+        {
+            if (collectable != null)
+            {
+                return collectable.ScoreValue;
+            }
+            return 0; // default value if there's an issue
+        }
 
         private void Update()
         {

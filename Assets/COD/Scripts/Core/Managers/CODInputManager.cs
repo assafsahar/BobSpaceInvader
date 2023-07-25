@@ -34,19 +34,16 @@ namespace COD.Core
 
         private void QuitGame()
         {
-            Debug.Log("QuitGame");
             // If we are running in a standalone build of the game
 #if UNITY_STANDALONE
-            // Quit the application
             Application.Quit();
 #endif
 
             // If we are running in the editor
 #if UNITY_EDITOR
-            Debug.Log("Editor");
             // Stop playing the scene
             UnityEditor.EditorApplication.isPlaying = false;
-    #endif
+#endif
         }
     }
 }

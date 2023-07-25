@@ -4,6 +4,7 @@ using COD.Core;
 using COD.UI;
 using COD.Shared;
 using System;
+using static COD.Shared.GameEnums;
 
 namespace COD.GameLogic
 {
@@ -92,14 +93,38 @@ namespace COD.GameLogic
         private void Collect(CODCollectableGraphics collectableGraphics)
         {
             Debug.Log("Collected "+ collectableGraphics);
+            
             HandleCollectableCollected(collectableGraphics);
+            //UpdateScoreBasedOnCollectable(collectableGraphics);
         }
 
         private void HandleCollectableCollected(CODCollectableGraphics collectableGraphics)
         {
             // Logic for when a collectable is collected
             activeCollectables.Remove(collectableGraphics);
+            UpdateScoreBasedOnCollectable(collectableGraphics);
             Destroy(collectableGraphics.gameObject); // Replace with pooling later
+        }
+
+        private void UpdateScoreBasedOnCollectable(CODCollectableGraphics collectableGraphics)
+        {
+            ScoreTags tag;
+            int scoreValue = collectableGraphics.GetScoreValue();
+            switch (collectableGraphics.GetCollectableType())
+            {
+                case CollectableType.Coin:
+                    tag = ScoreTags.Coin;
+                    break;
+                case CollectableType.SuperCoin:
+                    tag = ScoreTags.SuperCoin;
+                    break;
+                default:
+                    Debug.LogError("Unrecognized CollectableType");
+                    return;
+            }
+
+            CODGameLogicManager.Instance.ScoreManager.ChangeScoreByTagByAmount(tag, 1);
+            CODGameLogicManager.Instance.ScoreManager.ChangeScoreByTagByAmount(ScoreTags.MainScore, scoreValue);
         }
     }
 

@@ -6,12 +6,23 @@ namespace COD.GameLogic
     public class CODCollectable : ICollectable
     {
         public CollectableType Type { get; private set; }
+        public int ScoreValue { get; private set; }
 
         public CODCollectable(CollectableType type)
         {
             Type = type;
+            switch (type)
+            {
+                case CollectableType.Coin:
+                    ScoreValue = 10;
+                    break;
+                case CollectableType.SuperCoin:
+                    ScoreValue = 50;
+                    break;
+                default:
+                    ScoreValue = 0;
+                    break;
+            }
         }
-
-        // Any additional functionality/logic for the collectable
     }
 }

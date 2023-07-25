@@ -6,7 +6,7 @@ namespace COD.GameLogic
     public class CODGameLogicManager : ICODBaseManager
     {
         public static CODGameLogicManager Instance;
-        //public CODScoreManager ScoreManager;
+        public CODScoreManager ScoreManager;
         //public CODUpgradeManager UpgradeManager;
 
         public CODGameLogicManager()
@@ -21,8 +21,8 @@ namespace COD.GameLogic
 
         public void LoadManager(Action onComplete)
         {
-            /*ScoreManager = new CODScoreManager();
-            UpgradeManager = new CODUpgradeManager(
+            ScoreManager = new CODScoreManager();
+           /* UpgradeManager = new CODUpgradeManager(
              
                 );*/
             onComplete.Invoke();

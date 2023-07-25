@@ -55,6 +55,7 @@ namespace COD.Core
         OnTouchStarted = 3,
         OnTouchEnded = 4,
         OnTouchStayed = 5,
-        OnCollectableCollected = 6
+        OnCollectableCollected = 6,
+        OnScoreSet = 7
     }
 }
