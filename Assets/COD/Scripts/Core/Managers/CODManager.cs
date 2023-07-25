@@ -6,12 +6,13 @@ namespace COD.Core
     {
         public static CODManager Instance;
         public CODEventsManager EventsManager;
-
+        public CODFactoryManager FactoryManager;
+        public CODPoolManager PoolManager;
 
         /*public CODCrashManager CrashManager;
         
-        public CODFactoryManager FactoryManager;
-        public CODPoolManager PoolManager;
+        
+        
         public CODSaveManager SaveManager;
         public CODConfigManager ConfigManager;*/
 
@@ -39,11 +40,13 @@ namespace COD.Core
         {
             EventsManager = new CODEventsManager();
             InputManager = new InputManager();
+            FactoryManager = new CODFactoryManager();
+            PoolManager = new CODPoolManager();
 
             //CODDebug.Log("InitManagers");
             /*CrashManager = new CODCrashManager();
-            FactoryManager = new CODFactoryManager();
-            PoolManager = new CODPoolManager();
+            
+            
             SaveManager = new CODSaveManager();
             ConfigManager = new CODConfigManager(delegate
             {

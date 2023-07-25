@@ -16,6 +16,8 @@ namespace COD.GameLogic
         [SerializeField] private float maxSpawnTime = 5.0f;
         [SerializeField] private float minSpawnY = -2f; 
         [SerializeField] private float maxSpawnY = 2f;
+        [SerializeField] private int initialPoolSize = 20;
+        [SerializeField] private int maxPoolSize = 50;
 
         private float nextSpawnTime;
         private List<CODCollectableGraphics> activeCollectables = new List<CODCollectableGraphics>();
@@ -39,6 +41,7 @@ namespace COD.GameLogic
         }
         private void Start()
         {
+            CODManager.Instance.PoolManager.InitPool(prefab, initialPoolSize, maxPoolSize);
             SetNextSpawnTime();
         }
         private void Update()
@@ -52,9 +55,14 @@ namespace COD.GameLogic
         public CODCollectableGraphics SpawnCollectable(CollectableType type)
         {
             ICollectable collectable = new CODCollectable(type);
-            CODCollectableGraphics instance = Instantiate(prefab);
+            CODCollectableGraphics instance = CODManager.Instance.PoolManager.GetPoolable(PoolNames.Collectable) as CODCollectableGraphics;
+            if (instance == null)
+            {
+                Debug.LogError("No available collectables in pool.");
+                return null;
+            }
             instance.Initialize(collectable);
-            activeCollectables.Add(instance);
+            activeCollectables.Add(instance);          
             return instance;
         }
         private void SpawnRandomCollectable()
@@ -103,7 +111,7 @@ namespace COD.GameLogic
             // Logic for when a collectable is collected
             activeCollectables.Remove(collectableGraphics);
             UpdateScoreBasedOnCollectable(collectableGraphics);
-            Destroy(collectableGraphics.gameObject); // Replace with pooling later
+            CODManager.Instance.PoolManager.ReturnPoolable(collectableGraphics);
         }
 
         private void UpdateScoreBasedOnCollectable(CODCollectableGraphics collectableGraphics)

@@ -1,5 +1,6 @@
 using COD.Core;
 using COD.Shared;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -12,7 +13,7 @@ namespace COD.UI
         public Sprite sprite;
     }
 
-    public class CODCollectableGraphics : CODMonoBehaviour
+    public class CODCollectableGraphics : CODPoolable
     {
 
         [SerializeField] private SpriteRenderer spriteRenderer;
@@ -22,6 +23,9 @@ namespace COD.UI
         private Dictionary<CollectableType, Sprite> collectableSprites = new Dictionary<CollectableType, Sprite>();
 
         private ICollectable collectable;
+        private Vector3 leftScreenBoundary;
+        private float leftBoundaryX;
+        private float offset = 1f;
 
         private void Awake()
         {
@@ -29,6 +33,9 @@ namespace COD.UI
             {
                 collectableSprites.Add(item.type, item.sprite);
             }
+            leftScreenBoundary = Camera.main.ViewportToWorldPoint(new Vector3(0, 0.5f, 0));
+            leftBoundaryX = leftScreenBoundary.x;
+            leftBoundaryX -= offset;
         }
         public void Initialize(ICollectable collectable)
         {
@@ -51,6 +58,15 @@ namespace COD.UI
         private void Update()
         {
             transform.position += Vector3.left * speed * Time.deltaTime;
+            if (transform.position.x < leftBoundaryX)
+            {
+                OutOfBounds();
+            }
+        }
+
+        private void OutOfBounds()
+        {
+            CODManager.Instance.PoolManager.ReturnPoolable(this);
         }
 
         private void OnTriggerEnter2D(Collider2D other)

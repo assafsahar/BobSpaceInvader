@@ -1430,9 +1430,11 @@ MonoBehaviour:
   prefab: {fileID: 3144851105043746335, guid: d5e1b969b33578c428d4ef30de8bb594, type: 3}
   spawnPoint: {fileID: 1140619129}
   minSpawnTime: 0.3
-  maxSpawnTime: 0.8
-  minSpawnY: -2
-  maxSpawnY: 2
+  maxSpawnTime: 0.6
+  minSpawnY: -3.5
+  maxSpawnY: 3.5
+  initialPoolSize: 20
+  maxPoolSize: 50
 --- !u!4 &2058841809
 Transform:
   m_ObjectHideFlags: 0
