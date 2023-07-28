@@ -5,6 +5,7 @@ using COD.UI;
 using COD.Shared;
 using System;
 using static COD.Shared.GameEnums;
+using System.Collections;
 
 namespace COD.GameLogic
 {
@@ -18,18 +19,12 @@ namespace COD.GameLogic
         [SerializeField] private float maxSpawnY = 2f;
         [SerializeField] private int initialPoolSize = 20;
         [SerializeField] private int maxPoolSize = 50;
+        [SerializeField]
+        private List<WeightedCollectable> weightedCollectables = new List<WeightedCollectable>();
 
         private float nextSpawnTime;
         private List<CODCollectableGraphics> activeCollectables = new List<CODCollectableGraphics>();
-        private List<CollectableType> weightedCollectablesList = new List<CollectableType>
-        {
-            CollectableType.Coin,
-            CollectableType.Coin,
-            CollectableType.Coin,
-            CollectableType.Coin,
-            CollectableType.Coin,
-            CollectableType.SuperCoin
-        };
+        
 
         private void OnEnable()
         {
@@ -42,16 +37,9 @@ namespace COD.GameLogic
         private void Start()
         {
             CODManager.Instance.PoolManager.InitPool(prefab, initialPoolSize, maxPoolSize);
-            SetNextSpawnTime();
+            StartCoroutine(SpawnRoutine());
         }
-        private void Update()
-        {
-            if (Time.time >= nextSpawnTime)
-            {
-                SpawnRandomCollectable();
-                SetNextSpawnTime();
-            }
-        }
+        
         public CODCollectableGraphics SpawnCollectable(CollectableType type)
         {
             ICollectable collectable = new CODCollectable(type);
@@ -64,6 +52,15 @@ namespace COD.GameLogic
             instance.Initialize(collectable);
             activeCollectables.Add(instance);          
             return instance;
+        }
+        private IEnumerator SpawnRoutine()
+        {
+            while (true)
+            {
+                Debug.Log("SpawnRoutine");
+                yield return new WaitForSeconds(UnityEngine.Random.Range(minSpawnTime, maxSpawnTime));
+                SpawnRandomCollectable();
+            }
         }
         private void SpawnRandomCollectable()
         {
@@ -81,12 +78,22 @@ namespace COD.GameLogic
 
         private CollectableType GetRandomCollectableType()
         {
-            int randomIndex = UnityEngine.Random.Range(0, weightedCollectablesList.Count);
-            return weightedCollectablesList[randomIndex];
-        }
-        private void SetNextSpawnTime()
-        {
-            nextSpawnTime = Time.time + UnityEngine.Random.Range(minSpawnTime, maxSpawnTime);
+            int totalWeight = 0;
+            foreach (var item in weightedCollectables)
+            {
+                totalWeight += item.weight;
+            }
+
+            int randomWeightPoint = UnityEngine.Random.Range(0, totalWeight);
+            foreach (var item in weightedCollectables)
+            {
+                if (randomWeightPoint < item.weight)
+                    return item.collectableType;
+
+                randomWeightPoint -= item.weight;
+            }
+
+            return CollectableType.Coin; // default type if all else fails
         }
 
         private void HandleCollectableCollected(object data)
@@ -125,6 +132,9 @@ namespace COD.GameLogic
                     break;
                 case CollectableType.SuperCoin:
                     tag = ScoreTags.SuperCoin;
+                    break;
+                case CollectableType.Bomb:
+                    tag = ScoreTags.Bomb;
                     break;
                 default:
                     Debug.LogError("Unrecognized CollectableType");

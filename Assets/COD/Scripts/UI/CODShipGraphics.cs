@@ -1,4 +1,5 @@
 using UnityEngine;
+using DG.Tweening;
 
 namespace COD.UI
 {
@@ -12,11 +13,15 @@ namespace COD.UI
         private ShipState currentShipState;
         private float upperLimit;
         private float lowerLimit;
+        private float duration = 2f;  // Duration for one cycle (move to one side and back)
+        private float amplitude = 0.5f;  // The maximum distance the ship will move to each side
+
 
         private void Start()
         {
             currentShipState = ShipState.Straight;
             UpdateShipSprite();
+            StartSineWaveMotion();
         }
 
         public void InitializeShip(float upperLimit, float lowerLimit)
@@ -66,11 +71,19 @@ namespace COD.UI
             }
         }
 
-        private void ClampShipPosition()
+        private void StartSineWaveMotion()
         {
-            float shipY = transform.position.y;
-            float clampedY = Mathf.Clamp(shipY, lowerLimit, upperLimit);
-            transform.position = new Vector3(transform.position.x, clampedY, transform.position.z);
+            transform.DOKill();  // Kills any previous DOTween animations on this object to avoid overlapping tweens
+
+            // Create the looping sine wave motion
+            transform.DOMoveX(transform.position.x + amplitude, duration / 2)
+                .SetEase(Ease.InOutSine)
+                .OnComplete(() =>
+                {
+                    transform.DOMoveX(transform.position.x - amplitude, duration)
+                        .SetEase(Ease.InOutSine)
+                        .SetLoops(-1, LoopType.Yoyo);  // Infinite looping back and forth
+                });
         }
     }
 }

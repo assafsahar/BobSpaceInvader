@@ -8,7 +8,7 @@ namespace COD.GameLogic
         public CollectableType Type { get; private set; }
         public int ScoreValue { get; private set; }
 
-        public CODCollectable(CollectableType type)
+        public CODCollectable(CollectableType type, int? weight = null)
         {
             Type = type;
             switch (type)

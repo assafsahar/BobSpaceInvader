@@ -1435,6 +1435,13 @@ MonoBehaviour:
   maxSpawnY: 3.5
   initialPoolSize: 20
   maxPoolSize: 50
+  weightedCollectables:
+  - collectableType: 1
+    weight: 50
+  - collectableType: 4
+    weight: 10
+  - collectableType: 3
+    weight: 1
 --- !u!4 &2058841809
 Transform:
   m_ObjectHideFlags: 0
