@@ -8,10 +8,10 @@ TagManager:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Background
   - Water
   - UI
-  - 
+  - Ship
   - 
   - 
   - 
@@ -40,4 +40,16 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Background Back
+    uniqueID: 3349538705
+    locked: 0
+  - name: Ship
+    uniqueID: 2397324983
+    locked: 0
+  - name: Background Front
+    uniqueID: 1235814003
+    locked: 0
+  - name: Collectables
+    uniqueID: 209016131
     locked: 0

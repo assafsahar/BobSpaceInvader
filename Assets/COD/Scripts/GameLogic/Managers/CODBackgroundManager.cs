@@ -7,7 +7,7 @@ namespace GameLogic
         [System.Serializable]
         public class ParallaxLayer
         {
-            public Transform image; // This now refers to the combined image
+            public Transform image; 
             public float speed;
             public float resetPoint; // This is where we'll reset to the original position
             public float loopPoint;  // This is where the image should loop
