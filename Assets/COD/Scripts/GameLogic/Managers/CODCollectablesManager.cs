@@ -12,34 +12,31 @@ namespace COD.GameLogic
     public class CODCollectablesManager : CODMonoBehaviour
     {
         [SerializeField] private CODCollectableGraphics prefab;
-        [SerializeField] private Transform spawnPoint; // The point where collectables spawn.
-        [SerializeField] private float minSpawnTime = 1.0f; 
+        [SerializeField] private Transform spawnPoint;
+        [SerializeField] private float minSpawnTime = 1.0f;
         [SerializeField] private float maxSpawnTime = 5.0f;
-        [SerializeField] private float minSpawnY = -2f; 
+        [SerializeField] private float minSpawnY = -2f;
         [SerializeField] private float maxSpawnY = 2f;
         [SerializeField] private int initialPoolSize = 20;
         [SerializeField] private int maxPoolSize = 50;
+        [SerializeField] private int maxEnergy = 20;
+        [SerializeField] private int energyDecreaseRate = 1;
         [SerializeField]
         private List<WeightedCollectable> weightedCollectables = new List<WeightedCollectable>();
 
         private float nextSpawnTime;
+        private int initialEnergy;
         private List<CODCollectableGraphics> activeCollectables = new List<CODCollectableGraphics>();
-        
+        private Dictionary<CollectableType, Action<CODCollectableGraphics>> collectableHandlers;
 
-        private void OnEnable()
-        {
-            AddListener(CODEventNames.OnCollectableCollected, HandleCollectableCollected);
-        }
-        private void OnDisable()
-        {
-            RemoveListener(CODEventNames.OnCollectableCollected, HandleCollectableCollected);
-        }
         private void Start()
         {
             CODManager.Instance.PoolManager.InitPool(prefab, initialPoolSize, maxPoolSize);
+            InitCollectableHandlers();
             StartCoroutine(SpawnRoutine());
+            initialEnergy = maxEnergy;
         }
-        
+
         public CODCollectableGraphics SpawnCollectable(CollectableType type)
         {
             ICollectable collectable = new CODCollectable(type);
@@ -50,18 +47,29 @@ namespace COD.GameLogic
                 return null;
             }
             instance.Initialize(collectable);
-            activeCollectables.Add(instance);          
+            activeCollectables.Add(instance);
             return instance;
         }
+        private void InitCollectableHandlers()
+        {
+            collectableHandlers = new Dictionary<CollectableType, Action<CODCollectableGraphics>>
+            {
+                { CollectableType.Coin, HandleCoin },
+                { CollectableType.SuperCoin, HandleSuperCoin },
+                { CollectableType.Bomb, HandleBomb },
+                { CollectableType.Energy, HandleEnergy }
+            };
+        }
+
         private IEnumerator SpawnRoutine()
         {
             while (true)
             {
-                Debug.Log("SpawnRoutine");
                 yield return new WaitForSeconds(UnityEngine.Random.Range(minSpawnTime, maxSpawnTime));
                 SpawnRandomCollectable();
             }
         }
+
         private void SpawnRandomCollectable()
         {
             AdjustSpawnPointY();
@@ -96,54 +104,47 @@ namespace COD.GameLogic
             return CollectableType.Coin; // default type if all else fails
         }
 
-        private void HandleCollectableCollected(object data)
+        public void HandleCollectableCollected(CODCollectableGraphics collectableGraphics)
         {
-            if (data is CODCollectableGraphics collectableGraphics)
-            {
-                Collect(collectableGraphics);
-                // More logic here for the effect of the collectable on the player
-            }
-        }
-
-        private void Collect(CODCollectableGraphics collectableGraphics)
-        {
-            Debug.Log("Collected "+ collectableGraphics);
-            
-            HandleCollectableCollected(collectableGraphics);
-            //UpdateScoreBasedOnCollectable(collectableGraphics);
-        }
-
-        private void HandleCollectableCollected(CODCollectableGraphics collectableGraphics)
-        {
-            // Logic for when a collectable is collected
+            // This function can be called from CODShipCollisionHandler
             activeCollectables.Remove(collectableGraphics);
-            UpdateScoreBasedOnCollectable(collectableGraphics);
+
+            CollectableType type = collectableGraphics.GetCollectableType();
+            if (collectableHandlers.ContainsKey(type))
+            {
+                collectableHandlers[type].Invoke(collectableGraphics);
+            }
+            else
+            {
+                Debug.LogError($"Handler not found for collectable type: {type}");
+            }
+
             CODManager.Instance.PoolManager.ReturnPoolable(collectableGraphics);
         }
-
-        private void UpdateScoreBasedOnCollectable(CODCollectableGraphics collectableGraphics)
+        private void HandleCoin(CODCollectableGraphics collectableGraphics)
         {
-            ScoreTags tag;
-            int scoreValue = collectableGraphics.GetScoreValue();
-            switch (collectableGraphics.GetCollectableType())
-            {
-                case CollectableType.Coin:
-                    tag = ScoreTags.Coin;
-                    break;
-                case CollectableType.SuperCoin:
-                    tag = ScoreTags.SuperCoin;
-                    break;
-                case CollectableType.Bomb:
-                    tag = ScoreTags.Bomb;
-                    break;
-                default:
-                    Debug.LogError("Unrecognized CollectableType");
-                    return;
-            }
+            UpdateScore(ScoreTags.Coin, 1, collectableGraphics.GetScoreValue());
+        }
 
-            CODGameLogicManager.Instance.ScoreManager.ChangeScoreByTagByAmount(tag, 1);
+        private void HandleSuperCoin(CODCollectableGraphics collectableGraphics)
+        {
+            UpdateScore(ScoreTags.SuperCoin, 1, collectableGraphics.GetScoreValue());
+        }
+
+        private void HandleBomb(CODCollectableGraphics collectableGraphics)
+        {
+            CODGameLogicManager.Instance.GameFlowManager.EndGame();
+        }
+        private void HandleEnergy(CODCollectableGraphics collectableGraphics)
+        {
+            float energyAmount = collectableGraphics.GetEnergyValue();
+            CODGameLogicManager.Instance.EnergyManager.AddEnergy(energyAmount);
+        }
+
+        private void UpdateScore(ScoreTags tag, int count, int scoreValue)
+        {
+            CODGameLogicManager.Instance.ScoreManager.ChangeScoreByTagByAmount(tag, count);
             CODGameLogicManager.Instance.ScoreManager.ChangeScoreByTagByAmount(ScoreTags.MainScore, scoreValue);
         }
     }
-
 }

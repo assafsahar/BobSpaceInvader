@@ -73,7 +73,11 @@ namespace COD.UI
 
         private void StartSineWaveMotion()
         {
-            transform.DOKill();  // Kills any previous DOTween animations on this object to avoid overlapping tweens
+            if (transform)
+            {
+                transform.DOKill();  // Kills any previous DOTween animations on this object to avoid overlapping tweens
+            }
+            
 
             // Create the looping sine wave motion
             transform.DOMoveX(transform.position.x + amplitude, duration / 2)

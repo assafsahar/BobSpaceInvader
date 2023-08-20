@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -12,7 +13,7 @@ namespace COD.Core
         public CODPoolManager()
         {
             rootPools = new GameObject().transform;
-            Object.DontDestroyOnLoad(rootPools);
+            UnityEngine.Object.DontDestroyOnLoad(rootPools);
         }
 
         public void InitPool(string resourceName, int amount, int maxAmount = 100)
@@ -90,7 +91,7 @@ namespace COD.Core
 
                 foreach (var poolable in pool.AllPoolables)
                 {
-                    Object.Destroy(poolable);
+                    UnityEngine.Object.Destroy(poolable);
                 }
 
                 pool.AllPoolables.Clear();
@@ -99,6 +100,16 @@ namespace COD.Core
 
                 pools.Remove(name);
             }
+        }
+        public void Cleanup()
+        {
+            foreach (var poolName in Enum.GetValues(typeof(PoolNames)))
+            {
+                DestroyPool((PoolNames)poolName);
+            }
+
+            if (rootPools != null)
+                UnityEngine.Object.Destroy(rootPools.gameObject);
         }
     }
 
@@ -116,5 +127,7 @@ namespace COD.Core
         ScoreToast = 0,
         Collectable = 1
     }
+
+   
 }
 

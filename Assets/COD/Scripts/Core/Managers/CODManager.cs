@@ -17,7 +17,7 @@ namespace COD.Core
         public CODConfigManager ConfigManager;*/
 
         public Action onInitAction;
-        public InputManager InputManager;
+        //public InputManager InputManager;
 
         public CODManager()
         {
@@ -39,7 +39,7 @@ namespace COD.Core
         private void InitManagers()
         {
             EventsManager = new CODEventsManager();
-            InputManager = new InputManager();
+            //InputManager = new InputManager();
             FactoryManager = new CODFactoryManager();
             PoolManager = new CODPoolManager();
 

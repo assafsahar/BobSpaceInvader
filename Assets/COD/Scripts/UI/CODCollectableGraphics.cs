@@ -46,6 +46,14 @@ namespace COD.UI
         {
             return collectable.Type;
         }
+        public int GetEnergyValue()
+        {
+            if (collectable != null)
+            {
+                return collectable.EnergyValue;
+            }
+            return 0; // default value if there's an issue
+        }
         public int GetScoreValue()
         {
             if (collectable != null)
