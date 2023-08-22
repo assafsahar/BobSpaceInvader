@@ -1,0 +1,40 @@
+{
+    "UpgradeableConfigs": [
+      {
+        "UpgradableTypeID": "GetMoreEnergy",
+        "ArtItemName": "",
+        "UpgradableLevelData": [
+          {
+            "Level": 0,
+            "CoinsNeeded": 0,
+            "CurrencyTag": "Coin",
+            "Energy": 2
+          },
+          {
+            "Level": 1,
+            "CoinsNeeded": 20,
+            "CurrencyTag": "Coin",
+            "Energy": 4
+          },
+          {
+            "Level": 2,
+            "CoinsNeeded": 40,
+            "CurrencyTag": "Coin",
+            "Energy": 6
+          },
+          {
+            "Level": 3,
+            "CoinsNeeded": 60,
+            "CurrencyTag": "Coin",
+            "Energy": 8
+          },
+          {
+            "Level": 4,
+            "CoinsNeeded": 80,
+            "CurrencyTag": "Coin",
+            "Energy": 10
+          }
+        ]
+      }
+    ]
+}

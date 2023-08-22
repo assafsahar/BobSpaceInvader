@@ -57,6 +57,7 @@ namespace COD.Core
         OnTouchStayed = 5,
         OnCollectableCollected = 6,
         OnScoreSet = 7,
-        OnEnergyChanged = 8
+        OnEnergyChanged = 8,
+        OnUpgraded = 9
     }
 }
