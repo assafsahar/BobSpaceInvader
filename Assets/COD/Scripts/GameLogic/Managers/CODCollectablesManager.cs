@@ -34,7 +34,7 @@ namespace COD.GameLogic
             CODManager.Instance.PoolManager.InitPool(prefab, initialPoolSize, maxPoolSize);
             InitCollectableHandlers();
             StartCoroutine(SpawnRoutine());
-            initialEnergy = maxEnergy;
+            initialEnergy = maxEnergy;            
         }
 
         public CODCollectableGraphics SpawnCollectable(CollectableType type)

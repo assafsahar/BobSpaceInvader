@@ -30,6 +30,14 @@ namespace COD.GameLogic
                 _currentState = value;
             } 
         }
+        private void OnEnable()
+        {
+            AddListener(CODEventNames.OnUpgraded, HandleUpgradeEnergyCapsule);
+        }
+        private void OnDisable()
+        {
+            RemoveListener(CODEventNames.OnUpgraded, HandleUpgradeEnergyCapsule);
+        }
         private void Awake()
         {
             energyManager = CODGameLogicManager.Instance.EnergyManager;
@@ -86,6 +94,25 @@ namespace COD.GameLogic
                 string currentSceneName = SceneManager.GetActiveScene().name;
                 SceneManager.LoadScene(currentSceneName);
                 CurrentState = GameState.Ended;
+            }
+        }
+
+        private void HandleUpgradeEnergyCapsule(object unused)
+        {
+            if (CODGameLogicManager.Instance.UpgradeManager.CanMakeUpgrade(UpgradeablesTypeID.GetMoreEnergy))
+            {
+                if (CODGameLogicManager.Instance.UpgradeManager.UpgradeItemByID(UpgradeablesTypeID.GetMoreEnergy))
+                {
+                    Debug.Log("Upgrade Successful!");
+                }
+                else
+                {
+                    Debug.Log("Not enough coins!");
+                }
+            }
+            else
+            {
+                Debug.Log("Already at maximum upgrade level!");
             }
         }
 

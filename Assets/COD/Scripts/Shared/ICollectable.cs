@@ -4,6 +4,6 @@ namespace COD.Shared
     {
         CollectableType Type { get; }
         int ScoreValue { get; }
-        int EnergyValue { get; }
+        int EnergyValue { get; set; }
     }
 }

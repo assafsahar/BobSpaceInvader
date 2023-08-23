@@ -1,8 +1,6 @@
 using COD.Core;
-using COD.UI;
 using System;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace COD.GameLogic
 {
@@ -12,7 +10,10 @@ namespace COD.GameLogic
         public CODScoreManager ScoreManager;
         private CODGameFlowManager gameFlowManager;
         private CODCollectablesManager collectablesManager;
+        
         public CODEnergyManager EnergyManager { get; private set; }
+        public CODCollectableSettingsManager CollectableSettingsManager { get; private set; }
+
 
         public CODCollectablesManager CollectablesManager
         {
@@ -44,7 +45,7 @@ namespace COD.GameLogic
                 return gameFlowManager;
             }
         }
-        //public CODUpgradeManager UpgradeManager;
+        public CODUpgradeManager UpgradeManager;
 
         public CODGameLogicManager()
         {
@@ -68,9 +69,10 @@ namespace COD.GameLogic
             float energyDecreaseRate = 4f;
             EnergyManager = new CODEnergyManager(maxEnergy, initialEnergy, energyDecreaseRate);
 
-            /* UpgradeManager = new CODUpgradeManager(
+            UpgradeManager = new CODUpgradeManager(
 
-                 );*/
+                );
+            CollectableSettingsManager = new CODCollectableSettingsManager();
             onComplete.Invoke();
         }
     }

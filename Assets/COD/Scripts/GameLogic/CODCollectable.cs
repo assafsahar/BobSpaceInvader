@@ -7,11 +7,12 @@ namespace COD.GameLogic
     {
         public CollectableType Type { get; private set; }
         public int ScoreValue { get; private set; }
-        public int EnergyValue { get; private set; }
+        public int EnergyValue { get; set; }
 
         public CODCollectable(CollectableType type, int? weight = null)
         {
             Type = type;
+            int currentEnergyValue = CODGameLogicManager.Instance.CollectableSettingsManager.GetCurrentEnergyValue();
             //Todo - make this from configuration
             switch (type)
             {
@@ -29,7 +30,7 @@ namespace COD.GameLogic
                     break;
                 case CollectableType.Energy:
                     ScoreValue = 0;
-                    EnergyValue = 2;
+                    EnergyValue = currentEnergyValue;
                     break;
                 default:
                     ScoreValue = 0;
