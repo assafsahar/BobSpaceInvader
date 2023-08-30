@@ -1,5 +1,7 @@
 using COD.Core;
 using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.SocialPlatforms.Impl;
 using static COD.Shared.GameEnums;
 
 namespace COD.GameLogic
@@ -7,13 +9,19 @@ namespace COD.GameLogic
     public class CODScoreManager
     {
         public CODPlayerScoreData PlayerScoreData = new();
+        private CODPlayerScoreData initialScoreData;
         public CODScoreManager()
         {
-            /*CODManager.Instance.SaveManager.Load<CODPlayerScoreData>(delegate (CODPlayerScoreData data)
-            {
-                PlayerScoreData = data ?? new CODPlayerScoreData();
-            });*/
+            CODManager.Instance.EventsManager.AddListener(CODEventNames.RequestScoreUpdate, PushCurrentScores);
+
+            InitializeScores();
         }
+        ~CODScoreManager()
+        {
+            // Remove listener
+            CODManager.Instance.EventsManager.RemoveListener(CODEventNames.RequestScoreUpdate, PushCurrentScores);
+        }
+
 
         public bool TryGetScoreByTag(ScoreTags tag, ref int scoreOut)
         {
@@ -30,7 +38,7 @@ namespace COD.GameLogic
         {
             CODManager.Instance.EventsManager.InvokeEvent(CODEventNames.OnScoreSet, (tag, amount));
             PlayerScoreData.ScoreByTag[tag] = amount;
-            //CODDebug.Log($" set score {amount}");
+            Debug.Log($"Score for {tag} set to: {amount}");
             //CODManager.Instance.SaveManager.Save(PlayerScoreData);
         }
 
@@ -64,10 +72,56 @@ namespace COD.GameLogic
 
             return hasEnough;
         }
+        public int GetCurrentScore(ScoreTags tag)
+        {
+            if (PlayerScoreData.ScoreByTag.TryGetValue(tag, out var score))
+            {
+                return score;
+            }
+            return 0; // or some default value if the tag does not exist
+        }
+
+        public void ResetToInitialState()
+        {
+            PlayerScoreData = initialScoreData.Clone();
+            // Notify systems that the score has been reset (UI might need updating).
+            foreach (var pair in PlayerScoreData.ScoreByTag)
+            {
+                CODManager.Instance.EventsManager.InvokeEvent(CODEventNames.OnScoreSet, (pair.Key, pair.Value));
+            }
+        }
+        private void PushCurrentScores(object unused)
+        {
+            foreach (var pair in PlayerScoreData.ScoreByTag)
+            {
+                CODManager.Instance.EventsManager.InvokeEvent(CODEventNames.OnScoreSet, (pair.Key, pair.Value));
+            }
+        }
+        private void InitializeScores()
+        {
+            CODManager.Instance.SaveManager.Load<CODPlayerScoreData>(delegate (CODPlayerScoreData data)
+            {
+                PlayerScoreData = data ?? new CODPlayerScoreData();
+                initialScoreData = PlayerScoreData.Clone();
+
+                foreach (var pair in PlayerScoreData.ScoreByTag)
+                {
+                    CODManager.Instance.EventsManager.InvokeEvent(CODEventNames.OnScoreSet, (pair.Key, pair.Value));
+                }
+            });
+        }
     }
 
-    public class CODPlayerScoreData
+    public class CODPlayerScoreData : ICODSaveData
     {
         public Dictionary<ScoreTags, int> ScoreByTag = new();
+        public CODPlayerScoreData Clone()
+        {
+            return new CODPlayerScoreData
+            {
+                ScoreByTag = new Dictionary<ScoreTags, int>(this.ScoreByTag)
+            };
+        }
     }
+    
 }

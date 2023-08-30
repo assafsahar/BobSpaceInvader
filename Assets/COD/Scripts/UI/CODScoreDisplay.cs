@@ -2,6 +2,7 @@ using COD.Core;
 using System;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SocialPlatforms.Impl;
 using UnityEngine.UI;
 using static COD.Shared.GameEnums;
 
@@ -16,6 +17,8 @@ namespace COD.UI
         private void OnEnable()
         {
             AddListener(CODEventNames.OnScoreSet, UpdateScoreDisplay);
+            InvokeEvent(CODEventNames.RequestScoreUpdate);
+
         }
 
         private void OnDisable()
@@ -23,10 +26,12 @@ namespace COD.UI
             RemoveListener(CODEventNames.OnScoreSet, UpdateScoreDisplay);
         }
 
+
         private void UpdateScoreDisplay(object data)
         {
             if (data is ValueTuple<ScoreTags, int> scoreData)
             {
+                Debug.Log($"UI Update for {scoreData.Item1} with score: {scoreData.Item2}");
                 switch (scoreData.Item1)
                 {
                     case ScoreTags.Coin:

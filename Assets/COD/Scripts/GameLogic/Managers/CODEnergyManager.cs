@@ -36,6 +36,10 @@ namespace COD.GameLogic
             EnergyData energyData = new EnergyData(CurrentEnergy, MaxEnergy);
             CODManager.Instance.EventsManager.InvokeEvent(CODEventNames.OnEnergyChanged, energyData);
         }
+        public void ResetEnergy()
+        {
+            CurrentEnergy = MaxEnergy;
+        }
     }
 }
 

@@ -23,20 +23,33 @@ namespace COD.GameLogic
                 UpgradeConfig = config;
             });
 
-            CODManager.Instance.SaveManager.Load(delegate (CODPlayerUpgradeInventoryData data)
+            CODManager.Instance.SaveManager.Load<CODPlayerUpgradeInventoryData>(data =>
             {
                 PlayerUpgradeInventoryData = data ?? new CODPlayerUpgradeInventoryData
                 {
-                    Upgradeables = new List<CODUpgradeableData>(){new CODUpgradeableData
-                            {
-                                upgradableTypeID = UpgradeablesTypeID.GetMoreEnergy,
-                                CurrentLevel = 1
-                            }
-                        }
+                    Upgradeables = new List<CODUpgradeableData>()
+                 {
+                    new CODUpgradeableData
+                    {
+                        upgradableTypeID = UpgradeablesTypeID.GetMoreEnergy,
+                        CurrentLevel = 1
+                    }
+                },
+                    TotalCoins = 0,
+                    TotalSuperCoins = 0,
+                    CurrentScore = 0
                 };
+
+                CODManager.Instance.EventsManager.InvokeEvent(CODEventNames.OnScoreSet, (ScoreTags.Coin, PlayerUpgradeInventoryData.TotalCoins));
+                CODManager.Instance.EventsManager.InvokeEvent(CODEventNames.OnScoreSet, (ScoreTags.SuperCoin, PlayerUpgradeInventoryData.TotalSuperCoins));
+                CODManager.Instance.EventsManager.InvokeEvent(CODEventNames.OnScoreSet, (ScoreTags.MainScore, PlayerUpgradeInventoryData.CurrentScore));
+                //CODGameLogicManager.Instance.ScoreManager.SetScoreByTag(ScoreTags.Coin, PlayerUpgradeInventoryData.TotalCoins);
+                //CODGameLogicManager.Instance.ScoreManager.SetScoreByTag(ScoreTags.MainScore, PlayerUpgradeInventoryData.CurrentScore);
+
             });
         }
 
+        
         public bool CanMakeUpgrade(UpgradeablesTypeID typeID)
         {
             return UpgradeItemByID(typeID, false);
@@ -76,6 +89,44 @@ namespace COD.GameLogic
         {
             var upgradeable = PlayerUpgradeInventoryData.Upgradeables.FirstOrDefault(x => x.upgradableTypeID == typeID);
             return upgradeable;
+        }
+
+        public void SavePlayerData()
+        {
+            int coinScore = 0;
+            int superCoinScore = 0;
+            int mainScore = 0;
+
+            if (CODGameLogicManager.Instance.ScoreManager.TryGetScoreByTag(ScoreTags.Coin, ref coinScore))
+            {
+                PlayerUpgradeInventoryData.TotalCoins = coinScore;
+            }
+            if (CODGameLogicManager.Instance.ScoreManager.TryGetScoreByTag(ScoreTags.SuperCoin, ref superCoinScore))
+            {
+                PlayerUpgradeInventoryData.TotalSuperCoins = superCoinScore;
+            }
+            if (CODGameLogicManager.Instance.ScoreManager.TryGetScoreByTag(ScoreTags.MainScore, ref mainScore))
+            {
+                PlayerUpgradeInventoryData.CurrentScore = mainScore;
+            }
+
+            CODManager.Instance.SaveManager.Save(PlayerUpgradeInventoryData);
+        }
+        public void LoadPlayerData()
+        {
+            CODManager.Instance.SaveManager.Load<CODPlayerUpgradeInventoryData>(loadedData =>
+            {
+                // Check if the loaded data is not null. If it's null, it means no data was previously saved, and we can't proceed.
+                if (loadedData != null)
+                {
+                    PlayerUpgradeInventoryData = loadedData;
+
+                    // Update the CODScoreManager's data
+                    CODGameLogicManager.Instance.ScoreManager.SetScoreByTag(ScoreTags.Coin, loadedData.TotalCoins);
+                    CODGameLogicManager.Instance.ScoreManager.SetScoreByTag(ScoreTags.SuperCoin, loadedData.TotalSuperCoins);
+                    CODGameLogicManager.Instance.ScoreManager.SetScoreByTag(ScoreTags.MainScore, loadedData.CurrentScore);
+                }
+            });
         }
 
         private bool TryTheUpgrade(UpgradeablesTypeID typeID, bool makeTheUpgrade, CODUpgradeableData upgradeable)
@@ -150,6 +201,9 @@ namespace COD.GameLogic
     public class CODPlayerUpgradeInventoryData : ICODSaveData
     {
         public List<CODUpgradeableData> Upgradeables;
+        public int TotalCoins;
+        public int TotalSuperCoins;
+        public int CurrentScore;
     }
 
     [Serializable]

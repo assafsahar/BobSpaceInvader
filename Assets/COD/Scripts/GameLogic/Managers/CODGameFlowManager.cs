@@ -1,7 +1,9 @@
 using COD.Core;
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using static COD.Shared.GameEnums;
 
 namespace COD.GameLogic
 {
@@ -58,7 +60,7 @@ namespace COD.GameLogic
             }
             if (CurrentState == GameState.Start || CurrentState == GameState.Ended)
             {
-                // Load the game scene
+                energyManager.ResetEnergy();
                 CurrentState = GameState.Playing;
                 StartCoroutine(EnergyUpdateRoutine());
             }
@@ -90,12 +92,19 @@ namespace COD.GameLogic
                 // Game ended, do cleanup or show relevant UI
                 CODManager.Instance.PoolManager.Cleanup();
 
+                // save player data
+                CODGameLogicManager.Instance.UpgradeManager.SavePlayerData();
+
                 // Reload the current scene
                 string currentSceneName = SceneManager.GetActiveScene().name;
                 SceneManager.LoadScene(currentSceneName);
                 CurrentState = GameState.Ended;
+
+                CODGameLogicManager.Instance.UpgradeManager.LoadPlayerData();
             }
         }
+
+        
 
         private void HandleUpgradeEnergyCapsule(object unused)
         {
