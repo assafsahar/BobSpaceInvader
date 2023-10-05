@@ -97,6 +97,11 @@ namespace COD.GameLogic
             int superCoinScore = 0;
             int mainScore = 0;
 
+            if (!CODGameLogicManager.Instance.ScoreManager.IsInitialized)
+            {
+                Debug.LogWarning("Trying to access ScoreManager before it's initialized!");
+            }
+
             if (CODGameLogicManager.Instance.ScoreManager.TryGetScoreByTag(ScoreTags.Coin, ref coinScore))
             {
                 PlayerUpgradeInventoryData.TotalCoins = coinScore;
@@ -122,6 +127,10 @@ namespace COD.GameLogic
                     PlayerUpgradeInventoryData = loadedData;
 
                     // Update the CODScoreManager's data
+                    if (!CODGameLogicManager.Instance.ScoreManager.IsInitialized)
+                    {
+                        Debug.LogWarning("Trying to access ScoreManager before it's initialized!");
+                    }
                     CODGameLogicManager.Instance.ScoreManager.SetScoreByTag(ScoreTags.Coin, loadedData.TotalCoins);
                     CODGameLogicManager.Instance.ScoreManager.SetScoreByTag(ScoreTags.SuperCoin, loadedData.TotalSuperCoins);
                     CODGameLogicManager.Instance.ScoreManager.SetScoreByTag(ScoreTags.MainScore, loadedData.CurrentScore);
@@ -141,6 +150,10 @@ namespace COD.GameLogic
             ScoreTags coinsType = levelData.CurrencyTag;
             int newLevel = levelData.Level;
 
+            if (!CODGameLogicManager.Instance.ScoreManager.IsInitialized)
+            {
+                Debug.LogWarning("Trying to access ScoreManager before it's initialized!");
+            }
             if (CODGameLogicManager.Instance.ScoreManager.TryUseScore(coinsType, amountToReduce, makeTheUpgrade))
             {
                 if (makeTheUpgrade)

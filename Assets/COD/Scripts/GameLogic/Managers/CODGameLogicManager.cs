@@ -1,6 +1,7 @@
 using COD.Core;
 using System;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace COD.GameLogic
 {
@@ -13,7 +14,7 @@ namespace COD.GameLogic
         
         public CODEnergyManager EnergyManager { get; private set; }
         public CODCollectableSettingsManager CollectableSettingsManager { get; private set; }
-
+        public bool IsInitialized { get; private set; } = false;
 
         public CODCollectablesManager CollectablesManager
         {
@@ -62,7 +63,13 @@ namespace COD.GameLogic
         public void LoadManager(Action onComplete)
         {
             ScoreManager = new CODScoreManager();
-           
+            ScoreManager.Initialize();
+
+            while (!ScoreManager.IsInitialized)
+            {
+                // Wait until the ScoreManager is fully initialized
+            }
+
             // Todo: replace hard coded values with config
             float maxEnergy = 20f;
             float initialEnergy = 20f;
@@ -73,6 +80,7 @@ namespace COD.GameLogic
 
                 );
             CollectableSettingsManager = new CODCollectableSettingsManager();
+            IsInitialized = true;
             onComplete.Invoke();
         }
     }

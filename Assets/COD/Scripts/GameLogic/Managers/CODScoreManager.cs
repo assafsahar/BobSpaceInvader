@@ -1,4 +1,5 @@
 using COD.Core;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SocialPlatforms.Impl;
@@ -8,13 +9,12 @@ namespace COD.GameLogic
 {
     public class CODScoreManager
     {
+        public bool IsInitialized { get; private set; } = false;
         public CODPlayerScoreData PlayerScoreData = new();
         private CODPlayerScoreData initialScoreData;
         public CODScoreManager()
         {
             CODManager.Instance.EventsManager.AddListener(CODEventNames.RequestScoreUpdate, PushCurrentScores);
-
-            InitializeScores();
         }
         ~CODScoreManager()
         {
@@ -22,6 +22,13 @@ namespace COD.GameLogic
             CODManager.Instance.EventsManager.RemoveListener(CODEventNames.RequestScoreUpdate, PushCurrentScores);
         }
 
+        public void Initialize()
+        {
+            InitializeScores(() =>
+            {
+                Debug.Log("Scores have been initialized!");
+            });
+        }
 
         public bool TryGetScoreByTag(ScoreTags tag, ref int scoreOut)
         {
@@ -38,7 +45,7 @@ namespace COD.GameLogic
         {
             CODManager.Instance.EventsManager.InvokeEvent(CODEventNames.OnScoreSet, (tag, amount));
             PlayerScoreData.ScoreByTag[tag] = amount;
-            Debug.Log($"Score for {tag} set to: {amount}");
+            //Debug.Log($"Score for {tag} set to: {amount}");
             //CODManager.Instance.SaveManager.Save(PlayerScoreData);
         }
 
@@ -97,9 +104,9 @@ namespace COD.GameLogic
                 CODManager.Instance.EventsManager.InvokeEvent(CODEventNames.OnScoreSet, (pair.Key, pair.Value));
             }
         }
-        private void InitializeScores()
+        private void InitializeScores(Action onCompleted = null)
         {
-            CODManager.Instance.SaveManager.Load<CODPlayerScoreData>(delegate (CODPlayerScoreData data)
+            CODManager.Instance.SaveManager.Load<CODPlayerScoreData>(data =>
             {
                 PlayerScoreData = data ?? new CODPlayerScoreData();
                 initialScoreData = PlayerScoreData.Clone();
@@ -108,6 +115,8 @@ namespace COD.GameLogic
                 {
                     CODManager.Instance.EventsManager.InvokeEvent(CODEventNames.OnScoreSet, (pair.Key, pair.Value));
                 }
+                IsInitialized = true;
+                onCompleted?.Invoke();
             });
         }
     }

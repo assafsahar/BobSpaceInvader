@@ -143,6 +143,10 @@ namespace COD.GameLogic
 
         private void UpdateScore(ScoreTags tag, int count, int scoreValue)
         {
+            if (!CODGameLogicManager.Instance.ScoreManager.IsInitialized)
+            {
+                Debug.LogWarning("Trying to access ScoreManager before it's initialized!");
+            }
             CODGameLogicManager.Instance.ScoreManager.ChangeScoreByTagByAmount(tag, count);
             CODGameLogicManager.Instance.ScoreManager.ChangeScoreByTagByAmount(ScoreTags.MainScore, scoreValue);
         }

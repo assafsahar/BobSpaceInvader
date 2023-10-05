@@ -28,18 +28,22 @@ namespace COD.GameLogic
             }
             private set
             {
-                Debug.Log("GameState changed from " + _currentState + " to " + value);
+                //Debug.Log("GameState changed from " + _currentState + " to " + value);
                 _currentState = value;
             } 
         }
         private void OnEnable()
         {
+            SceneManager.sceneLoaded += OnSceneLoaded;
             AddListener(CODEventNames.OnUpgraded, HandleUpgradeEnergyCapsule);
         }
         private void OnDisable()
         {
             RemoveListener(CODEventNames.OnUpgraded, HandleUpgradeEnergyCapsule);
+            SceneManager.sceneLoaded -= OnSceneLoaded;
         }
+
+
         private void Awake()
         {
             energyManager = CODGameLogicManager.Instance.EnergyManager;
@@ -47,8 +51,9 @@ namespace COD.GameLogic
         private void Start()
         {
             CurrentState = GameState.Start;
-            StartGame();
+            StartCoroutine(StartWhenReady());
         }
+
 
         public void StartGame()
         {
@@ -95,16 +100,30 @@ namespace COD.GameLogic
                 // save player data
                 CODGameLogicManager.Instance.UpgradeManager.SavePlayerData();
 
+                //CODManager.Instance.EventsManager.StartListeningToSceneLoaded();
+
                 // Reload the current scene
                 string currentSceneName = SceneManager.GetActiveScene().name;
                 SceneManager.LoadScene(currentSceneName);
                 CurrentState = GameState.Ended;
-
-                CODGameLogicManager.Instance.UpgradeManager.LoadPlayerData();
             }
         }
 
-        
+        private IEnumerator StartWhenReady()
+        {
+            while (!CODGameLogicManager.Instance.IsInitialized || !CODGameLogicManager.Instance.ScoreManager.IsInitialized)
+            {
+                yield return null;  
+            }
+
+            StartGame();
+        }
+
+        private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+        {
+            SceneManager.sceneLoaded -= OnSceneLoaded;
+            CODGameLogicManager.Instance.UpgradeManager.LoadPlayerData();
+        }
 
         private void HandleUpgradeEnergyCapsule(object unused)
         {
