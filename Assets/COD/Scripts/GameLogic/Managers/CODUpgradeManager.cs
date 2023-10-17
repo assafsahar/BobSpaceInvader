@@ -32,7 +32,7 @@ namespace COD.GameLogic
                     new CODUpgradeableData
                     {
                         upgradableTypeID = UpgradeablesTypeID.GetMoreEnergy,
-                        CurrentLevel = 1
+                        CurrentLevel = 0
                     }
                 },
                     TotalCoins = 0,
@@ -141,7 +141,7 @@ namespace COD.GameLogic
         private bool TryTheUpgrade(UpgradeablesTypeID typeID, bool makeTheUpgrade, CODUpgradeableData upgradeable)
         {
             var upgradeableConfig = GetCodUpgradeableConfigByID(typeID);
-            if (upgradeableConfig.UpgradableLevelData.Count <= upgradeable.CurrentLevel)
+            if (upgradeableConfig.UpgradableLevelData.Count <= upgradeable.CurrentLevel+1)
             {
                 return false;
             }

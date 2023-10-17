@@ -422,6 +422,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e495531865d71b41a3499dca7d6fe37, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  initialShipSpeed: 3
+  speedIncreaseRate: 0.02
+  energyDecreaseInterval: 0.1
 --- !u!4 &188793647
 Transform:
   m_ObjectHideFlags: 0
@@ -1301,7 +1304,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   shipGraphics: {fileID: 904223716}
   rotationSpeed: 1
-  movementSpeed: 5
+  verticalSpeed: 5
   upperLimit: 3.82
   lowerLimit: -3.82
   stateChangeThreshold: 0.02
@@ -1869,15 +1872,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   layers:
   - image: {fileID: 1445055240}
-    speed: 1
+    speed: 0
     resetPoint: -0.4
     loopPoint: -10.4
   - image: {fileID: 1764018545}
-    speed: 2
+    speed: 0
     resetPoint: -0.9
     loopPoint: -10.5
   - image: {fileID: 1555163374}
-    speed: 3
+    speed: 0
     resetPoint: -0.8
     loopPoint: -10.35
 --- !u!4 &1462103323
@@ -2015,7 +2018,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: -0.3087185}
+  m_Offset: {x: 0, y: -0.77560633}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -2026,7 +2029,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 57.77691, y: 2.852563}
+  m_Size: {x: 57.77691, y: 1.9187871}
   m_EdgeRadius: 0
 --- !u!1 &1738743486
 GameObject:
@@ -2429,7 +2432,7 @@ MonoBehaviour:
   - collectableType: 3
     weight: 1
   - collectableType: 2
-    weight: 7
+    weight: 5
 --- !u!4 &2058841809
 Transform:
   m_ObjectHideFlags: 0

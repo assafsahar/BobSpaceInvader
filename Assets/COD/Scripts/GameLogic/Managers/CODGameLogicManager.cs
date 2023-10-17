@@ -11,7 +11,7 @@ namespace COD.GameLogic
         public CODScoreManager ScoreManager;
         private CODGameFlowManager gameFlowManager;
         private CODCollectablesManager collectablesManager;
-        
+
         public CODEnergyManager EnergyManager { get; private set; }
         public CODCollectableSettingsManager CollectableSettingsManager { get; private set; }
         public bool IsInitialized { get; private set; } = false;

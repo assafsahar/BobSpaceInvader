@@ -9,6 +9,13 @@ namespace COD.GameLogic
 {
     public class CODGameFlowManager : CODMonoBehaviour
     {
+        [SerializeField] float initialShipSpeed = 5f;
+        [SerializeField] float speedIncreaseRate = 0.1f;
+        [SerializeField] float energyDecreaseInterval = 0.4f;
+
+        private float currentSpeed;
+        private float targetSpeed;
+        private float lerpFactor = 0.01f;
         private const string GameSceneName = "GameScene";
         private CODEnergyManager energyManager;
         private GameState _currentState;
@@ -47,6 +54,7 @@ namespace COD.GameLogic
         private void Awake()
         {
             energyManager = CODGameLogicManager.Instance.EnergyManager;
+            targetSpeed = currentSpeed = initialShipSpeed;
         }
         private void Start()
         {
@@ -54,6 +62,14 @@ namespace COD.GameLogic
             StartCoroutine(StartWhenReady());
         }
 
+        private void Update()
+        {
+            if (CurrentState == GameState.Playing)
+            {
+                currentSpeed = Mathf.Lerp(currentSpeed, targetSpeed, lerpFactor);
+                InvokeEvent(CODEventNames.OnSpeedChange, currentSpeed);
+            }
+        }
 
         public void StartGame()
         {
@@ -151,8 +167,9 @@ namespace COD.GameLogic
             while (CurrentState == GameState.Playing)
             {
                 loopCount++;
+                targetSpeed += speedIncreaseRate;
                 energyManager?.UpdateEnergy(Time.deltaTime);
-                yield return new WaitForSeconds(0.1f);   
+                yield return new WaitForSeconds(energyDecreaseInterval);   
             }
         }
     }

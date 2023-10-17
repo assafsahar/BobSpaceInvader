@@ -18,7 +18,7 @@ namespace COD.UI
 
         [SerializeField] private SpriteRenderer spriteRenderer;
         [SerializeField] private List<CollectableSprite> collectableSpriteList;
-        [SerializeField] private float speed = 5f;
+        private float speed = 5f;
 
         private Dictionary<CollectableType, Sprite> collectableSprites = new Dictionary<CollectableType, Sprite>();
 
@@ -26,6 +26,15 @@ namespace COD.UI
         private Vector3 leftScreenBoundary;
         private float leftBoundaryX;
         private float offset = 1f;
+
+        private void OnEnable()
+        {
+            AddListener(CODEventNames.OnSpeedChange, UpdateSpeed);
+        }
+        private void OnDisable()
+        {
+            RemoveListener(CODEventNames.OnSpeedChange, UpdateSpeed);
+        }
 
         private void Awake()
         {
@@ -70,6 +79,11 @@ namespace COD.UI
             {
                 OutOfBounds();
             }
+        }
+
+        private void UpdateSpeed(object obj)
+        {
+            speed = (float)obj;
         }
 
         private void OutOfBounds()

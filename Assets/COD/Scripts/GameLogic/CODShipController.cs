@@ -9,7 +9,7 @@ namespace COD.GameLogic
     {
         [SerializeField] private CODShipGraphics shipGraphics;
         [SerializeField] private float rotationSpeed;
-        [SerializeField] private float movementSpeed;
+        [SerializeField] private float verticalSpeed;
         [SerializeField] private float upperLimit;
         [SerializeField] private float lowerLimit;
         [SerializeField] private float stateChangeThreshold = 0.05f;
@@ -49,7 +49,7 @@ namespace COD.GameLogic
             float direction = targetY > shipGraphics.transform.position.y ? 1 : -1;
 
             // Update position
-            Vector3 newShipPosition = shipGraphics.transform.position + new Vector3(0, direction * Time.deltaTime * movementSpeed, 0);
+            Vector3 newShipPosition = shipGraphics.transform.position + new Vector3(0, direction * Time.deltaTime * verticalSpeed, 0);
 
             // If the ship overshot its target, set it directly to the target
             if (direction > 0 && newShipPosition.y > targetY || direction < 0 && newShipPosition.y < targetY)

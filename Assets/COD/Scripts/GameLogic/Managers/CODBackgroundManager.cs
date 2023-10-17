@@ -1,8 +1,10 @@
+using COD.Core;
+using Codice.CM.Common;
 using UnityEngine;
 
 namespace GameLogic
 {
-    public class CODBackgroundManager : MonoBehaviour
+    public class CODBackgroundManager : CODMonoBehaviour
     {
         [System.Serializable]
         public class ParallaxLayer
@@ -17,6 +19,14 @@ namespace GameLogic
 
         private Vector3[] initialPositions;
 
+        private void OnEnable()
+        {
+            AddListener(CODEventNames.OnSpeedChange, UpdateSpeed);
+        }
+        private void OnDisable()
+        {
+            RemoveListener(CODEventNames.OnSpeedChange, UpdateSpeed);
+        }
         private void Start()
         {
             // Store the initial positions
@@ -40,6 +50,14 @@ namespace GameLogic
                     // Reset the image to its original position
                     layers[i].image.position = initialPositions[i] + Vector3.left * layers[i].resetPoint;
                 }
+            }
+        }
+        private void UpdateSpeed(object obj)
+        {
+            float baseSpeed = (float)obj;
+            for (int i = 0; i < layers.Length; i++)
+            {
+                layers[i].speed = baseSpeed * Mathf.Pow(1.3f, i);
             }
         }
     }
