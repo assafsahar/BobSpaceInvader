@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using UnityEngine;
 
 namespace COD.Core
 {
@@ -45,11 +46,18 @@ namespace COD.Core
     {
         public void GetConfigAsync<T>(string configID, Action<T> onComplete)
         {
-            var path = $"Assets/COD/Configs/{configID}.json";
-            var saveJson = File.ReadAllText(path);
-            var saveData = JsonConvert.DeserializeObject<T>(saveJson);
+            var path = $"Configs/{configID}";
+            TextAsset textAsset = Resources.Load<TextAsset>(path);
+            if (textAsset != null)
+            {
 
-            onComplete.Invoke(saveData);
+                var saveData = JsonConvert.DeserializeObject<T>(textAsset.text);
+                onComplete.Invoke(saveData);
+            }
+            else
+            {
+                Debug.LogError($"Config not found for {configID}");
+            }
         }
     }
 }
