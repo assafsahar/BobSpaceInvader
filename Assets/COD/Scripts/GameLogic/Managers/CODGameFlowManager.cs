@@ -25,7 +25,8 @@ namespace COD.GameLogic
             Start,
             Playing,
             Paused,
-            Ended
+            Ended,
+            Falling
         }
 
         public GameState CurrentState {
@@ -108,7 +109,7 @@ namespace COD.GameLogic
         public void EndGame()
         {
             Debug.Log("EndGame CurrentState=" + CurrentState);
-            if (CurrentState == GameState.Playing)
+            if (CurrentState == GameState.Playing || CurrentState == GameState.Falling)
             {
                 // Game ended, do cleanup or show relevant UI
                 CODManager.Instance.PoolManager.Cleanup();
@@ -124,7 +125,13 @@ namespace COD.GameLogic
                 CurrentState = GameState.Ended;
             }
         }
-
+        public void ChangeToFallState()
+        {
+            if (CurrentState == GameState.Playing)
+            {
+                CurrentState = GameState.Falling;
+            }
+        }
         private IEnumerator StartWhenReady()
         {
             while (!CODGameLogicManager.Instance.IsInitialized || !CODGameLogicManager.Instance.ScoreManager.IsInitialized)

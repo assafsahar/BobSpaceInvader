@@ -6,6 +6,7 @@ TagManager:
   tags:
   - BackgroundFront
   - Collectable
+  - GroundCollider
   layers:
   - Default
   - TransparentFX

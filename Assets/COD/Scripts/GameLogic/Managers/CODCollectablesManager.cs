@@ -19,13 +19,11 @@ namespace COD.GameLogic
         [SerializeField] private float maxSpawnY = 2f;
         [SerializeField] private int initialPoolSize = 20;
         [SerializeField] private int maxPoolSize = 50;
-        [SerializeField] private int maxEnergy = 20;
         [SerializeField] private int energyDecreaseRate = 1;
         [SerializeField]
         private List<WeightedCollectable> weightedCollectables = new List<WeightedCollectable>();
 
         private float nextSpawnTime;
-        private int initialEnergy;
         private List<CODCollectableGraphics> activeCollectables = new List<CODCollectableGraphics>();
         private Dictionary<CollectableType, Action<CODCollectableGraphics>> collectableHandlers;
 
@@ -34,7 +32,6 @@ namespace COD.GameLogic
             CODManager.Instance.PoolManager.InitPool(prefab, initialPoolSize, maxPoolSize);
             InitCollectableHandlers();
             StartCoroutine(SpawnRoutine());
-            initialEnergy = maxEnergy;            
         }
 
         public CODCollectableGraphics SpawnCollectable(CollectableType type)

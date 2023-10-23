@@ -72,7 +72,7 @@ namespace COD.GameLogic
 
             // Todo: replace hard coded values with config
             float maxEnergy = 20f;
-            float initialEnergy = 20f;
+            float initialEnergy = maxEnergy;
             float energyDecreaseRate = 4f;
             EnergyManager = new CODEnergyManager(maxEnergy, initialEnergy, energyDecreaseRate);
 

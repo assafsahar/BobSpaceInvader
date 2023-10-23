@@ -26,7 +26,8 @@ namespace COD.GameLogic
             if (CurrentEnergy <= 0)
             {
                 CurrentEnergy = 0;
-                CODGameLogicManager.Instance.GameFlowManager.EndGame();
+                CODGameLogicManager.Instance.GameFlowManager.ChangeToFallState();
+                //CODGameLogicManager.Instance.GameFlowManager.EndGame();
             }
         }
 

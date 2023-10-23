@@ -1,7 +1,7 @@
 using UnityEngine;
 using COD.Core;
 using COD.UI;
-using System;
+using static COD.GameLogic.CODGameFlowManager;
 
 namespace COD.GameLogic
 {
@@ -35,6 +35,21 @@ namespace COD.GameLogic
             RemoveListener(CODEventNames.OnTouchEnded, OnTouchEnded);
         }
 
+        private void Update()
+        {
+            if (CODGameLogicManager.Instance.GameFlowManager.CurrentState == GameState.Falling)
+            {
+                FallDown();
+                return; 
+            }
+        }
+
+        void FallDown()
+        {
+            Vector3 newShipPosition = transform.position + new Vector3(0, -Time.deltaTime * verticalSpeed, 0);
+            transform.position = newShipPosition;
+        }
+
         private void OnTouchStarted(object obj)
         {
             // No need to handle touch position here
@@ -42,6 +57,9 @@ namespace COD.GameLogic
 
         private void OnTouchStayed(object obj)
         {
+            if(CODGameLogicManager.Instance.GameFlowManager.CurrentState  == GameState.Falling) {
+                return;
+            }
             float targetY = Camera.main.ScreenToWorldPoint(new Vector3(0, (float)obj, 0)).y;
 
             // Calculate distance and direction
@@ -110,6 +128,8 @@ namespace COD.GameLogic
             shipGraphics.UpdateShipState(ShipState.Up);
             shipGraphics.RotateShip(rotationSpeed);
         }
+
+        
     }
 }
 
