@@ -16,6 +16,7 @@ namespace COD.GameLogic
 
         private float stillnessDuration = 0.2f;  // Adjust based on your preference. Represents the time of stillness before changing to straight state.
         private float currentStillnessTime = 0f;
+        private float fallingRotationSpeed = 50f;
 
         private void Start()
         {
@@ -48,6 +49,8 @@ namespace COD.GameLogic
         {
             Vector3 newShipPosition = transform.position + new Vector3(0, -Time.deltaTime * verticalSpeed, 0);
             transform.position = newShipPosition;
+            float rotationAmount = fallingRotationSpeed * Time.deltaTime; 
+            transform.Rotate(0f, 0f, rotationAmount);
         }
 
         private void OnTouchStarted(object obj)

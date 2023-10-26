@@ -55,7 +55,7 @@ namespace COD.UI
         {
             return collectable.Type;
         }
-        public int GetEnergyValue()
+        public float GetEnergyValue()
         {
             if (collectable != null)
             {

@@ -11,11 +11,7 @@ namespace COD.GameLogic
     {
         private void OnTriggerEnter2D(Collider2D other)
         {
-            if (CODGameLogicManager.Instance.GameFlowManager.CurrentState == GameState.Falling && other.CompareTag("GroundCollider"))
-            {
-                StartCoroutine(RestartAfterDelay(2f));  // Wait for 2 seconds before restarting
-            }
-            else if (other.CompareTag("BackgroundFront") && CODGameLogicManager.Instance.GameFlowManager.CurrentState != GameState.Falling)
+            if (other.CompareTag("BackgroundFront") && CODGameLogicManager.Instance.GameFlowManager.CurrentState != GameState.Falling)
             {
                 // Handle the game end condition here.
                 Debug.Log("End");
@@ -27,6 +23,14 @@ namespace COD.GameLogic
                 CODGameLogicManager.Instance.CollectablesManager.HandleCollectableCollected(other.GetComponent<CODCollectableGraphics>());
             }
             
+        }
+
+        private void OnCollisionEnter2D(Collision2D other)
+        {
+            if (CODGameLogicManager.Instance.GameFlowManager.CurrentState == GameState.Falling && other.gameObject.CompareTag("GroundCollider"))
+            {
+                StartCoroutine(RestartAfterDelay(2f));  // Wait for 2 seconds before restarting
+            }
         }
         private IEnumerator RestartAfterDelay(float delay)
         {

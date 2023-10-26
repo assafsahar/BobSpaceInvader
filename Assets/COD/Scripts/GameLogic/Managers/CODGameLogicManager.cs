@@ -1,7 +1,7 @@
 using COD.Core;
 using System;
+using System.Linq;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace COD.GameLogic
 {
@@ -15,6 +15,8 @@ namespace COD.GameLogic
         public CODEnergyManager EnergyManager { get; private set; }
         public CODCollectableSettingsManager CollectableSettingsManager { get; private set; }
         public bool IsInitialized { get; private set; } = false;
+        public CODUpgradeManagerConfig UpgradeManagerConfigData { get; private set; }
+
 
         public CODCollectablesManager CollectablesManager
         {
@@ -70,18 +72,24 @@ namespace COD.GameLogic
                 // Wait until the ScoreManager is fully initialized
             }
 
-            // Todo: replace hard coded values with config
-            float maxEnergy = 20f;
-            float initialEnergy = maxEnergy;
-            float energyDecreaseRate = 4f;
-            EnergyManager = new CODEnergyManager(maxEnergy, initialEnergy, energyDecreaseRate);
+            CODManager.Instance.ConfigManager.GetConfigAsync<CODUpgradeManagerConfig>("UpgradableConfig", (config) =>
+            {
+                UpgradeManagerConfigData = config;
 
-            UpgradeManager = new CODUpgradeManager(
+                var energyDataMain = UpgradeManagerConfigData.UpgradeableConfigs.FirstOrDefault(x => x.UpgradableTypeID == UpgradeablesTypeID.GetMoreEnergy);
+                var energyData = energyDataMain.UpgradableLevelData[0];
 
-                );
-            CollectableSettingsManager = new CODCollectableSettingsManager();
-            IsInitialized = true;
-            onComplete.Invoke();
+                float maxEnergy = energyData.MaxEnergy;
+                float initialEnergy = maxEnergy;
+                float energyDecreaseRate = energyData.EnergyDecreaseRate; 
+
+                EnergyManager = new CODEnergyManager(maxEnergy, initialEnergy, energyDecreaseRate);
+                UpgradeManager = new CODUpgradeManager();
+                CollectableSettingsManager = new CODCollectableSettingsManager();
+
+                IsInitialized = true;
+                onComplete.Invoke();
+            });
         }
     }
 }

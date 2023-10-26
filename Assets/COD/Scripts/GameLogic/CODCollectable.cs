@@ -7,12 +7,12 @@ namespace COD.GameLogic
     {
         public CollectableType Type { get; private set; }
         public int ScoreValue { get; private set; }
-        public int EnergyValue { get; set; }
+        public float EnergyValue { get; set; }
 
-        public CODCollectable(CollectableType type, int? weight = null)
+        public CODCollectable(CollectableType type)
         {
             Type = type;
-            int currentEnergyValue = CODGameLogicManager.Instance.CollectableSettingsManager.GetCurrentEnergyValue();
+            float currentEnergyValue = CODGameLogicManager.Instance.CollectableSettingsManager.GetCurrentEnergyValue();
             //Todo - make this from configuration
             switch (type)
             {

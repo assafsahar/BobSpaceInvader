@@ -1,9 +1,11 @@
 
+using COD.Shared;
+
 namespace COD.GameLogic
 {
     public class CODCollectableSettingsManager
     {
-        public int GetCurrentEnergyValue()
+        public float GetCurrentEnergyValue()
         {
             var upgradeConfig = CODGameLogicManager.Instance.UpgradeManager.GetCodUpgradeableConfigByID(UpgradeablesTypeID.GetMoreEnergy);
             var upgradeData = CODGameLogicManager.Instance.UpgradeManager.GetUpgradeableByID(UpgradeablesTypeID.GetMoreEnergy);
@@ -13,6 +15,11 @@ namespace COD.GameLogic
             }
             return 0;
         }
+        /*public CODCollectableConfig GetCollectableConfig(CollectableType type)
+        {
+            return gameConfig.CollectableConfigs.FirstOrDefault(c => c.CollectableType == type.ToString());
+        }*/
+
     }
 }
 

@@ -8,33 +8,65 @@
             "Level": 0,
             "CoinsNeeded": 0,
             "CurrencyTag": "Coin",
-            "Energy": 2
+            "Energy": 2,
+            "MaxEnergy": 20.0,
+            "EnergyDecreaseRate": 4.0
           },
           {
             "Level": 1,
             "CoinsNeeded": 20,
             "CurrencyTag": "Coin",
-            "Energy": 4
+            "Energy": 4,
+            "MaxEnergy": 20.0,
+            "EnergyDecreaseRate": 4.0
           },
           {
             "Level": 2,
             "CoinsNeeded": 40,
             "CurrencyTag": "Coin",
-            "Energy": 6
+            "Energy": 6,
+            "MaxEnergy": 20.0,
+            "EnergyDecreaseRate": 4.0
           },
           {
             "Level": 3,
             "CoinsNeeded": 60,
             "CurrencyTag": "Coin",
-            "Energy": 8
+            "Energy": 8,
+            "MaxEnergy": 20.0,
+            "EnergyDecreaseRate": 4.0
           },
           {
             "Level": 4,
             "CoinsNeeded": 80,
             "CurrencyTag": "Coin",
-            "Energy": 10
+            "Energy": 10,
+            "MaxEnergy": 20.0,
+            "EnergyDecreaseRate": 4.0
           }
         ]
       }
-    ]
+    ],
+    "CollectableConfigs": [
+      {
+          "CollectableType": "Coin",
+          "ScoreValue": 10,
+          "EnergyValue": 0
+      },
+      {
+          "CollectableType": "SuperCoin",
+          "ScoreValue": 50,
+          "EnergyValue": 0
+      },
+      {
+          "CollectableType": "Bomb",
+          "ScoreValue": 0,
+          "EnergyValue": 0
+      },
+      {
+          "CollectableType": "Energy",
+          "ScoreValue": 0,
+          "EnergyValue": "dynamic" 
+      }
+  ]
 }

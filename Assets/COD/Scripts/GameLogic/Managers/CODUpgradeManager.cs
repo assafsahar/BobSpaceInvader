@@ -191,7 +191,9 @@ namespace COD.GameLogic
         public int CoinsNeeded;
         public ScoreTags CurrencyTag;
         public int Score;
-        public int Energy;
+        public float Energy;
+        public float MaxEnergy;
+        public float EnergyDecreaseRate;
     }
 
     //Per Item Config
@@ -200,6 +202,7 @@ namespace COD.GameLogic
     {
         public UpgradeablesTypeID UpgradableTypeID;
         public List<CODUpgradeableLevelData> UpgradableLevelData;
+        public List<CODCollectableConfig> CollectableConfigs { get; set; }
     }
 
     //All config for upgradeable
