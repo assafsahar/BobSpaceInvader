@@ -35,7 +35,7 @@ namespace COD.Core
         private void QuitGame()
         {
             // If we are running in a standalone build of the game
-#if UNITY_STANDALONE
+#if UNITY_STANDALONE || UNITY_ANDROID
             Application.Quit();
 #endif
 
