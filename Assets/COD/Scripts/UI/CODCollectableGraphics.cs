@@ -26,6 +26,7 @@ namespace COD.UI
         private Vector3 leftScreenBoundary;
         private float leftBoundaryX;
         private float offset = 1f;
+        private Camera mainCamera;
 
         private void OnEnable()
         {
@@ -38,11 +39,12 @@ namespace COD.UI
 
         private void Awake()
         {
+            mainCamera = Camera.main;
             foreach (var item in collectableSpriteList)
             {
                 collectableSprites.Add(item.type, item.sprite);
             }
-            leftScreenBoundary = Camera.main.ViewportToWorldPoint(new Vector3(0, 0.5f, 0));
+            leftScreenBoundary = mainCamera.ViewportToWorldPoint(new Vector3(0, 0.5f, 0));
             leftBoundaryX = leftScreenBoundary.x;
             leftBoundaryX -= offset;
         }
@@ -74,7 +76,8 @@ namespace COD.UI
 
         private void Update()
         {
-            transform.position += Vector3.left * speed * Time.deltaTime;
+            Vector3 leftMovement = Vector3.left * (speed * Time.deltaTime);
+            transform.position += leftMovement;
             if (transform.position.x < leftBoundaryX)
             {
                 OutOfBounds();

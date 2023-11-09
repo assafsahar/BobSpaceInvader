@@ -47,7 +47,8 @@ namespace COD.GameLogic
 
         void FallDown()
         {
-            Vector3 newShipPosition = transform.position + new Vector3(0, -Time.deltaTime * verticalSpeed, 0);
+            float fallDistance = -Time.deltaTime * verticalSpeed;
+            Vector3 newShipPosition = transform.position + new Vector3(0, fallDistance, 0);
             transform.position = newShipPosition;
             float rotationAmount = fallingRotationSpeed * Time.deltaTime; 
             transform.Rotate(0f, 0f, rotationAmount);
