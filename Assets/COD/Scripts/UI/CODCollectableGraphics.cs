@@ -6,13 +6,22 @@ using UnityEngine;
 
 namespace COD.UI
 {
+    /// <summary>
+    /// the following data structure maps the types of collectables 
+    /// to their visual representations
+    /// </summary>
     [System.Serializable]
     public class CollectableSprite
     {
         public CollectableType type;
         public Sprite sprite;
     }
-
+    /// <summary>
+    /// Handles the visual representation of collectable items in the game. 
+    /// It's responsible for associating the correct sprite to each collectable type,
+    /// moving the collectables across the screen, and handling interactions when 
+    /// the player collects an item.
+    /// </summary>
     public class CODCollectableGraphics : CODPoolable
     {
 

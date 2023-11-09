@@ -7,6 +7,12 @@ using static COD.GameLogic.CODGameFlowManager;
 
 namespace COD.GameLogic
 {
+    /// <summary>
+    /// responsible for handling collisions for the ship. 
+    /// This includes detecting collisions with other objects, 
+    /// determining the outcome of a collision (e.g., handle collectable), 
+    /// and triggering any necessary responses in the game's logic
+    /// </summary>
     public class CODShipCollisionHandler : CODMonoBehaviour
     {
         private void OnTriggerEnter2D(Collider2D other)

@@ -6,6 +6,11 @@ using static COD.Shared.GameEnums;
 
 namespace COD.UI
 {
+    /// <summary>
+    /// Responsible for updating and displaying the score UI elements 
+    /// in the game. It reacts to events that change the player's score 
+    /// and updates the relevant UI components with the new score values.
+    /// </summary>
     public class CODScoreDisplay : CODMonoBehaviour
     {
         [SerializeField] private TMP_Text coinText;

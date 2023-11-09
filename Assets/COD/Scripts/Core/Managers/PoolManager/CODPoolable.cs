@@ -1,5 +1,10 @@
 using COD.Core;
 
+/// <summary>
+/// this class is meant to be inherited by objects that are 
+/// meant to be reused from an object pool to improve performance 
+/// by avoiding frequent instantiation and destruction
+/// </summary>
 public class CODPoolable : CODMonoBehaviour
 {
     public PoolNames PoolName;

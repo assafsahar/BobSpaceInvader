@@ -5,6 +5,11 @@ using static COD.GameLogic.CODGameFlowManager;
 
 namespace COD.GameLogic
 {
+    /// <summary>
+    /// the main controller for the player's ship. It handles movement, 
+    /// possibly firing weapons, and any other direct control mechanics 
+    /// related to the ship's in-game behavior.
+    /// </summary>
     public class ShipController : CODMonoBehaviour
     {
         [SerializeField] private CODShipGraphics shipGraphics;

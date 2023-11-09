@@ -7,6 +7,9 @@ using UnityEngine;
 
 namespace COD.Core
 {
+    /// <summary>
+    /// this class is designed to manage configuration settings it loads from external sources
+    /// </summary>
     public class CODConfigManager
     {
         private Action onInit;

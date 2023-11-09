@@ -7,6 +7,9 @@ using static COD.Shared.GameEnums;
 
 namespace COD.GameLogic
 {
+    /// <summary>
+    /// Responsible for managing the player's score. Can handle different score types
+    /// </summary>
     public class CODScoreManager
     {
         public bool IsInitialized { get; private set; } = false;

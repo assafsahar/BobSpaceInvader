@@ -3,6 +3,9 @@ using COD.Shared;
 
 namespace COD.GameLogic
 {
+    /// <summary>
+    /// handles the settings for the collectable items
+    /// </summary>
     public class CODCollectableSettingsManager
     {
         public float GetCurrentEnergyValue()

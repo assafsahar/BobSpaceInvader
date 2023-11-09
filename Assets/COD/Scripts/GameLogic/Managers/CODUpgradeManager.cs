@@ -7,6 +7,10 @@ using static COD.Shared.GameEnums;
 
 namespace COD.GameLogic
 {
+    /// <summary>
+    /// This manager handles the upgrades within the game, including any 
+    /// progressive improvements available to the player. Takes data from a config file
+    /// </summary>
     public class CODUpgradeManager
     {
         public CODPlayerUpgradeInventoryData PlayerUpgradeInventoryData; //Player Saved Data

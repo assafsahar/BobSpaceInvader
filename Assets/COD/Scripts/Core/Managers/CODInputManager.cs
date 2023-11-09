@@ -2,6 +2,11 @@ using UnityEngine;
 
 namespace COD.Core
 {
+    /// <summary>
+    /// this class is responsible for abstracting user input, 
+    /// allowing the rest of the game to react to user commands 
+    /// without being tightly coupled to the input source
+    /// </summary>
     public class InputManager : CODMonoBehaviour
     {
         private Vector2 startPos;

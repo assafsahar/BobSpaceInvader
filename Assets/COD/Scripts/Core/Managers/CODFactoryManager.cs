@@ -5,6 +5,9 @@ using Object = UnityEngine.Object;
 
 namespace COD.Core
 {
+    /// <summary>
+    /// This class is a factory for creating game objects
+    /// </summary>
     public class CODFactoryManager
     {
         public void CreateAsync<T>(T origin, Vector3 pos, Action<T> onCreated) where T : Object

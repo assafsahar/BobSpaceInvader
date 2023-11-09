@@ -6,6 +6,11 @@ using UnityEngine;
 
 namespace COD.UI
 {
+    /// <summary>
+    /// Manages the display of the player's energy in the UI. 
+    /// It listens for changes in the player's energy level 
+    /// and updates the energy display accordingly.
+    /// </summary>
     public class CODEnergyDisplay : CODMonoBehaviour
     {
         [SerializeField] private TextMeshProUGUI energyText;

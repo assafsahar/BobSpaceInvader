@@ -3,6 +3,12 @@ using COD.Shared;
 
 namespace COD.GameLogic
 {
+    /// <summary>
+    /// This class represents a collectable item within the game. 
+    /// It likely contains properties such as the type of collectable, 
+    /// its value (be it score, energy, or other resources), 
+    /// and any effects it has when collected by the player
+    /// </summary>
     public class CODCollectable : ICollectable
     {
         public CollectableType Type { get; private set; }

@@ -5,6 +5,10 @@ using UnityEngine;
 
 namespace COD.GameLogic
 {
+    /// <summary>
+    /// This class coordinate between various other managers 
+    /// and ensure that the game logic is executed correctly.
+    /// </summary>
     public class CODGameLogicManager : ICODBaseManager
     {
         public static CODGameLogicManager Instance;

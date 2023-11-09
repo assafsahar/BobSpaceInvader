@@ -4,6 +4,11 @@ using UnityEngine;
 
 namespace COD.GameLogic
 {
+    /// <summary>
+    /// manages the energy systems within the game, 
+    /// tracking energy levels, consumption, regeneration, 
+    /// and interactions with energy-related game elements.
+    /// </summary>
     public class CODEnergyManager
     {
         public float MaxEnergy { get; private set; }

@@ -3,6 +3,11 @@ using UnityEngine;
 
 namespace GameLogic
 {
+    /// <summary>
+    /// This class is in charge of the game's background elements. 
+    /// It controls the scrolling, parallax effects, or dynamic changes 
+    /// to the background as the game progresses
+    /// </summary>
     public class CODBackgroundManager : CODMonoBehaviour
     {
         [System.Serializable]

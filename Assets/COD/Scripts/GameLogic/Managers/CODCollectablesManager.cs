@@ -9,6 +9,10 @@ using System.Collections;
 
 namespace COD.GameLogic
 {
+    /// <summary>
+    /// This one is tasked with the overall management of collectable items 
+    /// in the game, including spawning and handling their collection by the player
+    /// </summary>
     public class CODCollectablesManager : CODMonoBehaviour
     {
         [SerializeField] private CODCollectableGraphics prefab;

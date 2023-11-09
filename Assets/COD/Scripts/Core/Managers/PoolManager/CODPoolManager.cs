@@ -4,6 +4,11 @@ using UnityEngine;
 
 namespace COD.Core
 {
+    /// <summary>
+    ///  this is an object pooling system. It includes methods for reinitializing 
+    ///  the object when it's pulled from the pool and for resetting it before 
+    ///  it's returned to the pool
+    /// </summary>
     public class CODPoolManager
     {
         private Dictionary<PoolNames, CODPool> pools = new();

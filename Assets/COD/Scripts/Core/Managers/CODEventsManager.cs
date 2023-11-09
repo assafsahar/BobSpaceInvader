@@ -4,6 +4,11 @@ using UnityEngine.SceneManagement;
 
 namespace COD.Core
 {
+    /// <summary>
+    /// This class is central to event handling within the game. 
+    /// It would be used to dispatch and listen for events throughout 
+    /// the game's various systems, allowing for decoupled communication between components.
+    /// </summary>
     public class CODEventsManager
     {
         private Dictionary<CODEventNames, List<Action<object>>> activeListeners = new();

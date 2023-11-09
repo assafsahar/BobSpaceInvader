@@ -6,7 +6,11 @@ using UnityEngine.SceneManagement;
 using static COD.Shared.GameEnums;
 
 namespace COD.GameLogic
-{
+{   /// <summary>
+    /// This class manages the flow of the game. 
+    /// It controls the transitions between different game states 
+    /// like starting, pausing, resuming, and ending the game
+    /// </summary>
     public class CODGameFlowManager : CODMonoBehaviour
     {
         [SerializeField] float initialShipSpeed = 5f;

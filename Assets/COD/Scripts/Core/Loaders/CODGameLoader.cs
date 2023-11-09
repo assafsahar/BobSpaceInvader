@@ -2,9 +2,12 @@ using COD.Core;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace HOG.Core
+namespace COD.Core
 {
-    public class HOGGameLoader : CODGameLoaderBase
+    /// <summary>
+    /// Loads the different game managers
+    /// </summary>
+    public class CODGameLoader : CODGameLoaderBase
     {
         [SerializeField] private CODGameLoaderBase gameLogicLoader;
         //[SerializeField] private CODLoadBarComponent loadbarComponent;

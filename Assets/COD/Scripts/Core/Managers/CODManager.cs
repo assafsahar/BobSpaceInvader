@@ -2,6 +2,12 @@ using System;
 
 namespace COD.Core
 {
+    /// <summary>
+    /// This class serves as a central point of management for various subsystems
+    /// of the COD game, such as event management and object pooling. 
+    /// It offers singleton-like access to these subsystems, which are used 
+    /// throughout the game's classes.
+    /// </summary>
     public class CODManager : ICODBaseManager
     {
         public static CODManager Instance;

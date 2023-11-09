@@ -5,6 +5,11 @@ using JsonConvert = Newtonsoft.Json.JsonConvert;
 
 namespace COD.Core
 {
+    /// <summary>
+    /// Handles saving and loading of the game's state 
+    /// to persistent storage. This could involve player preferences, 
+    /// game progress, high scores, and other data that needs to be retained between sessions
+    /// </summary>
     public class CODSaveManager
     {
         public void Save(ICODSaveData saveData)

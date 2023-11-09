@@ -3,6 +3,11 @@ using DG.Tweening;
 
 namespace COD.UI
 {
+    /// <summary>
+    /// Controls the visual state of the player's ship, 
+    /// including changing the sprite to match the ship's current 
+    /// movement state and handling any visual effects.
+    /// </summary>
     public class CODShipGraphics : MonoBehaviour
     {
         [SerializeField] private SpriteRenderer shipSpriteRenderer;
@@ -22,6 +27,18 @@ namespace COD.UI
             currentShipState = ShipState.Straight;
             UpdateShipSprite();
             StartSineWaveMotion();
+        }
+        private void OnDestroy()
+        {
+            if (DOTween.IsTweening(transform))
+            {
+                transform.DOKill(); 
+            }
+        }
+
+        private void OnDisable()
+        {
+            transform.DOKill(); 
         }
 
         public void InitializeShip(float upperLimit, float lowerLimit)

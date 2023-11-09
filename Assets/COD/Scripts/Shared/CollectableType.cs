@@ -1,5 +1,10 @@
 namespace COD.Shared
 {
+    /// <summary>
+    /// different types of collectable items within the game. 
+    /// Each item that can be collected by the player (like coins, power-ups, etc.) 
+    /// would have a corresponding type in this enumeration.
+    /// </summary>
     public enum CollectableType
     {
         Coin = 1,

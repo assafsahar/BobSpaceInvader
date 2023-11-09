@@ -4,6 +4,11 @@ using UnityEngine;
 
 namespace COD.Core
 {
+    /// <summary>
+    ///  this class serves as a base class for other MonoBehaviour scripts 
+    ///  in the COD game framework. It provides common functionality 
+    ///  for COD-related MonoBehaviour classes.
+    /// </summary>
     public class CODMonoBehaviour : MonoBehaviour
     {
         protected CODManager Manager => CODManager.Instance;
