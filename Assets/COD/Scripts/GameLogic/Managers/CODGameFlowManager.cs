@@ -16,6 +16,7 @@ namespace COD.GameLogic
         [SerializeField] float initialShipSpeed = 5f;
         [SerializeField] float speedIncreaseRate = 0.1f;
         [SerializeField] float energyDecreaseInterval = 0.4f;
+        [SerializeField] int travelDistancePerFrame = 1;
 
         private float currentSpeed;
         private float targetSpeed;
@@ -23,6 +24,8 @@ namespace COD.GameLogic
         private const string GameSceneName = "GameScene";
         private CODEnergyManager energyManager;
         private GameState _currentState;
+        private int distanceTravelledThisGame = 0;
+        
 
         public enum GameState
         {
@@ -73,6 +76,9 @@ namespace COD.GameLogic
             {
                 currentSpeed = Mathf.Lerp(currentSpeed, targetSpeed, lerpFactor);
                 InvokeEvent(CODEventNames.OnSpeedChange, currentSpeed);
+                distanceTravelledThisGame++;
+                InvokeEvent(CODEventNames.OnDistanceSet, distanceTravelledThisGame);
+                CODGameLogicManager.Instance.ScoreManager.AddDistance(travelDistancePerFrame);
             }
         }
 
@@ -87,6 +93,8 @@ namespace COD.GameLogic
             if (CurrentState == GameState.Start || CurrentState == GameState.Ended)
             {
                 energyManager.ResetEnergy();
+                distanceTravelledThisGame = 0;
+                CODGameLogicManager.Instance.ScoreManager.ResetGameScores();
                 CurrentState = GameState.Playing;
                 StartCoroutine(EnergyUpdateRoutine());
             }
@@ -127,6 +135,8 @@ namespace COD.GameLogic
                 string currentSceneName = SceneManager.GetActiveScene().name;
                 SceneManager.LoadScene(currentSceneName);
                 CurrentState = GameState.Ended;
+
+                CODGameLogicManager.Instance.ScoreManager.CalculateScore();
             }
         }
         public void ChangeToFallState()

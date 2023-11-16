@@ -16,10 +16,12 @@ namespace COD.UI
         [SerializeField] private TMP_Text coinText;
         [SerializeField] private TMP_Text superCoinText;
         [SerializeField] private TMP_Text scoreText;
+        [SerializeField] private TMP_Text distanceText;
 
         private void OnEnable()
         {
             AddListener(CODEventNames.OnScoreSet, UpdateScoreDisplay);
+            AddListener(CODEventNames.OnDistanceSet, UpdateDistanceDisplay);
             InvokeEvent(CODEventNames.RequestScoreUpdate);
 
         }
@@ -27,6 +29,7 @@ namespace COD.UI
         private void OnDisable()
         {
             RemoveListener(CODEventNames.OnScoreSet, UpdateScoreDisplay);
+            RemoveListener(CODEventNames.OnDistanceSet, UpdateDistanceDisplay);
         }
 
 
@@ -46,7 +49,17 @@ namespace COD.UI
                     case ScoreTags.MainScore:
                         scoreText.text = $"{scoreData.Item2}";
                         break;
+                    case ScoreTags.Distance:
+                        distanceText.text = $"{scoreData.Item2}";
+                        break;
                 }
+            }
+        }
+        private void UpdateDistanceDisplay(object data)
+        {
+            if (data is int distance)
+            {
+                distanceText.text = $"{distance:F0}"; 
             }
         }
     }

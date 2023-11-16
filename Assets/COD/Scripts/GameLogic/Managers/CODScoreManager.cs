@@ -15,6 +15,9 @@ namespace COD.GameLogic
         public bool IsInitialized { get; private set; } = false;
         public CODPlayerScoreData PlayerScoreData = new();
         private CODPlayerScoreData initialScoreData;
+        private float highestDistanceAchieved = 0;
+        private float totalDistanceTravelled = 0;
+        private int highestScoreAchieved = 0;
         public CODScoreManager()
         {
             CODManager.Instance.EventsManager.AddListener(CODEventNames.RequestScoreUpdate, PushCurrentScores);
@@ -50,6 +53,15 @@ namespace COD.GameLogic
             PlayerScoreData.ScoreByTag[tag] = amount;
             //Debug.Log($"Score for {tag} set to: {amount}");
             //CODManager.Instance.SaveManager.Save(PlayerScoreData);
+        }
+
+        public void AddScoreByTag(ScoreTags tag, int amount = 0)
+        {
+            var score = 0;
+            if (TryGetScoreByTag(tag, ref score))
+            {
+                SetScoreByTag(tag, score + amount);
+            }
         }
 
         public void ChangeScoreByTagByAmount(ScoreTags tag, int amount = 0)
@@ -100,6 +112,29 @@ namespace COD.GameLogic
                 CODManager.Instance.EventsManager.InvokeEvent(CODEventNames.OnScoreSet, (pair.Key, pair.Value));
             }
         }
+        public void AddDistance(int distance)
+        {
+            totalDistanceTravelled += distance;
+            ChangeScoreByTagByAmount(ScoreTags.Distance, distance);
+            ChangeScoreByTagByAmount(ScoreTags.MainScore, distance);
+            //highestDistanceAchieved = Mathf.Max(highestDistanceAchieved, totalDistanceTravelled);
+        }
+        public int GetCurrentDistance()
+        {
+            return GetCurrentScore(ScoreTags.Distance);
+        }
+        public void CalculateScore()
+        {
+            int score = GetCurrentScore(ScoreTags.MainScore) + GetCurrentDistance(); // Modify this formula as needed.
+            highestScoreAchieved = Mathf.Max(highestScoreAchieved, score);
+        }
+        public void ResetGameScores()
+        {
+            SetScoreByTag(ScoreTags.MainScore, 0);
+            SetScoreByTag(ScoreTags.Distance, 0);
+            // Reset any other scores as needed
+        }
+
         private void PushCurrentScores(object unused)
         {
             foreach (var pair in PlayerScoreData.ScoreByTag)
@@ -135,5 +170,4 @@ namespace COD.GameLogic
             };
         }
     }
-    
 }

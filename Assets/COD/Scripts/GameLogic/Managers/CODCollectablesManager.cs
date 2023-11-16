@@ -124,12 +124,16 @@ namespace COD.GameLogic
         }
         private void HandleCoin(CODCollectableGraphics collectableGraphics)
         {
-            UpdateScore(ScoreTags.Coin, 1, collectableGraphics.GetScoreValue());
+            int coinValue = collectableGraphics.GetScoreValue();
+            UpdateScore(ScoreTags.Coin, 1, coinValue);
+            CODGameLogicManager.Instance.UpgradeManager.PlayerUpgradeInventoryData.TotalCoins += coinValue;
         }
 
         private void HandleSuperCoin(CODCollectableGraphics collectableGraphics)
         {
-            UpdateScore(ScoreTags.SuperCoin, 1, collectableGraphics.GetScoreValue());
+            int coinValue = collectableGraphics.GetScoreValue();
+            UpdateScore(ScoreTags.SuperCoin, 1, coinValue);
+            CODGameLogicManager.Instance.UpgradeManager.PlayerUpgradeInventoryData.TotalCoins += coinValue;
         }
 
         private void HandleBomb(CODCollectableGraphics collectableGraphics)

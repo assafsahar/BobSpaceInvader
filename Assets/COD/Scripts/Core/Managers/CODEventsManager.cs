@@ -90,6 +90,7 @@ namespace COD.Core
         OnEnergyChanged = 8,
         OnUpgraded = 9,
         RequestScoreUpdate = 10,
-        OnSpeedChange = 11
+        OnSpeedChange = 11,
+        OnDistanceSet = 12
     }
 }

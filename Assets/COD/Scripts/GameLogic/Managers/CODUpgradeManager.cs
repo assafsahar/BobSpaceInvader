@@ -135,9 +135,9 @@ namespace COD.GameLogic
                     {
                         Debug.LogWarning("Trying to access ScoreManager before it's initialized!");
                     }
-                    CODGameLogicManager.Instance.ScoreManager.SetScoreByTag(ScoreTags.Coin, loadedData.TotalCoins);
-                    CODGameLogicManager.Instance.ScoreManager.SetScoreByTag(ScoreTags.SuperCoin, loadedData.TotalSuperCoins);
-                    CODGameLogicManager.Instance.ScoreManager.SetScoreByTag(ScoreTags.MainScore, loadedData.CurrentScore);
+                    CODGameLogicManager.Instance.ScoreManager.ChangeScoreByTagByAmount(ScoreTags.Coin, loadedData.TotalCoins);
+                    CODGameLogicManager.Instance.ScoreManager.ChangeScoreByTagByAmount(ScoreTags.SuperCoin, loadedData.TotalSuperCoins);
+                    CODGameLogicManager.Instance.ScoreManager.ChangeScoreByTagByAmount(ScoreTags.MainScore, loadedData.CurrentScore);
                 }
             });
         }
@@ -224,6 +224,9 @@ namespace COD.GameLogic
         public int TotalCoins;
         public int TotalSuperCoins;
         public int CurrentScore;
+        public int HighestSingleGameScore;
+        public float HighestSingleGameDistance;
+        public float TotalDistance;
     }
 
     [Serializable]

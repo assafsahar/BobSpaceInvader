@@ -8,7 +8,8 @@ namespace COD.Shared
         {
             Coin = 0,
             SuperCoin = 1,
-            MainScore = 2
+            MainScore = 2,
+            Distance = 3
         }
     }
 }
