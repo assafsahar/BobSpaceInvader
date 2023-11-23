@@ -21,7 +21,8 @@ namespace COD.UI
         private void OnEnable()
         {
             AddListener(CODEventNames.OnScoreSet, UpdateScoreDisplay);
-            AddListener(CODEventNames.OnDistanceSet, UpdateDistanceDisplay);
+            //AddListener(CODEventNames.OnDistanceSet, UpdateDistanceDisplay);
+            AddListener(CODEventNames.OnAccumulatedDistanceUpdated, UpdateAccumulatedDistanceDisplay);
             InvokeEvent(CODEventNames.RequestScoreUpdate);
 
         }
@@ -29,9 +30,14 @@ namespace COD.UI
         private void OnDisable()
         {
             RemoveListener(CODEventNames.OnScoreSet, UpdateScoreDisplay);
-            RemoveListener(CODEventNames.OnDistanceSet, UpdateDistanceDisplay);
+            //RemoveListener(CODEventNames.OnDistanceSet, UpdateDistanceDisplay);
         }
 
+
+        private void UpdateAccumulatedDistanceDisplay(object obj)
+        {
+            //Debug.Log("UpdateAccumulatedDistanceDisplay " + obj.ToString());
+        }
 
         private void UpdateScoreDisplay(object data)
         {
@@ -57,10 +63,10 @@ namespace COD.UI
         }
         private void UpdateDistanceDisplay(object data)
         {
-            if (data is int distance)
+            /*if (data is int distance)
             {
                 distanceText.text = $"{distance:F0}"; 
-            }
+            }*/
         }
     }
 }

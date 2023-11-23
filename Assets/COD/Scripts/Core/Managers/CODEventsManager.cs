@@ -91,6 +91,7 @@ namespace COD.Core
         OnUpgraded = 9,
         RequestScoreUpdate = 10,
         OnSpeedChange = 11,
-        OnDistanceSet = 12
+        OnDistanceSet = 12,
+        OnAccumulatedDistanceUpdated = 13
     }
 }

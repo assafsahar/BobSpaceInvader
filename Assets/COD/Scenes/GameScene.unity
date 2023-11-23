@@ -695,6 +695,7 @@ MonoBehaviour:
   initialShipSpeed: 3
   speedIncreaseRate: 0.02
   energyDecreaseInterval: 0.1
+  travelDistancePerFrame: 1
 --- !u!4 &188793647
 Transform:
   m_ObjectHideFlags: 0
@@ -1489,7 +1490,6 @@ GameObject:
   - component: {fileID: 904223716}
   - component: {fileID: 904223718}
   - component: {fileID: 904223717}
-  - component: {fileID: 904223720}
   m_Layer: 6
   m_Name: Ship
   m_TagString: Player
@@ -1682,51 +1682,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 840426fae1c494e4c9b7fa5158d055b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!61 &904223720
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 904223712}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 2.23, y: 2.11}
-    newSize: {x: 2.23, y: 2.11}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 2.23, y: 2.11}
-  m_EdgeRadius: 0
 --- !u!1 &1070402305
 GameObject:
   m_ObjectHideFlags: 0
@@ -2868,7 +2823,7 @@ MonoBehaviour:
   spawnPoint: {fileID: 1140619129}
   minSpawnTime: 0.3
   maxSpawnTime: 0.6
-  minSpawnY: -3.5
+  minSpawnY: -3
   maxSpawnY: 3.5
   initialPoolSize: 20
   maxPoolSize: 50

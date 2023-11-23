@@ -77,7 +77,7 @@ namespace COD.GameLogic
                 currentSpeed = Mathf.Lerp(currentSpeed, targetSpeed, lerpFactor);
                 InvokeEvent(CODEventNames.OnSpeedChange, currentSpeed);
                 distanceTravelledThisGame++;
-                InvokeEvent(CODEventNames.OnDistanceSet, distanceTravelledThisGame);
+                //InvokeEvent(CODEventNames.OnDistanceSet, distanceTravelledThisGame);
                 CODGameLogicManager.Instance.ScoreManager.AddDistance(travelDistancePerFrame);
             }
         }
@@ -121,6 +121,7 @@ namespace COD.GameLogic
         public void EndGame()
         {
             Debug.Log("EndGame CurrentState=" + CurrentState);
+            DisplayHighScoresAndDistance();
             if (CurrentState == GameState.Playing || CurrentState == GameState.Falling)
             {
                 // Game ended, do cleanup or show relevant UI
@@ -138,6 +139,16 @@ namespace COD.GameLogic
 
                 CODGameLogicManager.Instance.ScoreManager.CalculateScore();
             }
+        }
+        public void DisplayHighScoresAndDistance()
+        {
+            var scoreManager = CODGameLogicManager.Instance.ScoreManager;
+
+            int highestScore = scoreManager.GetHighestScore(ScoreTags.MainScore);
+            int longestDistance = scoreManager.GetHighestScore(ScoreTags.Distance);
+
+            Debug.Log($"Highest Score: {highestScore}");
+            Debug.Log($"Longest Distance: {longestDistance}");
         }
         public void ChangeToFallState()
         {

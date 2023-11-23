@@ -47,13 +47,17 @@ namespace COD.GameLogic
                 CODManager.Instance.EventsManager.InvokeEvent(CODEventNames.OnScoreSet, (ScoreTags.Coin, PlayerUpgradeInventoryData.TotalCoins));
                 CODManager.Instance.EventsManager.InvokeEvent(CODEventNames.OnScoreSet, (ScoreTags.SuperCoin, PlayerUpgradeInventoryData.TotalSuperCoins));
                 CODManager.Instance.EventsManager.InvokeEvent(CODEventNames.OnScoreSet, (ScoreTags.MainScore, PlayerUpgradeInventoryData.CurrentScore));
+                CODManager.Instance.EventsManager.InvokeEvent(CODEventNames.OnScoreSet, (ScoreTags.Distance, PlayerUpgradeInventoryData.TotalDistance));
                 //CODGameLogicManager.Instance.ScoreManager.SetScoreByTag(ScoreTags.Coin, PlayerUpgradeInventoryData.TotalCoins);
                 //CODGameLogicManager.Instance.ScoreManager.SetScoreByTag(ScoreTags.MainScore, PlayerUpgradeInventoryData.CurrentScore);
-
+                CODManager.Instance.EventsManager.AddListener(CODEventNames.OnAccumulatedDistanceUpdated, UpdateAccumulatedDistance);
             });
         }
+        ~CODUpgradeManager()
+        {
+            CODManager.Instance.EventsManager.RemoveListener(CODEventNames.OnAccumulatedDistanceUpdated, UpdateAccumulatedDistance);
+        }
 
-        
         public bool CanMakeUpgrade(UpgradeablesTypeID typeID)
         {
             return UpgradeItemByID(typeID, false);
@@ -100,6 +104,7 @@ namespace COD.GameLogic
             int coinScore = 0;
             int superCoinScore = 0;
             int mainScore = 0;
+            int distance = 0;
 
             if (!CODGameLogicManager.Instance.ScoreManager.IsInitialized)
             {
@@ -118,8 +123,13 @@ namespace COD.GameLogic
             {
                 PlayerUpgradeInventoryData.CurrentScore = mainScore;
             }
+            if (CODGameLogicManager.Instance.ScoreManager.TryGetScoreByTag(ScoreTags.Distance, ref distance))
+            {
+                PlayerUpgradeInventoryData.TotalDistance = distance;
+            }
 
             CODManager.Instance.SaveManager.Save(PlayerUpgradeInventoryData);
+            CODManager.Instance.SaveManager.Save(CODGameLogicManager.Instance.ScoreManager.PlayerScoreData);
         }
         public void LoadPlayerData()
         {
@@ -140,8 +150,30 @@ namespace COD.GameLogic
                     CODGameLogicManager.Instance.ScoreManager.ChangeScoreByTagByAmount(ScoreTags.MainScore, loadedData.CurrentScore);
                 }
             });
+            CODManager.Instance.SaveManager.Load<CODPlayerScoreData>(loadedData =>
+            {
+                if (loadedData != null)
+                {
+                    // Update the CODScoreManager's data with the loaded data
+                    CODGameLogicManager.Instance.ScoreManager.PlayerScoreData = loadedData;
+                }
+                else
+                {
+                    // Handle the case where there is no saved score data
+                    // Possibly set PlayerScoreData to a new instance or default values
+                }
+            });
         }
 
+        private void UpdateAccumulatedDistance(object data)
+        {
+            if (data is float distance)
+            {
+                PlayerUpgradeInventoryData.TotalDistance = distance;
+                // Optionally save the data here or elsewhere depending on when you want the data to persist
+                CODManager.Instance.SaveManager.Save(PlayerUpgradeInventoryData);
+            }
+        }
         private bool TryTheUpgrade(UpgradeablesTypeID typeID, bool makeTheUpgrade, CODUpgradeableData upgradeable)
         {
             var upgradeableConfig = GetCodUpgradeableConfigByID(typeID);

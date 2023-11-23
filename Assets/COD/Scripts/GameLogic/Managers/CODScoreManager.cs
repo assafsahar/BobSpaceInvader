@@ -15,9 +15,6 @@ namespace COD.GameLogic
         public bool IsInitialized { get; private set; } = false;
         public CODPlayerScoreData PlayerScoreData = new();
         private CODPlayerScoreData initialScoreData;
-        private float highestDistanceAchieved = 0;
-        private float totalDistanceTravelled = 0;
-        private int highestScoreAchieved = 0;
         public CODScoreManager()
         {
             CODManager.Instance.EventsManager.AddListener(CODEventNames.RequestScoreUpdate, PushCurrentScores);
@@ -49,18 +46,20 @@ namespace COD.GameLogic
 
         public void SetScoreByTag(ScoreTags tag, int amount = 0)
         {
-            CODManager.Instance.EventsManager.InvokeEvent(CODEventNames.OnScoreSet, (tag, amount));
             PlayerScoreData.ScoreByTag[tag] = amount;
+            UpdateHighestScore(tag, amount);
+            NotifyScoreChange(tag, amount);
             //Debug.Log($"Score for {tag} set to: {amount}");
             //CODManager.Instance.SaveManager.Save(PlayerScoreData);
         }
 
         public void AddScoreByTag(ScoreTags tag, int amount = 0)
         {
-            var score = 0;
+            int currentScore = GetCurrentScore(tag);
+            var score = currentScore + amount;
             if (TryGetScoreByTag(tag, ref score))
             {
-                SetScoreByTag(tag, score + amount);
+                SetScoreByTag(tag, score);
             }
         }
 
@@ -114,10 +113,10 @@ namespace COD.GameLogic
         }
         public void AddDistance(int distance)
         {
-            totalDistanceTravelled += distance;
+            PlayerScoreData.AccumulatedDistance += distance;
             ChangeScoreByTagByAmount(ScoreTags.Distance, distance);
             ChangeScoreByTagByAmount(ScoreTags.MainScore, distance);
-            //highestDistanceAchieved = Mathf.Max(highestDistanceAchieved, totalDistanceTravelled);
+            NotifyAccumulatedDistanceChange(PlayerScoreData.AccumulatedDistance);
         }
         public int GetCurrentDistance()
         {
@@ -126,7 +125,6 @@ namespace COD.GameLogic
         public void CalculateScore()
         {
             int score = GetCurrentScore(ScoreTags.MainScore) + GetCurrentDistance(); // Modify this formula as needed.
-            highestScoreAchieved = Mathf.Max(highestScoreAchieved, score);
         }
         public void ResetGameScores()
         {
@@ -134,7 +132,34 @@ namespace COD.GameLogic
             SetScoreByTag(ScoreTags.Distance, 0);
             // Reset any other scores as needed
         }
+        public int GetHighestScore(ScoreTags tag)
+        {
+            return PlayerScoreData.HighestScoresByTag.TryGetValue(tag, out var highestScore) ? highestScore : 0;
+        }
+        public void ResetCurrentScores()
+        {
+            foreach (var tag in Enum.GetValues(typeof(ScoreTags)))
+            {
+                SetScoreByTag((ScoreTags)tag, 0);
+            }
+        }
 
+        private void NotifyAccumulatedDistanceChange(float newDistance)
+        {
+            CODManager.Instance.EventsManager.InvokeEvent(CODEventNames.OnAccumulatedDistanceUpdated, newDistance);
+        }
+        private void UpdateHighestScore(ScoreTags tag, int newScore)
+        {
+            if (!PlayerScoreData.HighestScoresByTag.ContainsKey(tag) || PlayerScoreData.HighestScoresByTag[tag] < newScore)
+            {
+                PlayerScoreData.HighestScoresByTag[tag] = newScore;
+            }
+        }
+        private void NotifyScoreChange(ScoreTags tag, int newScore)
+        {
+            CODManager.Instance.EventsManager.InvokeEvent(CODEventNames.OnScoreSet, (tag, newScore));
+        }
+        
         private void PushCurrentScores(object unused)
         {
             foreach (var pair in PlayerScoreData.ScoreByTag)
@@ -162,11 +187,15 @@ namespace COD.GameLogic
     public class CODPlayerScoreData : ICODSaveData
     {
         public Dictionary<ScoreTags, int> ScoreByTag = new();
+        public Dictionary<ScoreTags, int> HighestScoresByTag = new();
+        public float AccumulatedDistance { get; set; }
         public CODPlayerScoreData Clone()
         {
             return new CODPlayerScoreData
             {
-                ScoreByTag = new Dictionary<ScoreTags, int>(this.ScoreByTag)
+                ScoreByTag = new Dictionary<ScoreTags, int>(this.ScoreByTag),
+                HighestScoresByTag = new Dictionary<ScoreTags, int>(this.ScoreByTag),
+                AccumulatedDistance = this.AccumulatedDistance
             };
         }
     }

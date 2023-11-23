@@ -27,17 +27,33 @@ namespace COD.GameLogic
         [SerializeField]
         private List<WeightedCollectable> weightedCollectables = new List<WeightedCollectable>();
 
+        private float originalMinSpawnTime;
+        private float originalMaxSpawnTime;
+        private float initialShipSpeed;
+
         private float nextSpawnTime;
         private List<CODCollectableGraphics> activeCollectables = new List<CODCollectableGraphics>();
         private Dictionary<CollectableType, Action<CODCollectableGraphics>> collectableHandlers;
 
         private void Start()
         {
+            originalMinSpawnTime = minSpawnTime;
+            originalMaxSpawnTime = maxSpawnTime;
+            initialShipSpeed = 5f;
+
             CODManager.Instance.PoolManager.InitPool(prefab, initialPoolSize, maxPoolSize);
             InitCollectableHandlers();
             StartCoroutine(SpawnRoutine());
         }
 
+        private void OnEnable()
+        {
+            AddListener(CODEventNames.OnSpeedChange, AdjustSpawnRate);
+        }
+        private void OnDisable()
+        {
+            RemoveListener(CODEventNames.OnSpeedChange, AdjustSpawnRate);
+        }
         public CODCollectableGraphics SpawnCollectable(CollectableType type)
         {
             ICollectable collectable = new CODCollectable(type);
@@ -50,6 +66,19 @@ namespace COD.GameLogic
             instance.Initialize(collectable);
             activeCollectables.Add(instance);
             return instance;
+        }
+        private void AdjustSpawnRate(object speedObject)
+        {
+            if (speedObject is float speed)
+            {
+                float speedFactor = speed / initialShipSpeed;
+
+                // The higher the speedFactor, the shorter the spawn time
+                minSpawnTime = Mathf.Max(originalMinSpawnTime / speedFactor, 0.05f); 
+                maxSpawnTime = Mathf.Max(originalMaxSpawnTime / speedFactor, 0.3f); 
+
+                Debug.Log($"Updated spawn times - Min: {minSpawnTime}, Max: {maxSpawnTime}");
+            }
         }
         private void InitCollectableHandlers()
         {
