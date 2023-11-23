@@ -1,5 +1,4 @@
 using COD.Core;
-using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -17,6 +16,7 @@ namespace COD.GameLogic
         [SerializeField] float speedIncreaseRate = 0.1f;
         [SerializeField] float energyDecreaseInterval = 0.4f;
         [SerializeField] int travelDistancePerFrame = 1;
+        [SerializeField] private InputManager inputManager;
 
         private float currentSpeed;
         private float targetSpeed;
@@ -94,7 +94,8 @@ namespace COD.GameLogic
             {
                 energyManager.ResetEnergy();
                 distanceTravelledThisGame = 0;
-                CurrentState = GameState.Playing;
+                
+                ChangeGameState(GameState.Playing);
 
                 // Load player data and update UI
                 CODGameLogicManager.Instance.UpgradeManager.LoadPlayerData();
@@ -110,7 +111,7 @@ namespace COD.GameLogic
             if (CurrentState == GameState.Playing)
             {
                 Time.timeScale = 0;
-                CurrentState = GameState.Paused;
+                ChangeGameState(GameState.Paused); 
             }
         }
 
@@ -119,14 +120,18 @@ namespace COD.GameLogic
             if (CurrentState == GameState.Paused)
             {
                 Time.timeScale = 1;
-                CurrentState = GameState.Playing;
+                ChangeGameState(GameState.Playing);
             }
         }
 
         public void EndGame()
         {
             Debug.Log("EndGame CurrentState=" + CurrentState);
-            DisplayHighScoresAndDistance();
+            if (inputManager != null)
+            {
+                inputManager.EnableInput(false);
+            }
+            //DisplayHighScoresAndDistance();
             if (CurrentState == GameState.Playing || CurrentState == GameState.Falling)
             {
                 // Game ended, do cleanup or show relevant UI
@@ -137,13 +142,31 @@ namespace COD.GameLogic
 
                 //CODManager.Instance.EventsManager.StartListeningToSceneLoaded();
 
-                // Reload the current scene
-                string currentSceneName = SceneManager.GetActiveScene().name;
-                SceneManager.LoadScene(currentSceneName);
-                CurrentState = GameState.Ended;
+                /*string currentSceneName = SceneManager.GetActiveScene().name;
+                SceneManager.LoadScene(currentSceneName);*/
+                ChangeGameState(GameState.Ended);
 
-                CODGameLogicManager.Instance.ScoreManager.CalculateScore();
+                //CODGameLogicManager.Instance.ScoreManager.CalculateScore();
+
+                StartCoroutine(EndGameRoutine());
             }
+        }
+        private IEnumerator EndGameRoutine()
+        {
+            DisplayHighScoresAndDistance();
+
+            // Wait for 1 second before restarting
+            yield return new WaitForSeconds(1f);
+            if (inputManager != null)
+            {
+                inputManager.EnableInput(true);
+            }
+            string currentSceneName = SceneManager.GetActiveScene().name;
+            SceneManager.LoadScene(currentSceneName);
+
+            CODGameLogicManager.Instance.ScoreManager.CalculateScore();
+
+
         }
         public void DisplayHighScoresAndDistance()
         {
@@ -159,7 +182,15 @@ namespace COD.GameLogic
         {
             if (CurrentState == GameState.Playing)
             {
-                CurrentState = GameState.Falling;
+                ChangeGameState(GameState.Falling);
+            }
+        }
+        public void ChangeGameState(GameState newState)
+        {
+            if (_currentState != newState)
+            {
+                _currentState = newState;
+                InvokeEvent(CODEventNames.OnGameStateChange, newState);
             }
         }
         private IEnumerator StartWhenReady()

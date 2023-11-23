@@ -696,6 +696,7 @@ MonoBehaviour:
   speedIncreaseRate: 0.02
   energyDecreaseInterval: 0.1
   travelDistancePerFrame: 1
+  inputManager: {fileID: 1070402307}
 --- !u!4 &188793647
 Transform:
   m_ObjectHideFlags: 0

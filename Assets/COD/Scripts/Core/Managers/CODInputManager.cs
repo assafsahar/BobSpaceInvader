@@ -10,12 +10,17 @@ namespace COD.Core
     public class InputManager : CODMonoBehaviour
     {
         private Vector2 startPos;
+        private bool inputEnabled = true;
 
         private void Update()
         {
+            if (!inputEnabled) return;
             HandleInput();
         }
-
+        public void EnableInput(bool enable)
+        {
+            inputEnabled = enable;
+        }
         private void HandleInput()
         {
             if (Input.GetMouseButtonDown(0))

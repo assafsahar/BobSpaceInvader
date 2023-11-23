@@ -92,6 +92,7 @@ namespace COD.Core
         RequestScoreUpdate = 10,
         OnSpeedChange = 11,
         OnDistanceSet = 12,
-        OnAccumulatedDistanceUpdated = 13
+        OnAccumulatedDistanceUpdated = 13,
+        OnGameStateChange = 14
     }
 }

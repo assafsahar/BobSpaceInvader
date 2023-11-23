@@ -6,6 +6,7 @@ using COD.Shared;
 using System;
 using static COD.Shared.GameEnums;
 using System.Collections;
+using static COD.GameLogic.CODGameFlowManager;
 
 namespace COD.GameLogic
 {
@@ -30,7 +31,7 @@ namespace COD.GameLogic
         private float originalMinSpawnTime;
         private float originalMaxSpawnTime;
         private float initialShipSpeed;
-
+        private GameState currentGameState;
         private float nextSpawnTime;
         private List<CODCollectableGraphics> activeCollectables = new List<CODCollectableGraphics>();
         private Dictionary<CollectableType, Action<CODCollectableGraphics>> collectableHandlers;
@@ -49,10 +50,12 @@ namespace COD.GameLogic
         private void OnEnable()
         {
             AddListener(CODEventNames.OnSpeedChange, AdjustSpawnRate);
+            AddListener(CODEventNames.OnGameStateChange, UpdateGameState);
         }
         private void OnDisable()
         {
             RemoveListener(CODEventNames.OnSpeedChange, AdjustSpawnRate);
+            RemoveListener(CODEventNames.OnGameStateChange, UpdateGameState);
         }
         public CODCollectableGraphics SpawnCollectable(CollectableType type)
         {
@@ -66,6 +69,13 @@ namespace COD.GameLogic
             instance.Initialize(collectable);
             activeCollectables.Add(instance);
             return instance;
+        }
+        private void UpdateGameState(object gameStateObj)
+        {
+            if (gameStateObj is GameState gameState)
+            {
+                currentGameState = gameState;
+            }
         }
         private void AdjustSpawnRate(object speedObject)
         {
@@ -96,7 +106,10 @@ namespace COD.GameLogic
             while (true)
             {
                 yield return new WaitForSeconds(UnityEngine.Random.Range(minSpawnTime, maxSpawnTime));
-                SpawnRandomCollectable();
+                if (currentGameState == GameState.Playing)
+                {
+                    SpawnRandomCollectable();
+                }
             }
         }
 

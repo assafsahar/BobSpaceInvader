@@ -124,7 +124,7 @@ namespace COD.GameLogic
         }
         public void CalculateScore()
         {
-            int score = GetCurrentScore(ScoreTags.MainScore) + GetCurrentDistance(); // Modify this formula as needed.
+            int score = GetCurrentScore(ScoreTags.MainScore) + GetCurrentDistance(); 
         }
         public void ResetGameScores()
         {

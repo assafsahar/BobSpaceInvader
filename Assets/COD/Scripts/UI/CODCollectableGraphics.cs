@@ -1,6 +1,5 @@
 using COD.Core;
 using COD.Shared;
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -57,6 +56,15 @@ namespace COD.UI
             leftBoundaryX = leftScreenBoundary.x;
             leftBoundaryX -= offset;
         }
+        private void Update()
+        {
+            Vector3 leftMovement = Vector3.left * (speed * Time.deltaTime);
+            transform.position += leftMovement;
+            if (transform.position.x < leftBoundaryX)
+            {
+                OutOfBounds();
+            }
+        }
         public void Initialize(ICollectable collectable)
         {
             this.collectable = collectable;
@@ -83,16 +91,16 @@ namespace COD.UI
             return 0; // default value if there's an issue
         }
 
-        private void Update()
+        
+        public override void OnTakenFromPool()
         {
-            Vector3 leftMovement = Vector3.left * (speed * Time.deltaTime);
-            transform.position += leftMovement;
-            if (transform.position.x < leftBoundaryX)
-            {
-                OutOfBounds();
-            }
+            base.OnTakenFromPool();
+            ResetCollectableState();
         }
-
+        private void ResetCollectableState()
+        {
+            gameObject.SetActive(true);
+        }
         private void UpdateSpeed(object obj)
         {
             speed = (float)obj;
