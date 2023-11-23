@@ -77,7 +77,7 @@ namespace COD.GameLogic
                 minSpawnTime = Mathf.Max(originalMinSpawnTime / speedFactor, 0.05f); 
                 maxSpawnTime = Mathf.Max(originalMaxSpawnTime / speedFactor, 0.3f); 
 
-                Debug.Log($"Updated spawn times - Min: {minSpawnTime}, Max: {maxSpawnTime}");
+                //Debug.Log($"Updated spawn times - Min: {minSpawnTime}, Max: {maxSpawnTime}");
             }
         }
         private void InitCollectableHandlers()

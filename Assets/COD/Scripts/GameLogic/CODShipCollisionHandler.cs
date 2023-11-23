@@ -17,7 +17,7 @@ namespace COD.GameLogic
     {
         private void OnTriggerEnter2D(Collider2D other)
         {
-            if (other.CompareTag("BackgroundFront") && CODGameLogicManager.Instance.GameFlowManager.CurrentState != GameState.Falling)
+            if (other.CompareTag("BackgroundFront"))
             {
                 // Handle the game end condition here.
                 Debug.Log("End");

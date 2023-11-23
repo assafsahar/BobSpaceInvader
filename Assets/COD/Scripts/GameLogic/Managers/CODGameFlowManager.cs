@@ -94,11 +94,11 @@ namespace COD.GameLogic
             {
                 energyManager.ResetEnergy();
                 distanceTravelledThisGame = 0;
-                CODGameLogicManager.Instance.ScoreManager.ResetGameScores();
                 CurrentState = GameState.Playing;
 
                 // Load player data and update UI
                 CODGameLogicManager.Instance.UpgradeManager.LoadPlayerData();
+                CODGameLogicManager.Instance.ScoreManager.ResetGameScores();
                 InvokeEvent(CODEventNames.RequestScoreUpdate);
 
                 StartCoroutine(EnergyUpdateRoutine());
