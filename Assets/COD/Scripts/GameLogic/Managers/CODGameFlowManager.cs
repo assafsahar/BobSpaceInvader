@@ -25,10 +25,12 @@ namespace COD.GameLogic
         private CODEnergyManager energyManager;
         private GameState _currentState;
         private int distanceTravelledThisGame = 0;
-        
+        private CODStartScreenController startScreenController;
+
 
         public enum GameState
         {
+            WaitingToStart,
             Start,
             Playing,
             Paused,
@@ -63,15 +65,18 @@ namespace COD.GameLogic
         {
             energyManager = CODGameLogicManager.Instance.EnergyManager;
             targetSpeed = currentSpeed = initialShipSpeed;
+            startScreenController = FindObjectOfType<CODStartScreenController>();
         }
         private void Start()
         {
-            CurrentState = GameState.Start;
+            CurrentState = GameState.WaitingToStart;
+            startScreenController.ShowStartScreen();
             StartCoroutine(StartWhenReady());
         }
 
         private void Update()
         {
+            Debug.Log($"[CODGameFlowManager] Update called. CurrentState: {CurrentState}");
             if (CurrentState == GameState.Playing)
             {
                 currentSpeed = Mathf.Lerp(currentSpeed, targetSpeed, lerpFactor);
@@ -84,26 +89,20 @@ namespace COD.GameLogic
 
         public void StartGame()
         {
-            Debug.Log("StartGame");
-            if (CurrentState == GameState.Playing)
-            {
-                Debug.LogWarning("Attempting to start the game when it's already playing.");
+            if (CurrentState != GameState.WaitingToStart)
                 return;
-            }
-            if (CurrentState == GameState.Start || CurrentState == GameState.Ended)
-            {
-                energyManager.ResetEnergy();
-                distanceTravelledThisGame = 0;
-                
-                ChangeGameState(GameState.Playing);
 
-                // Load player data and update UI
-                CODGameLogicManager.Instance.UpgradeManager.LoadPlayerData();
-                CODGameLogicManager.Instance.ScoreManager.ResetGameScores();
-                InvokeEvent(CODEventNames.RequestScoreUpdate);
+            Debug.Log("[CODGameFlowManager] StartGame called. CurrentState: " + CurrentState);
+            ChangeGameState(GameState.Playing);
 
-                StartCoroutine(EnergyUpdateRoutine());
-            }
+            energyManager.ResetEnergy();
+            distanceTravelledThisGame = 0;
+
+            // Load player data and update UI
+            CODGameLogicManager.Instance.UpgradeManager.LoadPlayerData();
+            CODGameLogicManager.Instance.ScoreManager.ResetGameScores();
+            InvokeEvent(CODEventNames.RequestScoreUpdate);
+            StartCoroutine(EnergyUpdateRoutine());
         }
 
         public void PauseGame()
@@ -150,6 +149,11 @@ namespace COD.GameLogic
 
                 StartCoroutine(EndGameRoutine());
             }
+            if (startScreenController != null)
+            {
+                startScreenController.ShowStartScreen();
+            }
+            ChangeGameState(GameState.WaitingToStart);
         }
         private IEnumerator EndGameRoutine()
         {
@@ -187,6 +191,7 @@ namespace COD.GameLogic
         }
         public void ChangeGameState(GameState newState)
         {
+            Debug.Log($"[CODGameFlowManager] ChangeGameState from {_currentState} to {newState}");
             if (_currentState != newState)
             {
                 _currentState = newState;
@@ -199,8 +204,6 @@ namespace COD.GameLogic
             {
                 yield return null;  
             }
-
-            StartGame();
         }
 
         private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
