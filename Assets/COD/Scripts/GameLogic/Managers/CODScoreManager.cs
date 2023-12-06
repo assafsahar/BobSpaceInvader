@@ -111,11 +111,12 @@ namespace COD.GameLogic
                 CODManager.Instance.EventsManager.InvokeEvent(CODEventNames.OnScoreSet, (pair.Key, pair.Value));
             }
         }
-        public void AddDistance(int distance)
+        public void AddDistance(float distance)
         {
+            int intDistance = (int)Math.Round(distance);
             PlayerScoreData.AccumulatedDistance += distance;
-            ChangeScoreByTagByAmount(ScoreTags.Distance, distance);
-            ChangeScoreByTagByAmount(ScoreTags.MainScore, distance);
+            ChangeScoreByTagByAmount(ScoreTags.Distance, intDistance);
+            ChangeScoreByTagByAmount(ScoreTags.MainScore, intDistance);
             NotifyAccumulatedDistanceChange(PlayerScoreData.AccumulatedDistance);
         }
         public int GetCurrentDistance()

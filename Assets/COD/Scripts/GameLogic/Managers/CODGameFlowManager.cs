@@ -15,17 +15,18 @@ namespace COD.GameLogic
         [SerializeField] float initialShipSpeed = 5f;
         [SerializeField] float speedIncreaseRate = 0.1f;
         [SerializeField] float energyDecreaseInterval = 0.4f;
-        [SerializeField] int travelDistancePerFrame = 1;
+        [SerializeField] float travelDistancePerFrame = 0.5f;
         [SerializeField] private InputManager inputManager;
 
         private float currentSpeed;
         private float targetSpeed;
         private float lerpFactor = 0.01f;
-        private const string GameSceneName = "GameScene";
         private CODEnergyManager energyManager;
         private GameState _currentState;
-        private int distanceTravelledThisGame = 0;
+        private float distanceTravelledThisGame = 0;
         private CODStartScreenController startScreenController;
+        private float distanceUpdateInterval = 0.5f;
+        private float distanceUpdateTimer = 0f;
 
 
         public enum GameState
@@ -81,9 +82,16 @@ namespace COD.GameLogic
             {
                 currentSpeed = Mathf.Lerp(currentSpeed, targetSpeed, lerpFactor);
                 InvokeEvent(CODEventNames.OnSpeedChange, currentSpeed);
-                distanceTravelledThisGame++;
-                //InvokeEvent(CODEventNames.OnDistanceSet, distanceTravelledThisGame);
-                CODGameLogicManager.Instance.ScoreManager.AddDistance(travelDistancePerFrame);
+                distanceUpdateTimer += Time.deltaTime;
+                if (distanceUpdateTimer >= distanceUpdateInterval)
+                {
+                    float distanceIncrement = travelDistancePerFrame * (currentSpeed / initialShipSpeed);
+                    distanceTravelledThisGame += distanceIncrement;
+                    //InvokeEvent(CODEventNames.OnDistanceSet, distanceTravelledThisGame);
+                    CODGameLogicManager.Instance.ScoreManager.AddDistance(distanceIncrement);
+                    distanceUpdateTimer = 0f;
+                    Debug.Log("distanceIncrement=" + distanceIncrement);
+                }
             }
         }
 

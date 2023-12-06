@@ -23,11 +23,11 @@ namespace COD.GameLogic
             switch (type)
             {
                 case CollectableType.Coin:
-                    ScoreValue = 10;
+                    ScoreValue = 1;
                     EnergyValue = 0;
                     break;
                 case CollectableType.SuperCoin:
-                    ScoreValue = 50;
+                    ScoreValue = 5;
                     EnergyValue = 0;
                     break;
                 case CollectableType.Bomb:

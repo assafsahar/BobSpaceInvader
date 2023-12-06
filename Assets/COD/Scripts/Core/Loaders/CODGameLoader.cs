@@ -14,7 +14,7 @@ namespace COD.Core
         private void Start()
         {
             loadbarComponent.SetTargetAmount(20);
-            WaitForSeconds(0.1f, DelayStart);
+            WaitForSeconds(1f, DelayStart);
         }
 
         private void DelayStart()
@@ -24,16 +24,20 @@ namespace COD.Core
             manager.LoadManager(() =>
             {
                 Debug.Log("LoadManager");
-                WaitForSeconds(0.1f, () =>
+                WaitForSeconds(2f, () =>
                 {
                     loadbarComponent.SetTargetAmount(98);
                     gameLogicLoader.StartLoad(() =>
                     {
-                        WaitForSeconds(0.1f, () =>
+                        WaitForSeconds(0.5f, () =>
                         {
                             loadbarComponent.SetTargetAmount(100);
-                            SceneManager.LoadScene(1);
-                            Destroy(this.gameObject);
+                            WaitForSeconds(0.5f, () =>
+                            {
+                                SceneManager.LoadScene(1);
+                                Destroy(this.gameObject);
+                            });
+                               
                         });
                     });
                 });
