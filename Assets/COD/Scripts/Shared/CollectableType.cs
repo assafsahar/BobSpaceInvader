@@ -10,7 +10,8 @@ namespace COD.Shared
         Coin = 1,
         Energy = 2,
         Bomb = 3,
-        SuperCoin = 4
+        SuperCoin = 4,
+        Shield = 5
         
     }
 }

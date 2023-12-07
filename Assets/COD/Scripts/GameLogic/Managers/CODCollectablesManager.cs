@@ -28,6 +28,7 @@ namespace COD.GameLogic
         [SerializeField]
         private List<WeightedCollectable> weightedCollectables = new List<WeightedCollectable>();
 
+        private ShipController shipController;
         private float originalMinSpawnTime;
         private float originalMaxSpawnTime;
         private float initialShipSpeed;
@@ -38,6 +39,11 @@ namespace COD.GameLogic
 
         private void Start()
         {
+            shipController = FindObjectOfType<ShipController>();
+            if (shipController == null)
+            {
+                Debug.LogError("ShipController not found in scene!");
+            }
             originalMinSpawnTime = minSpawnTime;
             originalMaxSpawnTime = maxSpawnTime;
             initialShipSpeed = 5f;
@@ -97,7 +103,8 @@ namespace COD.GameLogic
                 { CollectableType.Coin, HandleCoin },
                 { CollectableType.SuperCoin, HandleSuperCoin },
                 { CollectableType.Bomb, HandleBomb },
-                { CollectableType.Energy, HandleEnergy }
+                { CollectableType.Energy, HandleEnergy },
+                { CollectableType.Shield, HandleShield }
             };
         }
 
@@ -180,12 +187,20 @@ namespace COD.GameLogic
 
         private void HandleBomb(CODCollectableGraphics collectableGraphics)
         {
-            CODGameLogicManager.Instance.GameFlowManager.EndGame();
+            if (!shipController.IsShieldActive)
+            {
+                CODGameLogicManager.Instance.GameFlowManager.EndGame();
+            }
         }
         private void HandleEnergy(CODCollectableGraphics collectableGraphics)
         {
             float energyAmount = collectableGraphics.GetEnergyValue();
             CODGameLogicManager.Instance.EnergyManager.AddEnergy(energyAmount);
+        }
+        private void HandleShield(CODCollectableGraphics collectableGraphics)
+        {
+            // Logic to make the ship invincible
+            InvokeEvent(CODEventNames.OnShieldActivated);
         }
 
         private void UpdateScore(ScoreTags tag, int count, int scoreValue)

@@ -38,6 +38,10 @@ namespace COD.GameLogic
                     ScoreValue = 0;
                     EnergyValue = currentEnergyValue;
                     break;
+                case CollectableType.Shield:
+                    ScoreValue = 0;
+                    EnergyValue = 0;
+                    break;
                 default:
                     ScoreValue = 0;
                     break;

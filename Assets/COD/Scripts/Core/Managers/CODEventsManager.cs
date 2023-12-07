@@ -93,6 +93,7 @@ namespace COD.Core
         OnSpeedChange = 11,
         OnDistanceSet = 12,
         OnAccumulatedDistanceUpdated = 13,
-        OnGameStateChange = 14
+        OnGameStateChange = 14,
+        OnShieldActivated = 15
     }
 }

@@ -15,10 +15,20 @@ namespace COD.GameLogic
     /// </summary>
     public class CODShipCollisionHandler : CODMonoBehaviour
     {
+        private ShipController shipController;
+
+        private void Start()
+        {
+            shipController = GetComponent<ShipController>();
+        }
         private void OnTriggerEnter2D(Collider2D other)
         {
             if (other.CompareTag("BackgroundFront"))
             {
+                if (shipController.IsShieldActive)
+                {
+                    return;
+                }
                 // Handle the game end condition here.
                 Debug.Log("End");
                 CODGameLogicManager.Instance.GameFlowManager.EndGame();

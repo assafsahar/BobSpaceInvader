@@ -3103,6 +3103,8 @@ MonoBehaviour:
     weight: 2
   - collectableType: 2
     weight: 4
+  - collectableType: 5
+    weight: 3
 --- !u!4 &2058841809
 Transform:
   m_ObjectHideFlags: 0

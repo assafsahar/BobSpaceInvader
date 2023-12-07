@@ -2,6 +2,7 @@ using UnityEngine;
 using COD.Core;
 using COD.UI;
 using static COD.GameLogic.CODGameFlowManager;
+using System.Collections;
 
 namespace COD.GameLogic
 {
@@ -18,11 +19,22 @@ namespace COD.GameLogic
         [SerializeField] private float upperLimit;
         [SerializeField] private float lowerLimit;
         [SerializeField] private float stateChangeThreshold = 0.05f;
+        [SerializeField] private float shieldDuration = 5.0f;
+        [SerializeField] private float blinkStart = 1f;
+        [SerializeField] private float blinkInterval = 0.2f;
+
+        public bool IsShieldActive => isShieldActive;
 
         private float stillnessDuration = 0.2f;  // Adjust based on your preference. Represents the time of stillness before changing to straight state.
         private float currentStillnessTime = 0f;
         private float fallingRotationSpeed = 50f;
+        public bool isShieldActive = false;
+        private SpriteRenderer shipRenderer;
 
+        private void Awake()
+        {
+            shipRenderer = GetComponent<SpriteRenderer>();
+        }
         private void Start()
         {
             shipGraphics.InitializeShip(upperLimit, lowerLimit);
@@ -32,6 +44,7 @@ namespace COD.GameLogic
             AddListener(CODEventNames.OnTouchStarted, OnTouchStarted);
             AddListener(CODEventNames.OnTouchStayed, OnTouchStayed);
             AddListener(CODEventNames.OnTouchEnded, OnTouchEnded);
+            AddListener(CODEventNames.OnShieldActivated, ActivateShield);
         }
 
         private void OnDisable()
@@ -39,6 +52,7 @@ namespace COD.GameLogic
             RemoveListener(CODEventNames.OnTouchStarted, OnTouchStarted);
             RemoveListener(CODEventNames.OnTouchStayed, OnTouchStayed);
             RemoveListener(CODEventNames.OnTouchEnded, OnTouchEnded);
+            RemoveListener(CODEventNames.OnShieldActivated, ActivateShield);
         }
 
         private void Update()
@@ -50,7 +64,51 @@ namespace COD.GameLogic
             }
         }
 
-        void FallDown()
+        private void ActivateShield(object unused)
+        {
+            if (isShieldActive) return;
+
+            isShieldActive = true;
+            StartCoroutine(ShieldRoutine());
+            UpdateShipAppearanceForShield(true); // Implement this method to change the ship's appearance
+        }
+        private IEnumerator ShieldRoutine()
+        {
+            // Invincibility period before blinking starts
+            yield return new WaitForSeconds(shieldDuration - blinkStart);
+
+            // Blinking effect
+            float endTime = Time.time + blinkStart;
+            while (Time.time < endTime)
+            {
+                shipRenderer.enabled = !shipRenderer.enabled;
+                yield return new WaitForSeconds(blinkInterval);
+            }
+
+            // End of shield
+            shipRenderer.enabled = true;
+            isShieldActive = false;
+            UpdateShipAppearanceForShield(false); // Revert ship's appearance
+        }
+        
+        private void UpdateShipAppearanceForShield(bool isShieldActive)
+        {
+            // Example: Change the color of the ship to indicate the shield is active
+            if (isShieldActive)
+            {
+                shipGraphics.GetComponent<SpriteRenderer>().color = Color.blue; // Example: Blue for shield active
+            }
+            else
+            {
+                shipGraphics.GetComponent<SpriteRenderer>().color = Color.white; // Default color
+            }
+
+            // If you have a specific visual effect for the shield, you can enable/disable it here
+            // Example:
+            // shieldEffect.SetActive(isShieldActive);
+        }
+
+        private void FallDown()
         {
             float fallDistance = -Time.deltaTime * verticalSpeed;
             Vector3 newShipPosition = transform.position + new Vector3(0, fallDistance, 0);
