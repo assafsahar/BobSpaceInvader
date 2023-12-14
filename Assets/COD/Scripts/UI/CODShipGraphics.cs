@@ -14,13 +14,17 @@ namespace COD.UI
         [SerializeField] private Sprite upSprite;
         [SerializeField] private Sprite straightSprite;
         [SerializeField] private Sprite downSprite;
+        [SerializeField] private SpriteRenderer glowSpriteRenderer;
+        [SerializeField] private Sprite glowSpriteNormal;
+        [SerializeField] private Sprite glowSpriteUp;
+        [SerializeField] private Sprite glowSpriteDown;
+        [SerializeField] float glowEffectTime = 0.1f;
 
         private ShipState currentShipState;
         private float upperLimit;
         private float lowerLimit;
         private float duration = 2f;  // Duration for one cycle (move to one side and back)
         private float amplitude = 0.5f;  // The maximum distance the ship will move to each side
-
 
         private void Start()
         {
@@ -65,6 +69,20 @@ namespace COD.UI
                 return;
             }
             transform.rotation = Quaternion.Euler(0, 0, rotationSpeed);
+        }
+        public void TriggerGlowEffect()
+        {
+            // Choose the correct glow sprite based on the ship's state
+            Sprite currentGlowSprite = currentShipState switch
+            {
+                ShipState.Up => glowSpriteUp,
+                ShipState.Down => glowSpriteDown,
+                _ => glowSpriteNormal
+            };
+
+            glowSpriteRenderer.sprite = currentGlowSprite;
+            glowSpriteRenderer.enabled = true;
+            DOVirtual.DelayedCall(glowEffectTime, () => glowSpriteRenderer.enabled = false); // Example: 0.5 seconds duration
         }
 
         private void UpdateShipSprite()

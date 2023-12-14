@@ -13,7 +13,7 @@ namespace COD.GameLogic
     /// </summary>
     public class ShipController : CODMonoBehaviour
     {
-        [SerializeField] private CODShipGraphics shipGraphics;
+        public CODShipGraphics ShipGraphics;
         [SerializeField] private float rotationSpeed;
         [SerializeField] private float verticalSpeed;
         [SerializeField] private float upperLimit;
@@ -34,10 +34,11 @@ namespace COD.GameLogic
         private void Awake()
         {
             shipRenderer = GetComponent<SpriteRenderer>();
+            ShipGraphics = GetComponent<CODShipGraphics>();
         }
         private void Start()
         {
-            shipGraphics.InitializeShip(upperLimit, lowerLimit);
+            ShipGraphics.InitializeShip(upperLimit, lowerLimit);
         }
         private void OnEnable()
         {
@@ -96,11 +97,11 @@ namespace COD.GameLogic
             // Example: Change the color of the ship to indicate the shield is active
             if (isShieldActive)
             {
-                shipGraphics.GetComponent<SpriteRenderer>().color = Color.blue; // Example: Blue for shield active
+                ShipGraphics.GetComponent<SpriteRenderer>().color = Color.blue; // Example: Blue for shield active
             }
             else
             {
-                shipGraphics.GetComponent<SpriteRenderer>().color = Color.white; // Default color
+                ShipGraphics.GetComponent<SpriteRenderer>().color = Color.white; // Default color
             }
 
             // If you have a specific visual effect for the shield, you can enable/disable it here
@@ -130,11 +131,11 @@ namespace COD.GameLogic
             float targetY = Camera.main.ScreenToWorldPoint(new Vector3(0, (float)obj, 0)).y;
 
             // Calculate distance and direction
-            float distanceToTarget = Mathf.Abs(shipGraphics.transform.position.y - targetY);
-            float direction = targetY > shipGraphics.transform.position.y ? 1 : -1;
+            float distanceToTarget = Mathf.Abs(ShipGraphics.transform.position.y - targetY);
+            float direction = targetY > ShipGraphics.transform.position.y ? 1 : -1;
 
             // Update position
-            Vector3 newShipPosition = shipGraphics.transform.position + new Vector3(0, direction * Time.deltaTime * verticalSpeed, 0);
+            Vector3 newShipPosition = ShipGraphics.transform.position + new Vector3(0, direction * Time.deltaTime * verticalSpeed, 0);
 
             // If the ship overshot its target, set it directly to the target
             if (direction > 0 && newShipPosition.y > targetY || direction < 0 && newShipPosition.y < targetY)
@@ -145,7 +146,7 @@ namespace COD.GameLogic
             // Clamp position
             newShipPosition.y = Mathf.Clamp(newShipPosition.y, lowerLimit, upperLimit);
 
-            shipGraphics.transform.position = newShipPosition;
+            ShipGraphics.transform.position = newShipPosition;
 
             // If distance is minor, accumulate time and consider switching to Straight state.
             if (distanceToTarget < stateChangeThreshold)
@@ -154,7 +155,7 @@ namespace COD.GameLogic
 
                 if (currentStillnessTime >= stillnessDuration)
                 {
-                    shipGraphics.UpdateShipState(ShipState.Straight);
+                    ShipGraphics.UpdateShipState(ShipState.Straight);
                     return;
                 }
             }
@@ -181,19 +182,19 @@ namespace COD.GameLogic
 
         private void StopShipMovement()
         {
-            shipGraphics.UpdateShipState(ShipState.Straight);
+            ShipGraphics.UpdateShipState(ShipState.Straight);
         }
 
         private void MoveShipDown()
         {
-            shipGraphics.UpdateShipState(ShipState.Down);
-            shipGraphics.RotateShip(-rotationSpeed);
+            ShipGraphics.UpdateShipState(ShipState.Down);
+            ShipGraphics.RotateShip(-rotationSpeed);
         }
 
         private void MoveShipUp()
         {
-            shipGraphics.UpdateShipState(ShipState.Up);
-            shipGraphics.RotateShip(rotationSpeed);
+            ShipGraphics.UpdateShipState(ShipState.Up);
+            ShipGraphics.RotateShip(rotationSpeed);
         }
 
         

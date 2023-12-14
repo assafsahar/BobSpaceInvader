@@ -176,6 +176,7 @@ namespace COD.GameLogic
             int coinValue = collectableGraphics.GetScoreValue();
             UpdateScore(ScoreTags.Coin, 1, coinValue);
             CODGameLogicManager.Instance.UpgradeManager.PlayerUpgradeInventoryData.TotalCoins += coinValue;
+            shipController.ShipGraphics.TriggerGlowEffect();
         }
 
         private void HandleSuperCoin(CODCollectableGraphics collectableGraphics)
@@ -183,6 +184,7 @@ namespace COD.GameLogic
             int coinValue = collectableGraphics.GetScoreValue();
             UpdateScore(ScoreTags.SuperCoin, 1, coinValue);
             CODGameLogicManager.Instance.UpgradeManager.PlayerUpgradeInventoryData.TotalCoins += coinValue;
+            shipController.ShipGraphics.TriggerGlowEffect();
         }
 
         private void HandleBomb(CODCollectableGraphics collectableGraphics)
@@ -196,11 +198,13 @@ namespace COD.GameLogic
         {
             float energyAmount = collectableGraphics.GetEnergyValue();
             CODGameLogicManager.Instance.EnergyManager.AddEnergy(energyAmount);
+            shipController.ShipGraphics.TriggerGlowEffect();
         }
         private void HandleShield(CODCollectableGraphics collectableGraphics)
         {
             // Logic to make the ship invincible
             InvokeEvent(CODEventNames.OnShieldActivated);
+            shipController.ShipGraphics.TriggerGlowEffect();
         }
 
         private void UpdateScore(ScoreTags tag, int count, int scoreValue)
