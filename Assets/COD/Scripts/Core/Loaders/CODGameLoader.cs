@@ -14,7 +14,7 @@ namespace COD.Core
         private void Start()
         {
             loadbarComponent.SetTargetAmount(20);
-            WaitForSeconds(1f, DelayStart);
+            WaitForSeconds(0.5f, DelayStart);
         }
 
         private void DelayStart()

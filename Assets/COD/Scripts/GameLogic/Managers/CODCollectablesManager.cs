@@ -36,10 +36,16 @@ namespace COD.GameLogic
         private float nextSpawnTime;
         private List<CODCollectableGraphics> activeCollectables = new List<CODCollectableGraphics>();
         private Dictionary<CollectableType, Action<CODCollectableGraphics>> collectableHandlers;
+        private Animator shipAnimator;
 
-        private void Start()
+        private void Awake()
         {
             shipController = FindObjectOfType<ShipController>();
+            shipAnimator = shipController.GetComponent<Animator>();
+        }
+        private void Start()
+        {
+            
             if (shipController == null)
             {
                 Debug.LogError("ShipController not found in scene!");
@@ -191,7 +197,9 @@ namespace COD.GameLogic
         {
             if (!shipController.IsShieldActive)
             {
-                CODGameLogicManager.Instance.GameFlowManager.EndGame();
+                shipAnimator.SetBool("IsExplode", true);
+                StartCoroutine(EndGameAfterExplosion());
+                //CODGameLogicManager.Instance.GameFlowManager.EndGame();
             }
         }
         private void HandleEnergy(CODCollectableGraphics collectableGraphics)
@@ -206,7 +214,13 @@ namespace COD.GameLogic
             InvokeEvent(CODEventNames.OnShieldActivated);
             shipController.ShipGraphics.TriggerGlowEffect();
         }
+        private IEnumerator EndGameAfterExplosion()
+        {
+            yield return new WaitForSeconds(1.5f);
 
+            shipAnimator.SetBool("IsExplode", false);
+            CODGameLogicManager.Instance.GameFlowManager.EndGame();
+        }
         private void UpdateScore(ScoreTags tag, int count, int scoreValue)
         {
             if (!CODGameLogicManager.Instance.ScoreManager.IsInitialized)

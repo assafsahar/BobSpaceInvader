@@ -90,7 +90,7 @@ namespace COD.GameLogic
                     //InvokeEvent(CODEventNames.OnDistanceSet, distanceTravelledThisGame);
                     CODGameLogicManager.Instance.ScoreManager.AddDistance(distanceIncrement);
                     distanceUpdateTimer = 0f;
-                    Debug.Log("distanceIncrement=" + distanceIncrement);
+                    //Debug.Log("distanceIncrement=" + distanceIncrement);
                 }
             }
         }
