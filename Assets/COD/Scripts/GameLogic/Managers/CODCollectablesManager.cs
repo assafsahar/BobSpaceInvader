@@ -33,15 +33,13 @@ namespace COD.GameLogic
         private float originalMaxSpawnTime;
         private float initialShipSpeed;
         private GameState currentGameState;
-        private float nextSpawnTime;
         private List<CODCollectableGraphics> activeCollectables = new List<CODCollectableGraphics>();
         private Dictionary<CollectableType, Action<CODCollectableGraphics>> collectableHandlers;
-        private Animator shipAnimator;
+        private float explosionAnimationDuration = 1.5f;
 
         private void Awake()
         {
             shipController = FindObjectOfType<ShipController>();
-            shipAnimator = shipController.GetComponent<Animator>();
         }
         private void Start()
         {
@@ -182,7 +180,7 @@ namespace COD.GameLogic
             int coinValue = collectableGraphics.GetScoreValue();
             UpdateScore(ScoreTags.Coin, 1, coinValue);
             CODGameLogicManager.Instance.UpgradeManager.PlayerUpgradeInventoryData.TotalCoins += coinValue;
-            shipController.ShipGraphics.TriggerGlowEffect();
+            TriggerGlowEffect();
         }
 
         private void HandleSuperCoin(CODCollectableGraphics collectableGraphics)
@@ -190,35 +188,40 @@ namespace COD.GameLogic
             int coinValue = collectableGraphics.GetScoreValue();
             UpdateScore(ScoreTags.SuperCoin, 1, coinValue);
             CODGameLogicManager.Instance.UpgradeManager.PlayerUpgradeInventoryData.TotalCoins += coinValue;
-            shipController.ShipGraphics.TriggerGlowEffect();
+            TriggerGlowEffect();
         }
 
         private void HandleBomb(CODCollectableGraphics collectableGraphics)
         {
             if (!shipController.IsShieldActive)
             {
-                shipAnimator.SetBool("IsExplode", true);
+                shipController.ShipGraphics.TriggerExplosion();
                 StartCoroutine(EndGameAfterExplosion());
-                //CODGameLogicManager.Instance.GameFlowManager.EndGame();
             }
         }
         private void HandleEnergy(CODCollectableGraphics collectableGraphics)
         {
             float energyAmount = collectableGraphics.GetEnergyValue();
             CODGameLogicManager.Instance.EnergyManager.AddEnergy(energyAmount);
-            shipController.ShipGraphics.TriggerGlowEffect();
+            TriggerGlowEffect();
         }
         private void HandleShield(CODCollectableGraphics collectableGraphics)
         {
             // Logic to make the ship invincible
             InvokeEvent(CODEventNames.OnShieldActivated);
-            shipController.ShipGraphics.TriggerGlowEffect();
+            TriggerGlowEffect();
+        }
+        private void TriggerGlowEffect()
+        {
+            if(shipController.GetInputEnabled())
+            {
+                shipController.ShipGraphics.TriggerGlowEffect();
+            }
         }
         private IEnumerator EndGameAfterExplosion()
         {
-            yield return new WaitForSeconds(1.5f);
-
-            shipAnimator.SetBool("IsExplode", false);
+            yield return new WaitForSeconds(explosionAnimationDuration);
+            shipController.ShipGraphics.ResetGraphicsPostExplosion();
             CODGameLogicManager.Instance.GameFlowManager.EndGame();
         }
         private void UpdateScore(ScoreTags tag, int count, int scoreValue)

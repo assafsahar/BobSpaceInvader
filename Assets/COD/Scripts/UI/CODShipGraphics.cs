@@ -11,6 +11,7 @@ namespace COD.UI
     public class CODShipGraphics : MonoBehaviour
     {
         [SerializeField] private SpriteRenderer shipSpriteRenderer;
+        [SerializeField] private Animator explosionAnimator;
         [SerializeField] private Sprite upSprite;
         [SerializeField] private Sprite straightSprite;
         [SerializeField] private Sprite downSprite;
@@ -20,6 +21,7 @@ namespace COD.UI
         [SerializeField] private Sprite glowSpriteDown;
         [SerializeField] float glowEffectTime = 0.1f;
 
+        private bool explosionIsActive;
         private ShipState currentShipState;
         private float upperLimit;
         private float lowerLimit;
@@ -50,9 +52,26 @@ namespace COD.UI
             this.upperLimit = upperLimit;
             this.lowerLimit = lowerLimit;
         }
-
+        public bool ExplosionIsActive()
+        {
+            return explosionIsActive;
+        }
+        public void TriggerExplosion()
+        {
+            explosionIsActive = true;
+            shipSpriteRenderer.enabled = false;
+            explosionAnimator.gameObject.SetActive(true);
+            explosionAnimator.SetBool("IsExplode", true);
+        }
+        public void ResetGraphicsPostExplosion()
+        {
+            explosionAnimator.SetBool("IsExplode", false);
+            explosionAnimator.gameObject.SetActive(false);
+            explosionIsActive = false;
+        }
         public void UpdateShipState(ShipState newState)
         {
+            Debug.Log($"Ship state changing from {currentShipState} to {newState}");
             currentShipState = newState;
             UpdateShipSprite();
             if (currentShipState == ShipState.Straight)
@@ -88,6 +107,7 @@ namespace COD.UI
         private void UpdateShipSprite()
         {
             Sprite newSprite = GetShipSprite(currentShipState);
+            Debug.Log($"Updating ship sprite to state: {currentShipState}");
             shipSpriteRenderer.sprite = newSprite;
         }
 

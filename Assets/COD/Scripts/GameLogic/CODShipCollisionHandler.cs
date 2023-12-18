@@ -1,5 +1,4 @@
 using COD.Core;
-using COD.Shared;
 using COD.UI;
 using System.Collections;
 using UnityEngine;
@@ -16,12 +15,23 @@ namespace COD.GameLogic
     public class CODShipCollisionHandler : CODMonoBehaviour
     {
         private ShipController shipController;
-        private Animator shipAnimator;
+        //private Animator shipAnimator;
+        /*private Animator explosionAnimator;
+        private SpriteRenderer shipSpriteRenderer;
+        private SpriteRenderer explosionSpriteRenderer;*/
+        private CODShipGraphics shipGraphics;
 
         private void Start()
         {
             shipController = GetComponent<ShipController>();
-            shipAnimator = GetComponent<Animator>();
+            /*explosionAnimator = shipController.transform.GetComponentInChildren<Animator>();
+            explosionAnimator.gameObject.SetActive(false);
+            explosionAnimator.SetBool("IsExplode", false);
+            explosionSpriteRenderer = explosionAnimator.GetComponent<SpriteRenderer>();
+            shipSpriteRenderer = GetComponent<SpriteRenderer>();
+            shipSpriteRenderer.gameObject.SetActive(true);*/
+            shipGraphics = GetComponentInChildren<CODShipGraphics>();
+            //shipAnimator = GetComponent<Animator>();
         }
         private void OnTriggerEnter2D(Collider2D other)
         {
@@ -33,13 +43,17 @@ namespace COD.GameLogic
                 }
                 // Handle the game end condition here.
                 Debug.Log("End");
-                shipAnimator.SetBool("IsExplode", true);
-                StartCoroutine(RestartAfterDelay(2f));
+                ShowExplosion();
+                //shipAnimator.SetBool("IsExplode", true);
             }
             else if (other.CompareTag("Collectable") && CODGameLogicManager.Instance.GameFlowManager.CurrentState != GameState.Falling)
             {
-                // Notify CODCollectablesManager about the collectable collision
-                CODGameLogicManager.Instance.CollectablesManager.HandleCollectableCollected(other.GetComponent<CODCollectableGraphics>());
+                if (!shipGraphics.ExplosionIsActive())
+                {
+                    // Notify CODCollectablesManager about the collectable collision
+                    CODCollectableGraphics collectableGraphics = other.GetComponent<CODCollectableGraphics>();
+                    CODGameLogicManager.Instance.CollectablesManager.HandleCollectableCollected(collectableGraphics);
+                }
             }
         }
 
@@ -47,14 +61,23 @@ namespace COD.GameLogic
         {
             if (CODGameLogicManager.Instance.GameFlowManager.CurrentState == GameState.Falling && other.gameObject.CompareTag("GroundCollider"))
             {
-                shipAnimator.SetBool("IsExplode", true);
-                StartCoroutine(RestartAfterDelay(2f));  // Wait for 2 seconds before restarting
+                if (shipController.IsShieldActive)
+                {
+                    return;
+                }
+                ShowExplosion();
             }
+        }
+        private void ShowExplosion()
+        {
+            shipController.EnableInput(false);
+            shipGraphics.TriggerExplosion();
+            StartCoroutine(RestartAfterDelay(2f));
         }
         private IEnumerator RestartAfterDelay(float delay)
         {
             yield return new WaitForSeconds(delay);
-            shipAnimator.SetBool("IsExplode", false);
+            shipGraphics.ResetGraphicsPostExplosion();
             CODGameLogicManager.Instance.GameFlowManager.EndGame();
         }
     }

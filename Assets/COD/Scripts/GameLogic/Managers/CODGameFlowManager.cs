@@ -27,7 +27,7 @@ namespace COD.GameLogic
         private CODStartScreenController startScreenController;
         private float distanceUpdateInterval = 0.5f;
         private float distanceUpdateTimer = 0f;
-
+        private ShipController shipController;
 
         public enum GameState
         {
@@ -67,6 +67,11 @@ namespace COD.GameLogic
             energyManager = CODGameLogicManager.Instance.EnergyManager;
             targetSpeed = currentSpeed = initialShipSpeed;
             startScreenController = FindObjectOfType<CODStartScreenController>();
+            shipController = FindObjectOfType<ShipController>();
+            if (shipController != null)
+            {
+                shipController.EnableInput(true); 
+            }
         }
         private void Start()
         {
@@ -77,7 +82,7 @@ namespace COD.GameLogic
 
         private void Update()
         {
-            Debug.Log($"[CODGameFlowManager] Update called. CurrentState: {CurrentState}");
+            //Debug.Log($"[CODGameFlowManager] Update called. CurrentState: {CurrentState}");
             if (CurrentState == GameState.Playing)
             {
                 currentSpeed = Mathf.Lerp(currentSpeed, targetSpeed, lerpFactor);

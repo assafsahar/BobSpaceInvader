@@ -37,7 +37,7 @@ namespace COD.Core
 
         private void UpdateView()
         {
-            Debug.Log(targetAmount);
+            //Debug.Log(targetAmount);
             loadingImage.DOFillAmount(targetAmount / 100, fillSpeed).SetEase(Ease.Linear);
             StartCoroutine(AnimateToTargetAmount((int)targetAmount));
         }

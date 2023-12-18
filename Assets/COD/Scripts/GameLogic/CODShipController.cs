@@ -30,6 +30,7 @@ namespace COD.GameLogic
         private float fallingRotationSpeed = 50f;
         public bool isShieldActive = false;
         private SpriteRenderer shipRenderer;
+        public bool inputEnabled = true;
 
         private void Awake()
         {
@@ -64,7 +65,14 @@ namespace COD.GameLogic
                 return; 
             }
         }
-
+        public void EnableInput(bool enable)
+        {
+            inputEnabled = enable;
+        }
+        public bool GetInputEnabled()
+        {
+            return inputEnabled;    
+        }
         private void ActivateShield(object unused)
         {
             if (isShieldActive) return;
@@ -125,7 +133,8 @@ namespace COD.GameLogic
 
         private void OnTouchStayed(object obj)
         {
-            if(CODGameLogicManager.Instance.GameFlowManager.CurrentState  == GameState.Falling) {
+            Debug.Log("OnTouchStayed called");
+            if (!inputEnabled || CODGameLogicManager.Instance.GameFlowManager.CurrentState  == GameState.Falling) {
                 return;
             }
             float targetY = Camera.main.ScreenToWorldPoint(new Vector3(0, (float)obj, 0)).y;
@@ -177,6 +186,7 @@ namespace COD.GameLogic
 
         private void OnTouchEnded(object obj)
         {
+            Debug.Log("OnTouchEnded called");
             StopShipMovement();
         }
 
