@@ -36,14 +36,14 @@ namespace COD.UI
 
         private void UpdateAccumulatedDistanceDisplay(object obj)
         {
-            //Debug.Log("UpdateAccumulatedDistanceDisplay " + obj.ToString());
+            //CODDebug.Log("UpdateAccumulatedDistanceDisplay " + obj.ToString());
         }
 
         private void UpdateScoreDisplay(object data)
         {
             if (data is ValueTuple<ScoreTags, int> scoreData)
             {
-                //Debug.Log($"UI Update for {scoreData.Item1} with score: {scoreData.Item2}");
+                //CODDebug.Log($"UI Update for {scoreData.Item1} with score: {scoreData.Item2}");
                 switch (scoreData.Item1)
                 {
                     case ScoreTags.Coin:

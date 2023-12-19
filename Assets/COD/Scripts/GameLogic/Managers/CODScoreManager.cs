@@ -29,7 +29,7 @@ namespace COD.GameLogic
         {
             InitializeScores(() =>
             {
-                Debug.Log("Scores have been initialized!");
+                CODDebug.Log("Scores have been initialized!");
             });
         }
 
@@ -49,7 +49,7 @@ namespace COD.GameLogic
             PlayerScoreData.ScoreByTag[tag] = amount;
             UpdateHighestScore(tag, amount);
             NotifyScoreChange(tag, amount);
-            //Debug.Log($"Score for {tag} set to: {amount}");
+            //CODDebug.Log($"Score for {tag} set to: {amount}");
             //CODManager.Instance.SaveManager.Save(PlayerScoreData);
         }
 

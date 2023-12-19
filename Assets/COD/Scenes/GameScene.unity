@@ -694,7 +694,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   initialShipSpeed: 3
   speedIncreaseRate: 0.01
-  energyDecreaseInterval: 0.1
+  energyDecreaseInterval: 0.05
   travelDistancePerFrame: 0.5
   inputManager: {fileID: 1070402307}
 --- !u!4 &188793647
@@ -3296,7 +3296,6 @@ MonoBehaviour:
   maxSpawnY: 3.5
   initialPoolSize: 20
   maxPoolSize: 50
-  energyDecreaseRate: 1
   weightedCollectables:
   - collectableType: 1
     weight: 50

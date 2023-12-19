@@ -24,7 +24,6 @@ namespace COD.GameLogic
         [SerializeField] private float maxSpawnY = 2f;
         [SerializeField] private int initialPoolSize = 20;
         [SerializeField] private int maxPoolSize = 50;
-        [SerializeField] private int energyDecreaseRate = 1;
         [SerializeField]
         private List<WeightedCollectable> weightedCollectables = new List<WeightedCollectable>();
 
@@ -46,7 +45,7 @@ namespace COD.GameLogic
             
             if (shipController == null)
             {
-                Debug.LogError("ShipController not found in scene!");
+                CODDebug.LogException("ShipController not found in scene!");
             }
             originalMinSpawnTime = minSpawnTime;
             originalMaxSpawnTime = maxSpawnTime;
@@ -73,7 +72,7 @@ namespace COD.GameLogic
             CODCollectableGraphics instance = CODManager.Instance.PoolManager.GetPoolable(PoolNames.Collectable) as CODCollectableGraphics;
             if (instance == null)
             {
-                Debug.LogError("No available collectables in pool.");
+                CODDebug.LogException("No available collectables in pool.");
                 return null;
             }
             instance.Initialize(collectable);
@@ -170,7 +169,7 @@ namespace COD.GameLogic
             }
             else
             {
-                Debug.LogError($"Handler not found for collectable type: {type}");
+                CODDebug.LogException($"Handler not found for collectable type: {type}");
             }
 
             CODManager.Instance.PoolManager.ReturnPoolable(collectableGraphics);

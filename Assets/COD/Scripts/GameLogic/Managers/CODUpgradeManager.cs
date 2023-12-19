@@ -73,7 +73,7 @@ namespace COD.GameLogic
             }
             else
             {
-                Debug.Log("failed because upgradable was null");
+                CODDebug.Log("failed because upgradable was null");
                 //CODManager.Instance.CrashManager.LogExceptionHandling($"UpgradeItemByID {typeID.ToString()} failed because upgradable was null");
                 return false;
             }
@@ -204,7 +204,7 @@ namespace COD.GameLogic
             {
                 if (makeTheUpgrade)
                 {
-                    Debug.LogError($"UpgradeItemByID {typeID.ToString()} tried upgrade and there is no enough");
+                    CODDebug.LogException($"UpgradeItemByID {typeID.ToString()} tried upgrade and there is no enough");
                 }
                 return false;
             }

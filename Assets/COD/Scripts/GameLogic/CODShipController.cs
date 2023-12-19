@@ -133,7 +133,6 @@ namespace COD.GameLogic
 
         private void OnTouchStayed(object obj)
         {
-            Debug.Log("OnTouchStayed called");
             if (!inputEnabled || CODGameLogicManager.Instance.GameFlowManager.CurrentState  == GameState.Falling) {
                 return;
             }
@@ -186,7 +185,6 @@ namespace COD.GameLogic
 
         private void OnTouchEnded(object obj)
         {
-            Debug.Log("OnTouchEnded called");
             StopShipMovement();
         }
 

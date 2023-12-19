@@ -26,7 +26,7 @@ public class CODStartScreenController : MonoBehaviour
 
     public void ShowStartScreen()
     {
-        Debug.Log("[CODStartScreenController] Showing start screen");
+        //CODDebug.Log("[CODStartScreenController] Showing start screen");
         startScreenUI.SetActive(true);
         /*if (gameFlowManager != null)
         {
@@ -36,7 +36,7 @@ public class CODStartScreenController : MonoBehaviour
 
     private void StartGameOnTouch(object data)
     {
-        Debug.Log("[CODStartScreenController] StartGameOnTouch called");
+        //CODDebug.Log("[CODStartScreenController] StartGameOnTouch called");
         startScreenUI.SetActive(false);
         if (gameFlowManager != null && gameFlowManager.CurrentState == GameState.WaitingToStart)
         {

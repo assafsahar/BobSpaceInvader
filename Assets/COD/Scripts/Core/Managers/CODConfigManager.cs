@@ -59,7 +59,7 @@ namespace COD.Core
             }
             else
             {
-                Debug.LogError($"Config not found for {configID}");
+                CODDebug.LogException($"Config not found for {configID}");
             }
         }
     }

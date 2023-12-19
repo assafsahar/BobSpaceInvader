@@ -31,7 +31,7 @@ namespace COD.GameLogic
                     collectablesManager = GameObject.FindObjectOfType<CODCollectablesManager>();
                     if (collectablesManager == null)
                     {
-                        Debug.LogError("Could not find CODCollectablesManager in the scene!");
+                        CODDebug.LogException("Could not find CODCollectablesManager in the scene!");
                     }
                 }
                 return collectablesManager;
@@ -46,7 +46,7 @@ namespace COD.GameLogic
                     gameFlowManager = GameObject.FindObjectOfType<CODGameFlowManager>();
                     if(gameFlowManager == null)
                     {
-                        Debug.LogError("Could not find CODGameFlowManager in the scene!");
+                        CODDebug.LogException("Could not find CODGameFlowManager in the scene!");
                     }
                 }
                 return gameFlowManager;
@@ -58,7 +58,7 @@ namespace COD.GameLogic
         {
             if (Instance != null)
             {
-                Debug.LogError("Multiple instances of CODGameLogicManager being created!");
+                CODDebug.LogException("Multiple instances of CODGameLogicManager being created!");
                 return;
             }
 

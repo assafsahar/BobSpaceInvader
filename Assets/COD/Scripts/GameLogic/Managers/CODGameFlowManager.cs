@@ -46,7 +46,7 @@ namespace COD.GameLogic
             }
             private set
             {
-                //Debug.Log("GameState changed from " + _currentState + " to " + value);
+                //CODDebug.Log("GameState changed from " + _currentState + " to " + value);
                 _currentState = value;
             } 
         }
@@ -82,7 +82,7 @@ namespace COD.GameLogic
 
         private void Update()
         {
-            //Debug.Log($"[CODGameFlowManager] Update called. CurrentState: {CurrentState}");
+            //CODDebug.Log($"[CODGameFlowManager] Update called. CurrentState: {CurrentState}");
             if (CurrentState == GameState.Playing)
             {
                 currentSpeed = Mathf.Lerp(currentSpeed, targetSpeed, lerpFactor);
@@ -95,7 +95,7 @@ namespace COD.GameLogic
                     //InvokeEvent(CODEventNames.OnDistanceSet, distanceTravelledThisGame);
                     CODGameLogicManager.Instance.ScoreManager.AddDistance(distanceIncrement);
                     distanceUpdateTimer = 0f;
-                    //Debug.Log("distanceIncrement=" + distanceIncrement);
+                    //CODDebug.Log("distanceIncrement=" + distanceIncrement);
                 }
             }
         }
@@ -105,7 +105,7 @@ namespace COD.GameLogic
             if (CurrentState != GameState.WaitingToStart)
                 return;
 
-            Debug.Log("[CODGameFlowManager] StartGame called. CurrentState: " + CurrentState);
+            CODDebug.Log("[CODGameFlowManager] StartGame called. CurrentState: " + CurrentState);
             ChangeGameState(GameState.Playing);
 
             energyManager.ResetEnergy();
@@ -138,7 +138,7 @@ namespace COD.GameLogic
 
         public void EndGame()
         {
-            Debug.Log("EndGame CurrentState=" + CurrentState);
+            CODDebug.Log("EndGame CurrentState=" + CurrentState);
             if (inputManager != null)
             {
                 inputManager.EnableInput(false);
@@ -192,8 +192,8 @@ namespace COD.GameLogic
             int highestScore = scoreManager.GetHighestScore(ScoreTags.MainScore);
             int longestDistance = scoreManager.GetHighestScore(ScoreTags.Distance);
 
-            Debug.Log($"Highest Score: {highestScore}");
-            Debug.Log($"Longest Distance: {longestDistance}");
+            CODDebug.Log($"Highest Score: {highestScore}");
+            CODDebug.Log($"Longest Distance: {longestDistance}");
         }
         public void ChangeToFallState()
         {
@@ -204,7 +204,7 @@ namespace COD.GameLogic
         }
         public void ChangeGameState(GameState newState)
         {
-            Debug.Log($"[CODGameFlowManager] ChangeGameState from {_currentState} to {newState}");
+            CODDebug.Log($"[CODGameFlowManager] ChangeGameState from {_currentState} to {newState}");
             if (_currentState != newState)
             {
                 _currentState = newState;
@@ -231,16 +231,16 @@ namespace COD.GameLogic
             {
                 if (CODGameLogicManager.Instance.UpgradeManager.UpgradeItemByID(UpgradeablesTypeID.GetMoreEnergy))
                 {
-                    Debug.Log("Upgrade Successful!");
+                    CODDebug.Log("Upgrade Successful!");
                 }
                 else
                 {
-                    Debug.Log("Not enough coins!");
+                    CODDebug.Log("Not enough coins!");
                 }
             }
             else
             {
-                Debug.Log("Already at maximum upgrade level!");
+                CODDebug.LogException("Already at maximum upgrade level!");
             }
         }
 

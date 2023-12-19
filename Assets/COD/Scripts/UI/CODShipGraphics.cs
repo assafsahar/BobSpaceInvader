@@ -71,7 +71,7 @@ namespace COD.UI
         }
         public void UpdateShipState(ShipState newState)
         {
-            Debug.Log($"Ship state changing from {currentShipState} to {newState}");
+            //CODDebug.Log($"Ship state changing from {currentShipState} to {newState}");
             currentShipState = newState;
             UpdateShipSprite();
             if (currentShipState == ShipState.Straight)
@@ -107,7 +107,7 @@ namespace COD.UI
         private void UpdateShipSprite()
         {
             Sprite newSprite = GetShipSprite(currentShipState);
-            Debug.Log($"Updating ship sprite to state: {currentShipState}");
+            //CODDebug.Log($"Updating ship sprite to state: {currentShipState}");
             shipSpriteRenderer.sprite = newSprite;
         }
 

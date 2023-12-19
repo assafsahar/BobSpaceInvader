@@ -15,9 +15,9 @@ namespace COD.Core
         public void Save(ICODSaveData saveData)
         {
             var saveID = saveData.GetType().FullName;
-            //HOGDebug.Log(saveID);
+            //CODDebug.Log(saveID);
             var saveJson = JsonConvert.SerializeObject(saveData);
-            //HOGDebug.Log(saveJson);
+            //CODDebug.Log(saveJson);
 
             var path = $"{Application.persistentDataPath}/{saveID}.codSave";
 
@@ -36,8 +36,8 @@ namespace COD.Core
             var saveJson = File.ReadAllText(path);
             var saveData = JsonConvert.DeserializeObject<T>(saveJson);
 
-            //HOGDebug.Log($"saveID={saveID}");
-            //HOGDebug.Log($"saveJson={saveJson}");
+            //CODDebug.Log($"saveID={saveID}");
+            //CODDebug.Log($"saveJson={saveJson}");
 
             onComplete.Invoke(saveData);
         }

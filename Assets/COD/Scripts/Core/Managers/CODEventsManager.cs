@@ -94,6 +94,7 @@ namespace COD.Core
         OnDistanceSet = 12,
         OnAccumulatedDistanceUpdated = 13,
         OnGameStateChange = 14,
-        OnShieldActivated = 15
+        OnShieldActivated = 15,
+        OnLoadingStepComplete = 16
     }
 }

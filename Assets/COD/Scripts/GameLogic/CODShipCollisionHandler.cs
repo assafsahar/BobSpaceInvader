@@ -42,7 +42,7 @@ namespace COD.GameLogic
                     return;
                 }
                 // Handle the game end condition here.
-                Debug.Log("End");
+                CODDebug.Log("End");
                 ShowExplosion();
                 //shipAnimator.SetBool("IsExplode", true);
             }
