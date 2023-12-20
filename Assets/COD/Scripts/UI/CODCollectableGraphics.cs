@@ -1,5 +1,6 @@
 using COD.Core;
 using COD.Shared;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -26,27 +27,36 @@ namespace COD.UI
 
         [SerializeField] private SpriteRenderer spriteRenderer;
         [SerializeField] private List<CollectableSprite> collectableSpriteList;
+        [SerializeField] float attractSpeed = 10f;
         private float speed = 5f;
-
-        private Dictionary<CollectableType, Sprite> collectableSprites = new Dictionary<CollectableType, Sprite>();
-
         private ICollectable collectable;
         private Vector3 leftScreenBoundary;
         private float leftBoundaryX;
         private float offset = 1f;
         private Camera mainCamera;
+        //private bool isAttractedByMagnet = false;
+        private Vector3 shipPosition;
+
+        private Dictionary<CollectableType, Sprite> collectableSprites = new Dictionary<CollectableType, Sprite>();
+
+        public static bool isAttractedByMagnet { get; set; }
 
         private void OnEnable()
         {
             AddListener(CODEventNames.OnSpeedChange, UpdateSpeed);
+            AddListener(CODEventNames.OnMagnetActivated, HandleMagnetActivation);
+            AddListener(CODEventNames.OnShipPositionUpdated, UpdateShipPosition);
         }
         private void OnDisable()
         {
             RemoveListener(CODEventNames.OnSpeedChange, UpdateSpeed);
+            RemoveListener(CODEventNames.OnMagnetActivated, HandleMagnetActivation);
+            RemoveListener(CODEventNames.OnShipPositionUpdated, UpdateShipPosition);
         }
 
         private void Awake()
         {
+            isAttractedByMagnet = false;
             mainCamera = Camera.main;
             foreach (var item in collectableSpriteList)
             {
@@ -58,6 +68,10 @@ namespace COD.UI
         }
         private void Update()
         {
+            if (isAttractedByMagnet && (collectable.Type == CollectableType.Coin || collectable.Type == CollectableType.SuperCoin))
+            {
+                MoveTowardsShip();
+            }
             Vector3 leftMovement = Vector3.left * (speed * Time.deltaTime);
             transform.position += leftMovement;
             if (transform.position.x < leftBoundaryX)
@@ -90,12 +104,30 @@ namespace COD.UI
             }
             return 0; // default value if there's an issue
         }
-
         
         public override void OnTakenFromPool()
         {
             base.OnTakenFromPool();
             ResetCollectableState();
+        }
+
+        private void UpdateShipPosition(object positionObj)
+        {
+            if (positionObj is Vector3 position)
+            {
+                shipPosition = position;
+            }
+        }
+        private void MoveTowardsShip()
+        {
+            transform.position = Vector3.MoveTowards(transform.position, shipPosition, attractSpeed * Time.deltaTime);
+        }
+        private void HandleMagnetActivation(object isActiveObj)
+        {
+            if (isActiveObj is bool isActive)
+            {
+                isAttractedByMagnet = isActive;
+            }
         }
         private void ResetCollectableState()
         {

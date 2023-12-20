@@ -11,7 +11,7 @@ namespace COD.Shared
         Energy = 2,
         Bomb = 3,
         SuperCoin = 4,
-        Shield = 5
-        
+        Shield = 5,
+        Magnet = 6
     }
 }

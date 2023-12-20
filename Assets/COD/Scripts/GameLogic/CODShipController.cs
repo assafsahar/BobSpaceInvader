@@ -19,13 +19,12 @@ namespace COD.GameLogic
         [SerializeField] private float upperLimit;
         [SerializeField] private float lowerLimit;
         [SerializeField] private float stateChangeThreshold = 0.05f;
-        [SerializeField] private float shieldDuration = 5.0f;
-        [SerializeField] private float blinkStart = 1f;
+        [SerializeField] private float blinkDuration = 1f;
         [SerializeField] private float blinkInterval = 0.2f;
 
         public bool IsShieldActive => isShieldActive;
 
-        private float stillnessDuration = 0.2f;  // Adjust based on your preference. Represents the time of stillness before changing to straight state.
+        private float stillnessDuration = 0.2f; 
         private float currentStillnessTime = 0f;
         private float fallingRotationSpeed = 50f;
         public bool isShieldActive = false;
@@ -64,6 +63,8 @@ namespace COD.GameLogic
                 FallDown();
                 return; 
             }
+            Vector3 shipPosition = transform.position;
+            InvokeEvent(CODEventNames.OnShipPositionUpdated, shipPosition);
         }
         public void EnableInput(bool enable)
         {
@@ -73,21 +74,27 @@ namespace COD.GameLogic
         {
             return inputEnabled;    
         }
-        private void ActivateShield(object unused)
+        private void ActivateShield(object isActive)
         {
-            if (isShieldActive) return;
+            var active = (bool)isActive;
+            if (isShieldActive == active) return;
 
-            isShieldActive = true;
+            isShieldActive = active;
+            
+            if (active)
+            {
+                UpdateShipAppearanceForShield(active);
+                return;
+            }
             StartCoroutine(ShieldRoutine());
-            UpdateShipAppearanceForShield(true); // Implement this method to change the ship's appearance
         }
         private IEnumerator ShieldRoutine()
         {
             // Invincibility period before blinking starts
-            yield return new WaitForSeconds(shieldDuration - blinkStart);
+            //yield return new WaitForSeconds(shieldDuration - blinkStart);
 
             // Blinking effect
-            float endTime = Time.time + blinkStart;
+            float endTime = Time.time + blinkDuration;
             while (Time.time < endTime)
             {
                 shipRenderer.enabled = !shipRenderer.enabled;

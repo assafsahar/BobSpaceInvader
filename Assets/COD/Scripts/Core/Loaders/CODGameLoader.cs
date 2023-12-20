@@ -51,7 +51,7 @@ namespace COD.Core
                 {
                     gameLogicLoader.StartLoad(() =>
                     {
-                        WaitForSeconds(0.5f, SetNextLoadingTarget);
+                        WaitForSeconds(0.1f, SetNextLoadingTarget);
                     });
                 }
             }

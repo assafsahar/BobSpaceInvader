@@ -24,6 +24,8 @@ namespace COD.GameLogic
         [SerializeField] private float maxSpawnY = 2f;
         [SerializeField] private int initialPoolSize = 20;
         [SerializeField] private int maxPoolSize = 50;
+        [SerializeField] private float magnetDuration = 5.0f;
+        [SerializeField] private float shieldDuration = 5.0f;
         [SerializeField]
         private List<WeightedCollectable> weightedCollectables = new List<WeightedCollectable>();
 
@@ -107,7 +109,8 @@ namespace COD.GameLogic
                 { CollectableType.SuperCoin, HandleSuperCoin },
                 { CollectableType.Bomb, HandleBomb },
                 { CollectableType.Energy, HandleEnergy },
-                { CollectableType.Shield, HandleShield }
+                { CollectableType.Shield, HandleShield },
+                { CollectableType.Magnet, HandleMagnet }
             };
         }
 
@@ -207,10 +210,41 @@ namespace COD.GameLogic
         }
         private void HandleShield(CODCollectableGraphics collectableGraphics)
         {
-            // Logic to make the ship invincible
-            InvokeEvent(CODEventNames.OnShieldActivated);
+            StartCoroutine(ShieldEffectCoroutine());
             TriggerGlowEffect();
         }
+        private void HandleMagnet(CODCollectableGraphics collectableGraphics)
+        {
+            StartCoroutine(MagnetEffectCoroutine());
+        }
+        private IEnumerator MagnetEffectCoroutine()
+        {
+            ActivateMagnetEffect(true);
+            CODCollectableGraphics.isAttractedByMagnet = true;
+
+            yield return new WaitForSeconds(magnetDuration);
+
+            ActivateMagnetEffect(false);
+            CODCollectableGraphics.isAttractedByMagnet = false;
+        }
+        private IEnumerator ShieldEffectCoroutine()
+        {
+            ActivateShieldEffect(true);
+
+            yield return new WaitForSeconds(shieldDuration);
+
+            ActivateShieldEffect(false);
+        }
+
+        private void ActivateMagnetEffect(bool isActive)
+        {
+            InvokeEvent(CODEventNames.OnMagnetActivated, isActive);
+        }
+        private void ActivateShieldEffect(bool isActive)
+        {
+            InvokeEvent(CODEventNames.OnShieldActivated, isActive);
+        }
+
         private void TriggerGlowEffect()
         {
             if(shipController.GetInputEnabled())

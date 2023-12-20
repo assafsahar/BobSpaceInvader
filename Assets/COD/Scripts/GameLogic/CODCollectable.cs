@@ -42,6 +42,10 @@ namespace COD.GameLogic
                     ScoreValue = 0;
                     EnergyValue = 0;
                     break;
+                case CollectableType.Magnet:
+                    ScoreValue = 0;
+                    EnergyValue = 0;
+                    break;
                 default:
                     ScoreValue = 0;
                     break;

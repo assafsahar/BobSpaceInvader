@@ -60,6 +60,8 @@ MonoBehaviour:
     sprite: {fileID: 21300000, guid: 5479835bd6f14194ab5c760c149beb1b, type: 3}
   - type: 5
     sprite: {fileID: 21300000, guid: 287bc3e3ff5c03d40aebf2b19ff14477, type: 3}
+  - type: 6
+    sprite: {fileID: 21300000, guid: d57c3775f087c0b43b37fca82e3f9467, type: 3}
 --- !u!212 &5875976451445845983
 SpriteRenderer:
   m_ObjectHideFlags: 0

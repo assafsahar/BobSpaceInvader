@@ -96,6 +96,8 @@ namespace COD.Core
         OnGameStateChange = 14,
         OnShieldActivated = 15,
         OnLoadingStepComplete = 16,
-        OnShipCrash = 17
+        OnShipCrash = 17,
+        OnMagnetActivated = 18,
+        OnShipPositionUpdated = 19
     }
 }

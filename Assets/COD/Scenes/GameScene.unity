@@ -695,7 +695,7 @@ MonoBehaviour:
   initialShipSpeed: 3
   speedIncreaseRate: 0.01
   energyDecreaseInterval: 0.05
-  travelDistancePerFrame: 0.5
+  travelDistancePerFrame: 0.2
   inputManager: {fileID: 1070402307}
 --- !u!4 &188793647
 Transform:
@@ -1774,8 +1774,7 @@ MonoBehaviour:
   upperLimit: 3.82
   lowerLimit: -3.82
   stateChangeThreshold: 0.02
-  shieldDuration: 5
-  blinkStart: 1
+  blinkDuration: 1.5
   blinkInterval: 0.2
   isShieldActive: 0
   inputEnabled: 1
@@ -3309,6 +3308,8 @@ MonoBehaviour:
   maxSpawnY: 3.5
   initialPoolSize: 20
   maxPoolSize: 50
+  magnetDuration: 5
+  shieldDuration: 5
   weightedCollectables:
   - collectableType: 1
     weight: 50
@@ -3319,6 +3320,8 @@ MonoBehaviour:
   - collectableType: 2
     weight: 4
   - collectableType: 5
+    weight: 2
+  - collectableType: 6
     weight: 2
 --- !u!4 &2058841809
 Transform:
