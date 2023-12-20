@@ -195,6 +195,7 @@ namespace COD.GameLogic
             if (!shipController.IsShieldActive)
             {
                 shipController.ShipGraphics.TriggerExplosion();
+                InvokeEvent(CODEventNames.OnShipCrash);
                 StartCoroutine(EndGameAfterExplosion());
             }
         }

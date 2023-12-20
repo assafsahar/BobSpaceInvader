@@ -95,6 +95,7 @@ namespace COD.Core
         OnAccumulatedDistanceUpdated = 13,
         OnGameStateChange = 14,
         OnShieldActivated = 15,
-        OnLoadingStepComplete = 16
+        OnLoadingStepComplete = 16,
+        OnShipCrash = 17
     }
 }

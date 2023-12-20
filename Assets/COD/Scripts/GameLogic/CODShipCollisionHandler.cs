@@ -72,6 +72,7 @@ namespace COD.GameLogic
         {
             shipController.EnableInput(false);
             shipGraphics.TriggerExplosion();
+            InvokeEvent(CODEventNames.OnShipCrash);
             StartCoroutine(RestartAfterDelay(2f));
         }
         private IEnumerator RestartAfterDelay(float delay)
