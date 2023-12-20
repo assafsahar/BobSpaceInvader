@@ -694,7 +694,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   initialShipSpeed: 3
   speedIncreaseRate: 0.01
-  energyDecreaseInterval: 0.05
+  energyDecreaseInterval: 0.1
   travelDistancePerFrame: 0.2
   inputManager: {fileID: 1070402307}
 --- !u!4 &188793647

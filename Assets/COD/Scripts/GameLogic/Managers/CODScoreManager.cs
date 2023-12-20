@@ -15,6 +15,7 @@ namespace COD.GameLogic
         public bool IsInitialized { get; private set; } = false;
         public CODPlayerScoreData PlayerScoreData = new();
         private CODPlayerScoreData initialScoreData;
+        private float fractionalDistance = 0f;
         public CODScoreManager()
         {
             CODManager.Instance.EventsManager.AddListener(CODEventNames.RequestScoreUpdate, PushCurrentScores);
@@ -113,11 +114,16 @@ namespace COD.GameLogic
         }
         public void AddDistance(float distance)
         {
-            int intDistance = (int)Math.Round(distance);
-            PlayerScoreData.AccumulatedDistance += distance;
-            ChangeScoreByTagByAmount(ScoreTags.Distance, intDistance);
-            ChangeScoreByTagByAmount(ScoreTags.MainScore, intDistance);
-            NotifyAccumulatedDistanceChange(PlayerScoreData.AccumulatedDistance);
+            fractionalDistance += distance;
+            int intDistance = (int)Math.Floor(fractionalDistance);
+            if (intDistance > 0)
+            {
+                PlayerScoreData.AccumulatedDistance += distance;
+                ChangeScoreByTagByAmount(ScoreTags.Distance, intDistance);
+                ChangeScoreByTagByAmount(ScoreTags.MainScore, intDistance);
+                NotifyAccumulatedDistanceChange(PlayerScoreData.AccumulatedDistance);
+                fractionalDistance -= intDistance;
+            }
         }
         public int GetCurrentDistance()
         {
