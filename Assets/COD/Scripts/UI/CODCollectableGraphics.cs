@@ -3,6 +3,7 @@ using COD.Shared;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 namespace COD.UI
 {
@@ -28,6 +29,10 @@ namespace COD.UI
         [SerializeField] private SpriteRenderer spriteRenderer;
         [SerializeField] private List<CollectableSprite> collectableSpriteList;
         [SerializeField] float attractSpeed = 10f;
+        [SerializeField] private float blinkDuration = 1f;
+        [SerializeField] private float minAlpha = 0.2f;
+        [SerializeField] private float maxAlpha = 1f;
+
         private float speed = 5f;
         private ICollectable collectable;
         private Vector3 leftScreenBoundary;
@@ -35,7 +40,7 @@ namespace COD.UI
         private float offset = 1f;
         private Camera mainCamera;
         //private bool isAttractedByMagnet = false;
-        private Vector3 shipPosition;
+        private Vector3 shipPosition;        
 
         private Dictionary<CollectableType, Sprite> collectableSprites = new Dictionary<CollectableType, Sprite>();
 
@@ -83,6 +88,10 @@ namespace COD.UI
         {
             this.collectable = collectable;
             spriteRenderer.sprite = collectableSprites[collectable.Type];
+            if (ShouldBlink(collectable.Type)) 
+            {
+                StartBlinkEffect();
+            }
         }
         public CollectableType GetCollectableType()
         {
@@ -110,7 +119,17 @@ namespace COD.UI
             base.OnTakenFromPool();
             ResetCollectableState();
         }
-
+        private bool ShouldBlink(CollectableType type)
+        {
+            return type == CollectableType.Energy; 
+        }
+        private void StartBlinkEffect()
+        {
+            Sequence blinkSequence = DOTween.Sequence();
+            blinkSequence.Append(spriteRenderer.DOFade(minAlpha, blinkDuration / 2).SetEase(Ease.InSine))
+                         .Append(spriteRenderer.DOFade(maxAlpha, blinkDuration / 2).SetEase(Ease.OutSine))
+                         .SetLoops(-1, LoopType.Yoyo); // Infinite loop with Yoyo effect (back and forth)
+        }
         private void UpdateShipPosition(object positionObj)
         {
             if (positionObj is Vector3 position)

@@ -31,9 +31,16 @@ namespace COD.UI
                 UpdateEnergyUI(energyData.CurrentEnergy, energyData.MaxEnergy);
             }
         }
-        public void UpdateEnergyUI(float currentEnergy, float maxEnergy)
+        public void UpdateEnergyUI(float currentEnergy, float? maxEnergy)
         {
-            energyText.text = $"{Math.Ceiling(currentEnergy)}/{maxEnergy}";
+            if (maxEnergy.HasValue)
+            {
+                energyText.text = $"{Math.Ceiling(currentEnergy)}/{maxEnergy}";
+            }
+            else
+            {
+                energyText.text = $"{Math.Ceiling(currentEnergy)}";
+            }
         }
     }
 }

@@ -11,9 +11,9 @@ namespace COD.Shared
     public struct EnergyData
     {
         public float CurrentEnergy;
-        public float MaxEnergy;
+        public float? MaxEnergy;
 
-        public EnergyData(float currentEnergy, float maxEnergy)
+        public EnergyData(float currentEnergy, float? maxEnergy = null)
         {
             CurrentEnergy = currentEnergy;
             MaxEnergy = maxEnergy;

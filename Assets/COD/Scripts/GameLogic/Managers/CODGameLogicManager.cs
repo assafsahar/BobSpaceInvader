@@ -15,6 +15,7 @@ namespace COD.GameLogic
         public CODScoreManager ScoreManager;
         private CODGameFlowManager gameFlowManager;
         private CODCollectablesManager collectablesManager;
+        private float startEnergyDefault = 20f;
 
         public CODEnergyManager EnergyManager { get; private set; }
         public CODCollectableSettingsManager CollectableSettingsManager { get; private set; }
@@ -83,8 +84,8 @@ namespace COD.GameLogic
                 var energyDataMain = UpgradeManagerConfigData.UpgradeableConfigs.FirstOrDefault(x => x.UpgradableTypeID == UpgradeablesTypeID.GetMoreEnergy);
                 var energyData = energyDataMain.UpgradableLevelData[0];
 
-                float maxEnergy = energyData.MaxEnergy;
-                float initialEnergy = maxEnergy;
+                float? maxEnergy = energyData.MaxEnergy;
+                float initialEnergy = maxEnergy.HasValue ? maxEnergy.Value : startEnergyDefault;
                 float energyDecreaseRate = energyData.EnergyDecreaseRate; 
 
                 EnergyManager = new CODEnergyManager(maxEnergy, initialEnergy, energyDecreaseRate);

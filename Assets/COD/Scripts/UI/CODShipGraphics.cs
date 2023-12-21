@@ -89,7 +89,7 @@ namespace COD.UI
             }
             transform.rotation = Quaternion.Euler(0, 0, rotationSpeed);
         }
-        public void TriggerGlowEffect()
+       /* public void TriggerGlowEffect()
         {
             // Choose the correct glow sprite based on the ship's state
             Sprite currentGlowSprite = currentShipState switch
@@ -102,6 +102,21 @@ namespace COD.UI
             glowSpriteRenderer.sprite = currentGlowSprite;
             glowSpriteRenderer.enabled = true;
             DOVirtual.DelayedCall(glowEffectTime, () => glowSpriteRenderer.enabled = false); // Example: 0.5 seconds duration
+        }*/
+        public void TriggerGlowEffectForDuration(float duration)
+        {
+            glowSpriteRenderer.sprite = GetGlowSprite();
+            glowSpriteRenderer.enabled = true;
+            DOVirtual.DelayedCall(duration, () => glowSpriteRenderer.enabled = false);
+        }
+        private Sprite GetGlowSprite()
+        {
+            return currentShipState switch
+            {
+                ShipState.Up => glowSpriteUp,
+                ShipState.Down => glowSpriteDown,
+                _ => glowSpriteNormal
+            };
         }
 
         private void UpdateShipSprite()

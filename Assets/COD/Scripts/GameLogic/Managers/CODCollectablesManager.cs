@@ -26,6 +26,8 @@ namespace COD.GameLogic
         [SerializeField] private int maxPoolSize = 50;
         [SerializeField] private float magnetDuration = 5.0f;
         [SerializeField] private float shieldDuration = 5.0f;
+        [SerializeField] private float capsuleGlowEffectDuration = 0.5f;
+        [SerializeField] private float coinGlowEffectDuration = 0.1f;
         [SerializeField]
         private List<WeightedCollectable> weightedCollectables = new List<WeightedCollectable>();
 
@@ -182,7 +184,7 @@ namespace COD.GameLogic
             int coinValue = collectableGraphics.GetScoreValue();
             UpdateScore(ScoreTags.Coin, 1, coinValue);
             CODGameLogicManager.Instance.UpgradeManager.PlayerUpgradeInventoryData.TotalCoins += coinValue;
-            TriggerGlowEffect();
+            TriggerGlowEffect(coinGlowEffectDuration);
         }
 
         private void HandleSuperCoin(CODCollectableGraphics collectableGraphics)
@@ -190,7 +192,7 @@ namespace COD.GameLogic
             int coinValue = collectableGraphics.GetScoreValue();
             UpdateScore(ScoreTags.SuperCoin, 1, coinValue);
             CODGameLogicManager.Instance.UpgradeManager.PlayerUpgradeInventoryData.TotalCoins += coinValue;
-            TriggerGlowEffect();
+            TriggerGlowEffect(coinGlowEffectDuration);
         }
 
         private void HandleBomb(CODCollectableGraphics collectableGraphics)
@@ -199,6 +201,7 @@ namespace COD.GameLogic
             {
                 shipController.ShipGraphics.TriggerExplosion();
                 InvokeEvent(CODEventNames.OnShipCrash);
+                shipController.EnableInput(false);
                 StartCoroutine(EndGameAfterExplosion());
             }
         }
@@ -206,16 +209,17 @@ namespace COD.GameLogic
         {
             float energyAmount = collectableGraphics.GetEnergyValue();
             CODGameLogicManager.Instance.EnergyManager.AddEnergy(energyAmount);
-            TriggerGlowEffect();
+            TriggerGlowEffect(capsuleGlowEffectDuration);
         }
         private void HandleShield(CODCollectableGraphics collectableGraphics)
         {
             StartCoroutine(ShieldEffectCoroutine());
-            TriggerGlowEffect();
+            TriggerGlowEffect(capsuleGlowEffectDuration);
         }
         private void HandleMagnet(CODCollectableGraphics collectableGraphics)
         {
             StartCoroutine(MagnetEffectCoroutine());
+            TriggerGlowEffect(capsuleGlowEffectDuration);
         }
         private IEnumerator MagnetEffectCoroutine()
         {
@@ -245,13 +249,14 @@ namespace COD.GameLogic
             InvokeEvent(CODEventNames.OnShieldActivated, isActive);
         }
 
-        private void TriggerGlowEffect()
+        private void TriggerGlowEffect(float duration)
         {
             if(shipController.GetInputEnabled())
             {
-                shipController.ShipGraphics.TriggerGlowEffect();
+                shipController.ShipGraphics.TriggerGlowEffectForDuration(duration);
             }
         }
+
         private IEnumerator EndGameAfterExplosion()
         {
             yield return new WaitForSeconds(explosionAnimationDuration);

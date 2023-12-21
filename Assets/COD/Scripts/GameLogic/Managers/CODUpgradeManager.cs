@@ -228,7 +228,7 @@ namespace COD.GameLogic
         public ScoreTags CurrencyTag;
         public int Score;
         public float Energy;
-        public float MaxEnergy;
+        public float? MaxEnergy;
         public float EnergyDecreaseRate;
     }
 

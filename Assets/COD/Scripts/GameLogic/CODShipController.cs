@@ -78,21 +78,17 @@ namespace COD.GameLogic
         {
             var active = (bool)isActive;
             if (isShieldActive == active) return;
-
-            isShieldActive = active;
             
             if (active)
             {
-                UpdateShipAppearanceForShield(active);
+                isShieldActive = true;
+                UpdateShipAppearanceForShield(true);
                 return;
             }
             StartCoroutine(ShieldRoutine());
         }
         private IEnumerator ShieldRoutine()
         {
-            // Invincibility period before blinking starts
-            //yield return new WaitForSeconds(shieldDuration - blinkStart);
-
             // Blinking effect
             float endTime = Time.time + blinkDuration;
             while (Time.time < endTime)
