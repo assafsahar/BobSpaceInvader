@@ -1680,7 +1680,7 @@ GameObject:
   - component: {fileID: 904223716}
   - component: {fileID: 904223718}
   - component: {fileID: 904223717}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: Ship
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -2195,7 +2195,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1153301683}
   - component: {fileID: 1153301684}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: shipglow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2476,8 +2476,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -945428591
-  m_SortingLayer: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 000f30fedc783524d88c8edd4186284c, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -2622,8 +2622,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 1235814003
-  m_SortingLayer: 3
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
   m_SortingOrder: 2
   m_Sprite: {fileID: 21300000, guid: bf9c57fe7f35c2b40b63e498b7596b20, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -2692,7 +2692,7 @@ GameObject:
   - component: {fileID: 1730536291}
   - component: {fileID: 1730536292}
   - component: {fileID: 1730536293}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: ShipExplosionAnimator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2992,9 +2992,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -945428591
-  m_SortingLayer: 1
-  m_SortingOrder: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 2ab0f70931501894f866fafd5c32cd43, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -3301,15 +3301,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefab: {fileID: 3144851105043746335, guid: d5e1b969b33578c428d4ef30de8bb594, type: 3}
+  toastMessagePrefab: {fileID: 7497766637859337784, guid: 55970dfe83d472c458c4aa1950fc8549, type: 3}
+  toastPosition: {x: -10, y: 0}
   spawnPoint: {fileID: 1140619129}
   minSpawnTime: 0.3
   maxSpawnTime: 0.6
   minSpawnY: -3
   maxSpawnY: 3.5
   initialPoolSize: 20
+  initialToastPoolSize: 20
   maxPoolSize: 50
   magnetDuration: 5
   shieldDuration: 5
+  capsuleGlowEffectDuration: 0.5
+  coinGlowEffectDuration: 0.1
   weightedCollectables:
   - collectableType: 1
     weight: 50

@@ -133,6 +133,5 @@ namespace COD.Core
         Collectable = 1
     }
 
-   
-}
 
+}

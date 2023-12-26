@@ -17,12 +17,15 @@ namespace COD.GameLogic
     public class CODCollectablesManager : CODMonoBehaviour
     {
         [SerializeField] private CODCollectableGraphics prefab;
+        [SerializeField] private CODToastMessage toastMessagePrefab;
+        [SerializeField] private Vector2 toastPosition;
         [SerializeField] private Transform spawnPoint;
         [SerializeField] private float minSpawnTime = 1.0f;
         [SerializeField] private float maxSpawnTime = 5.0f;
         [SerializeField] private float minSpawnY = -2f;
         [SerializeField] private float maxSpawnY = 2f;
         [SerializeField] private int initialPoolSize = 20;
+        [SerializeField] private int initialToastPoolSize = 20;
         [SerializeField] private int maxPoolSize = 50;
         [SerializeField] private float magnetDuration = 5.0f;
         [SerializeField] private float shieldDuration = 5.0f;
@@ -56,6 +59,8 @@ namespace COD.GameLogic
             initialShipSpeed = 5f;
 
             CODManager.Instance.PoolManager.InitPool(prefab, initialPoolSize, maxPoolSize);
+            // Initialize pool for toast messages
+            CODManager.Instance.PoolManager.InitPool(toastMessagePrefab, initialToastPoolSize, maxPoolSize);
             InitCollectableHandlers();
             StartCoroutine(SpawnRoutine());
         }
@@ -179,12 +184,21 @@ namespace COD.GameLogic
 
             CODManager.Instance.PoolManager.ReturnPoolable(collectableGraphics);
         }
+        private void ShowToastMessage(string message, Vector3 startPosition, Vector2 targetPosition)
+        {
+            CODToastMessage toast = CODManager.Instance.PoolManager.GetPoolable(PoolNames.ScoreToast) as CODToastMessage;
+            if (toast != null)
+            {
+                toast.Initialize(message, startPosition, targetPosition);
+            }
+        }
         private void HandleCoin(CODCollectableGraphics collectableGraphics)
         {
             int coinValue = collectableGraphics.GetScoreValue();
             UpdateScore(ScoreTags.Coin, 1, coinValue);
             CODGameLogicManager.Instance.UpgradeManager.PlayerUpgradeInventoryData.TotalCoins += coinValue;
             TriggerGlowEffect(coinGlowEffectDuration);
+            ShowToastMessage($"+{coinValue} Coins", collectableGraphics.transform.position, toastPosition);
         }
 
         private void HandleSuperCoin(CODCollectableGraphics collectableGraphics)
