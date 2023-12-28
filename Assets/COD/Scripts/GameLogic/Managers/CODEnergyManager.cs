@@ -32,10 +32,10 @@ namespace COD.GameLogic
             {
                 CurrentEnergy = MaxEnergy.Value;
             }
-            else if (!MaxEnergy.HasValue && CurrentEnergy < 0)
+            /*else if (!MaxEnergy.HasValue && CurrentEnergy < 0)
             {
                 CurrentEnergy = defaultEnergyValue; 
-            }
+            }*/
             EnergyData energyData = new EnergyData(CurrentEnergy, MaxEnergy);
             CODManager.Instance.EventsManager.InvokeEvent(CODEventNames.OnEnergyChanged, energyData);
             if (CurrentEnergy <= 0)

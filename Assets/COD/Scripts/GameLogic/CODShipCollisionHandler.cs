@@ -1,5 +1,6 @@
 using COD.Core;
 using COD.UI;
+using System;
 using System.Collections;
 using UnityEngine;
 using static COD.GameLogic.CODGameFlowManager;
@@ -15,45 +16,31 @@ namespace COD.GameLogic
     public class CODShipCollisionHandler : CODMonoBehaviour
     {
         private ShipController shipController;
-        //private Animator shipAnimator;
-        /*private Animator explosionAnimator;
-        private SpriteRenderer shipSpriteRenderer;
-        private SpriteRenderer explosionSpriteRenderer;*/
         private CODShipGraphics shipGraphics;
 
         private void Start()
         {
             shipController = GetComponent<ShipController>();
-            /*explosionAnimator = shipController.transform.GetComponentInChildren<Animator>();
-            explosionAnimator.gameObject.SetActive(false);
-            explosionAnimator.SetBool("IsExplode", false);
-            explosionSpriteRenderer = explosionAnimator.GetComponent<SpriteRenderer>();
-            shipSpriteRenderer = GetComponent<SpriteRenderer>();
-            shipSpriteRenderer.gameObject.SetActive(true);*/
             shipGraphics = GetComponentInChildren<CODShipGraphics>();
-            //shipAnimator = GetComponent<Animator>();
         }
         private void OnTriggerEnter2D(Collider2D other)
         {
             if (other.CompareTag("BackgroundFront"))
             {
-                if (shipController.IsShieldActive)
-                {
-                    return;
-                }
-                // Handle the game end condition here.
-                CODDebug.Log("End");
-                ShowExplosion();
-                //shipAnimator.SetBool("IsExplode", true);
+                HandleCollisionWithBackground();
             }
             else if (other.CompareTag("Collectable") && CODGameLogicManager.Instance.GameFlowManager.CurrentState != GameState.Falling)
             {
-                if (!shipGraphics.ExplosionIsActive())
-                {
-                    // Notify CODCollectablesManager about the collectable collision
-                    CODCollectableGraphics collectableGraphics = other.GetComponent<CODCollectableGraphics>();
-                    CODGameLogicManager.Instance.CollectablesManager.HandleCollectableCollected(collectableGraphics);
-                }
+                HandleCollectableCollision(other);
+            }
+        }
+
+        private void HandleCollectableCollision(Collider2D other)
+        {
+            if (!shipGraphics.ExplosionIsActive())
+            {
+                CODCollectableGraphics collectableGraphics = other.GetComponent<CODCollectableGraphics>();
+                CODGameLogicManager.Instance.CollectablesManager.HandleCollectableCollected(collectableGraphics);
             }
         }
 
@@ -61,12 +48,25 @@ namespace COD.GameLogic
         {
             if (CODGameLogicManager.Instance.GameFlowManager.CurrentState == GameState.Falling && other.gameObject.CompareTag("GroundCollider"))
             {
-                if (shipController.IsShieldActive)
-                {
-                    return;
-                }
-                ShowExplosion();
+                HandleCollisionWithGround();
             }
+        }
+        private void HandleCollisionWithBackground()
+        {
+            if (shipController.IsShieldActive && CODGameLogicManager.Instance.EnergyManager.CurrentEnergy > 0)
+            {
+                return; // Ignore collision if shield is active and energy is not depleted
+            }
+            ShowExplosion();
+        }
+
+        private void HandleCollisionWithGround()
+        {
+            if (shipController.IsShieldActive)
+            {
+                return; // Ignore collision with ground if shield is active
+            }
+            ShowExplosion();
         }
         private void ShowExplosion()
         {
