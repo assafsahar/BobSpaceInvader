@@ -1,5 +1,5 @@
 {
-  "DefaultEnergyValue": 21,
+  "DefaultEnergyValue": 15,
   "UpgradeableConfigs": [
     {
       "UpgradableTypeID": "GetMoreEnergy",
