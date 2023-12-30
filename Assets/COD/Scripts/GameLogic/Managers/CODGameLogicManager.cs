@@ -86,10 +86,12 @@ namespace COD.GameLogic
 
                 float? maxEnergy = energyData.MaxEnergy;
                 float initialEnergy = maxEnergy.HasValue ? maxEnergy.Value : startEnergyDefault;
-                float energyDecreaseRate = energyData.EnergyDecreaseRate; 
+                float energyDecreaseRate = energyData.EnergyDecreaseRate;
 
-                EnergyManager = new CODEnergyManager(maxEnergy, initialEnergy, energyDecreaseRate);
                 UpgradeManager = new CODUpgradeManager();
+                int defaultEnergyValue = UpgradeManager.GetDefaultEnergyValue();
+                EnergyManager = new CODEnergyManager(maxEnergy, initialEnergy, energyDecreaseRate, defaultEnergyValue);
+                
                 CollectableSettingsManager = new CODCollectableSettingsManager();
 
                 IsInitialized = true;

@@ -15,14 +15,15 @@ namespace COD.GameLogic
         public float CurrentEnergy { get; private set; }
         public float EnergyDecreaseRate { get; private set; }
 
-        private float defaultEnergyValue = 20f;
+        private float defaultEnergyValue;
 
 
-        public CODEnergyManager(float? maxEnergy, float initialEnergy, float energyDecreaseRate)
+        public CODEnergyManager(float? maxEnergy, float initialEnergy, float energyDecreaseRate, float defaultEnergyValue)
         {
             MaxEnergy = maxEnergy;
             CurrentEnergy = initialEnergy;
             EnergyDecreaseRate = energyDecreaseRate;
+            this.defaultEnergyValue = defaultEnergyValue;
         }
 
         public void UpdateEnergy(float deltaTime)

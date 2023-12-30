@@ -164,6 +164,10 @@ namespace COD.GameLogic
                 }
             });
         }
+        public int GetDefaultEnergyValue()
+        {
+            return UpgradeConfig.DefaultEnergyValue;
+        }
 
         private void UpdateAccumulatedDistance(object data)
         {
@@ -245,6 +249,7 @@ namespace COD.GameLogic
     [Serializable]  
     public class CODUpgradeManagerConfig
     {
+        public int DefaultEnergyValue;
         public List<CODUpgradeableConfig> UpgradeableConfigs;
     }
 
