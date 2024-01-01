@@ -17,7 +17,9 @@ namespace COD.GameLogic
     public class CODCollectablesManager : CODMonoBehaviour
     {
         [SerializeField] private CODCollectableGraphics prefab;
-        [SerializeField] private CODToastMessage toastMessagePrefab;
+        [SerializeField] private CODToastMessage normalCoinToastPrefab;
+        [SerializeField] private CODToastMessage superCoinToastPrefab;
+        [SerializeField] private CODToastMessage energyToastPrefab;
         [SerializeField] private Vector2 toastPosition;
         [SerializeField] private Transform spawnPoint;
         [SerializeField] private float minSpawnTime = 1.0f;
@@ -58,9 +60,11 @@ namespace COD.GameLogic
             originalMaxSpawnTime = maxSpawnTime;
             initialShipSpeed = 5f;
 
-            CODManager.Instance.PoolManager.InitPool(prefab, initialPoolSize, maxPoolSize);
+            CODManager.Instance.PoolManager.InitPool(prefab, initialPoolSize, maxPoolSize, PoolNames.Collectable);
             // Initialize pool for toast messages
-            CODManager.Instance.PoolManager.InitPool(toastMessagePrefab, initialToastPoolSize, maxPoolSize);
+            CODManager.Instance.PoolManager.InitPool(normalCoinToastPrefab, initialToastPoolSize, maxPoolSize, PoolNames.NormalCoinToast);
+            CODManager.Instance.PoolManager.InitPool(superCoinToastPrefab, initialToastPoolSize, maxPoolSize, PoolNames.SuperCoinToast);
+            CODManager.Instance.PoolManager.InitPool(energyToastPrefab, initialToastPoolSize, maxPoolSize, PoolNames.EnergyToast);
             InitCollectableHandlers();
             StartCoroutine(SpawnRoutine());
         }
@@ -184,9 +188,9 @@ namespace COD.GameLogic
 
             CODManager.Instance.PoolManager.ReturnPoolable(collectableGraphics);
         }
-        private void ShowToastMessage(string message, Vector3 startPosition, Vector2 targetPosition)
+        private void ShowToastMessage(PoolNames toastType, string message, Vector3 startPosition, Vector2 targetPosition)
         {
-            CODToastMessage toast = CODManager.Instance.PoolManager.GetPoolable(PoolNames.ScoreToast) as CODToastMessage;
+            CODToastMessage toast = CODManager.Instance.PoolManager.GetPoolable(toastType) as CODToastMessage;
             if (toast != null)
             {
                 toast.Initialize(message, startPosition, targetPosition);
@@ -198,7 +202,7 @@ namespace COD.GameLogic
             UpdateScore(ScoreTags.Coin, 1, coinValue);
             CODGameLogicManager.Instance.UpgradeManager.PlayerUpgradeInventoryData.TotalCoins += coinValue;
             TriggerGlowEffect(coinGlowEffectDuration);
-            ShowToastMessage($"+{coinValue} Coins", collectableGraphics.transform.position, toastPosition);
+            ShowToastMessage(PoolNames.NormalCoinToast, $"+{coinValue} Coins", collectableGraphics.transform.position, toastPosition);
         }
 
         private void HandleSuperCoin(CODCollectableGraphics collectableGraphics)
@@ -207,6 +211,7 @@ namespace COD.GameLogic
             UpdateScore(ScoreTags.SuperCoin, 1, coinValue);
             CODGameLogicManager.Instance.UpgradeManager.PlayerUpgradeInventoryData.TotalCoins += coinValue;
             TriggerGlowEffect(coinGlowEffectDuration);
+            ShowToastMessage(PoolNames.SuperCoinToast, $"+{coinValue} Super Coins", collectableGraphics.transform.position, toastPosition);
         }
 
         private void HandleBomb(CODCollectableGraphics collectableGraphics)
@@ -224,6 +229,7 @@ namespace COD.GameLogic
             float energyAmount = collectableGraphics.GetEnergyValue();
             CODGameLogicManager.Instance.EnergyManager.AddEnergy(energyAmount);
             TriggerGlowEffect(capsuleGlowEffectDuration);
+            ShowToastMessage(PoolNames.EnergyToast, $"+{energyAmount} Energy", collectableGraphics.transform.position, toastPosition);
         }
         private void HandleShield(CODCollectableGraphics collectableGraphics)
         {

@@ -21,12 +21,12 @@ namespace COD.Core
             UnityEngine.Object.DontDestroyOnLoad(rootPools);
         }
 
-        public void InitPool(string resourceName, int amount, int maxAmount = 100)
+        public void InitPool(string resourceName, int amount, int maxAmount, PoolNames poolName)
         {
             var original = Resources.Load<CODPoolable>(resourceName);
-            InitPool(original, amount, maxAmount);
+            InitPool(original, amount, maxAmount, poolName);
         }
-        public void InitPool(CODPoolable original, int amount, int maxAmount)
+        public void InitPool(CODPoolable original, int amount, int maxAmount, PoolNames poolName)
         {
             CODManager.Instance.FactoryManager.MultiCreateAsync(original, Vector3.zero, amount,
                 delegate (List<CODPoolable> list)
@@ -46,7 +46,7 @@ namespace COD.Core
                         MaxPoolables = maxAmount
                     };
 
-                    pools.Add(original.PoolName, pool);
+                    pools.Add(poolName, pool);
                 });
         }
 
@@ -130,8 +130,9 @@ namespace COD.Core
     {
         NA = -1,
         ScoreToast = 0,
-        Collectable = 1
+        Collectable = 1,
+        NormalCoinToast = 2,
+        SuperCoinToast = 3,
+        EnergyToast = 4
     }
-
-
 }

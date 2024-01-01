@@ -3301,7 +3301,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefab: {fileID: 3144851105043746335, guid: d5e1b969b33578c428d4ef30de8bb594, type: 3}
-  toastMessagePrefab: {fileID: 7497766637859337784, guid: 55970dfe83d472c458c4aa1950fc8549, type: 3}
+  normalCoinToastPrefab: {fileID: 7497766637859337784, guid: 55970dfe83d472c458c4aa1950fc8549, type: 3}
+  superCoinToastPrefab: {fileID: 7497766637859337784, guid: 2232fa42b0eeb9c44b13632d5a0428b8, type: 3}
+  energyToastPrefab: {fileID: 7497766637859337784, guid: 9a19f65d02174ce469be8488c3abc327, type: 3}
   toastPosition: {x: -10, y: 0}
   spawnPoint: {fileID: 1140619129}
   minSpawnTime: 0.3

@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 6723427964956400052}
   - component: {fileID: 7497766637859337784}
   m_Layer: 6
-  m_Name: ToastText
+  m_Name: SuperCoinToastText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
