@@ -15,6 +15,7 @@ namespace COD.GameLogic
     {
         public CODPlayerUpgradeInventoryData PlayerUpgradeInventoryData; //Player Saved Data
         public CODUpgradeManagerConfig UpgradeConfig = new CODUpgradeManagerConfig(); //From cloud
+        public bool isFirstLoad = true;
 
         //MockData
         //Load From Save Data On Device (Future)
@@ -141,13 +142,13 @@ namespace COD.GameLogic
                     PlayerUpgradeInventoryData = loadedData;
 
                     // Update the CODScoreManager's data
-                    if (!CODGameLogicManager.Instance.ScoreManager.IsInitialized)
+                    if (isFirstLoad && CODGameLogicManager.Instance.ScoreManager.IsInitialized)
                     {
-                        Debug.LogWarning("Trying to access ScoreManager before it's initialized!");
+                        CODGameLogicManager.Instance.ScoreManager.ChangeScoreByTagByAmount(ScoreTags.Coin, loadedData.TotalCoins);
+                        CODGameLogicManager.Instance.ScoreManager.ChangeScoreByTagByAmount(ScoreTags.SuperCoin, loadedData.TotalSuperCoins);
+                        CODGameLogicManager.Instance.ScoreManager.ChangeScoreByTagByAmount(ScoreTags.MainScore, loadedData.CurrentScore);
+                        isFirstLoad = false; // Prevent updating scores again after the first load
                     }
-                    CODGameLogicManager.Instance.ScoreManager.ChangeScoreByTagByAmount(ScoreTags.Coin, loadedData.TotalCoins);
-                    CODGameLogicManager.Instance.ScoreManager.ChangeScoreByTagByAmount(ScoreTags.SuperCoin, loadedData.TotalSuperCoins);
-                    CODGameLogicManager.Instance.ScoreManager.ChangeScoreByTagByAmount(ScoreTags.MainScore, loadedData.CurrentScore);
                 }
             });
             CODManager.Instance.SaveManager.Load<CODPlayerScoreData>(loadedData =>

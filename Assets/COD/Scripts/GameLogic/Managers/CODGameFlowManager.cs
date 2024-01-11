@@ -102,6 +102,12 @@ namespace COD.GameLogic
 
         public void StartGame()
         {
+            // Reset the first load flag to true when starting a new game
+            if (CODGameLogicManager.Instance.UpgradeManager != null)
+            {
+                CODGameLogicManager.Instance.UpgradeManager.isFirstLoad = true;
+            }
+
             if (CurrentState != GameState.WaitingToStart)
                 return;
 
@@ -178,6 +184,12 @@ namespace COD.GameLogic
             {
                 inputManager.EnableInput(true);
             }
+            // Set the isFirstLoad to false to prevent the scores from being doubled on scene reload
+            if (CODGameLogicManager.Instance.UpgradeManager != null)
+            {
+                CODGameLogicManager.Instance.UpgradeManager.isFirstLoad = false;
+            }
+
             string currentSceneName = SceneManager.GetActiveScene().name;
             SceneManager.LoadScene(currentSceneName);
 

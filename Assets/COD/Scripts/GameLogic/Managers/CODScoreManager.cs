@@ -1,8 +1,6 @@
 using COD.Core;
 using System;
 using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.SocialPlatforms.Impl;
 using static COD.Shared.GameEnums;
 
 namespace COD.GameLogic
