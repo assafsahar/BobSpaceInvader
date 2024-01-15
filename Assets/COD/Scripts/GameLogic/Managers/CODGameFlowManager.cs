@@ -194,8 +194,6 @@ namespace COD.GameLogic
             SceneManager.LoadScene(currentSceneName);
 
             CODGameLogicManager.Instance.ScoreManager.CalculateScore();
-
-
         }
         public void DisplayHighScoresAndDistance()
         {

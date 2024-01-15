@@ -194,6 +194,11 @@ namespace COD.GameLogic
             if (toast != null)
             {
                 toast.Initialize(message, startPosition, targetPosition);
+                CODDebug.Log("Toast shown: " + message);
+            }
+            else
+            {
+                CODDebug.LogException("No toast available to show. All toasts might be active.");
             }
         }
         private void HandleCoin(CODCollectableGraphics collectableGraphics)

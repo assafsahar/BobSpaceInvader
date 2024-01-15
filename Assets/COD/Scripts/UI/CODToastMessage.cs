@@ -39,9 +39,20 @@ namespace COD.UI
                    .SetDelay(moveDuration * 0.5f)
                    .OnComplete(() =>
                    {
+                       CODDebug.Log("Toast is being returned to pool");
                        gameObject.SetActive(false);
                        CODManager.Instance.PoolManager.ReturnPoolable(this);
-                   });
+                   })
+                .OnKill(() =>
+                 {
+                     CODDebug.Log("Tween killed. Returning toast to pool regardless.");
+                     if (gameObject.activeInHierarchy)
+                     {
+                         gameObject.SetActive(false);
+                         CODManager.Instance.PoolManager.ReturnPoolable(this);
+                     }
+                 });
+                
         }
     }
 }

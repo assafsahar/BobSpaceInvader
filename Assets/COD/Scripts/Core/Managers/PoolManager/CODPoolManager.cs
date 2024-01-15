@@ -78,9 +78,24 @@ namespace COD.Core
         {
             if (pools.TryGetValue(poolable.PoolName, out CODPool pool))
             {
-                pool.AvailablePoolables.Enqueue(poolable);
-                poolable.OnReturnedToPool();
-                poolable.gameObject.SetActive(false);
+                if (pool.UsedPoolables.Contains(poolable))
+                {
+                    poolable.OnReturnedToPool();
+                    poolable.gameObject.SetActive(false);
+
+                    pool.UsedPoolables.Dequeue();
+                    pool.AvailablePoolables.Enqueue(poolable);
+                    Debug.Log($"Returned {poolable.name} to pool. Available: {pool.AvailablePoolables.Count}");
+                }
+                else
+                {
+                    CODDebug.LogException($"Trying to return a poolable that isn't marked as used: {poolable.name}");
+                }
+
+            }
+            else
+            {
+                CODDebug.LogException($"Attempted to return a poolable of type {poolable.PoolName}, but no pool exists for this type.");
             }
         }
 

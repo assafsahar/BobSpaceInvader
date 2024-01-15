@@ -110,7 +110,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26c91b8db9b6561428483438dbf98d88, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PoolName: 0
+  PoolName: 4
   textMesh: {fileID: 0}
   moveDuration: 1
   fadeDuration: 0.5
