@@ -1,4 +1,5 @@
 using COD.Core;
+using System;
 
 /// <summary>
 /// this class is meant to be inherited by objects that are 
@@ -8,7 +9,11 @@ using COD.Core;
 public class CODPoolable : CODMonoBehaviour
 {
     public PoolNames PoolName;
-
+    public string UniqueId { get; private set; }
+    private void Awake()
+    {
+        UniqueId = Guid.NewGuid().ToString();
+    }
     virtual public void OnTakenFromPool()
     {
         this.gameObject.SetActive(true);

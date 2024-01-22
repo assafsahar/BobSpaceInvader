@@ -14,6 +14,7 @@ namespace COD.GameLogic
         public CollectableType Type { get; private set; }
         public int ScoreValue { get; private set; }
         public float EnergyValue { get; set; }
+        public float MovementSpeed { get; set; }
 
         public CODCollectable(CollectableType type)
         {
@@ -25,29 +26,36 @@ namespace COD.GameLogic
                 case CollectableType.Coin:
                     ScoreValue = 1;
                     EnergyValue = 0;
+                    MovementSpeed = 1f;
                     break;
                 case CollectableType.SuperCoin:
                     ScoreValue = 5;
                     EnergyValue = 0;
+                    MovementSpeed = 1f;
                     break;
                 case CollectableType.Bomb:
                     ScoreValue = 0;
                     EnergyValue = 0;
+                    MovementSpeed = 1f;
                     break;
                 case CollectableType.Energy:
                     ScoreValue = 0;
                     EnergyValue = currentEnergyValue;
+                    MovementSpeed = -1f;
                     break;
                 case CollectableType.Shield:
                     ScoreValue = 0;
                     EnergyValue = 0;
+                    MovementSpeed = -1f;
                     break;
                 case CollectableType.Magnet:
                     ScoreValue = 0;
                     EnergyValue = 0;
+                    MovementSpeed = -1f;
                     break;
                 default:
                     ScoreValue = 0;
+                    MovementSpeed = 1f;
                     break;
             }
         }

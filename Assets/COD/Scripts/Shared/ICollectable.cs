@@ -11,5 +11,6 @@ namespace COD.Shared
         CollectableType Type { get; }
         int ScoreValue { get; }
         float EnergyValue { get; set; }
+        float MovementSpeed { get; set; }
     }
 }

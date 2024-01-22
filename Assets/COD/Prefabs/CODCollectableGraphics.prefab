@@ -61,7 +61,7 @@ MonoBehaviour:
     sprite: {fileID: 21300000, guid: 287bc3e3ff5c03d40aebf2b19ff14477, type: 3}
   - type: 6
     sprite: {fileID: 21300000, guid: d57c3775f087c0b43b37fca82e3f9467, type: 3}
-  attractSpeed: 10
+  attractSpeed: 50
   blinkDuration: 1
   minAlpha: 0.5
   maxAlpha: 1

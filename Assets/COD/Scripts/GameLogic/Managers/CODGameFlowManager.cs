@@ -214,7 +214,7 @@ namespace COD.GameLogic
         }
         public void ChangeGameState(GameState newState)
         {
-            CODDebug.Log($"[CODGameFlowManager] ChangeGameState from {_currentState} to {newState}");
+            //CODDebug.Log($"[CODGameFlowManager] ChangeGameState from {_currentState} to {newState}");
             if (_currentState != newState)
             {
                 _currentState = newState;

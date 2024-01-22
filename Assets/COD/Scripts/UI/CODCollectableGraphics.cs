@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using Codice.CM.Common;
 
 namespace COD.UI
 {
@@ -33,7 +34,7 @@ namespace COD.UI
         [SerializeField] private float minAlpha = 0.2f;
         [SerializeField] private float maxAlpha = 1f;
 
-        private float speed = 5f;
+        private float speed;
         private ICollectable collectable;
         private Vector3 leftScreenBoundary;
         private float leftBoundaryX;
@@ -73,12 +74,16 @@ namespace COD.UI
         }
         private void Update()
         {
+
             if (isAttractedByMagnet && (collectable.Type == CollectableType.Coin || collectable.Type == CollectableType.SuperCoin))
             {
                 MoveTowardsShip();
             }
-            Vector3 leftMovement = Vector3.left * (speed * Time.deltaTime);
-            transform.position += leftMovement;
+            else
+            {
+                Vector3 leftMovement = Vector3.left * (speed * Time.deltaTime);
+                transform.position += leftMovement;
+            }
             if (transform.position.x < leftBoundaryX)
             {
                 OutOfBounds();
@@ -154,7 +159,10 @@ namespace COD.UI
         }
         private void UpdateSpeed(object obj)
         {
-            speed = (float)obj;
+            if(!isAttractedByMagnet)
+            {
+                speed = (float)obj + collectable.MovementSpeed;
+            }
         }
 
         private void OutOfBounds()
@@ -171,5 +179,4 @@ namespace COD.UI
             }
         }
     }
-
 }

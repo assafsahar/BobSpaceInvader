@@ -41,7 +41,7 @@ namespace COD.Core
                     var pool = new CODPool
                     {
                         AllPoolables = new Queue<CODPoolable>(list),
-                        UsedPoolables = new Queue<CODPoolable>(),
+                        UsedPoolables = new List<CODPoolable>(),
                         AvailablePoolables = new Queue<CODPoolable>(list),
                         MaxPoolables = maxAmount
                     };
@@ -56,10 +56,10 @@ namespace COD.Core
             {
                 if (pool.AvailablePoolables.TryDequeue(out CODPoolable poolable))
                 {
-                    //CODDebug.Log($"GetPoolable - {poolName}");
+                    CODDebug.Log($"[GetPoolable] Taken: {poolable.name}, ID: {poolable.UniqueId}");
 
                     poolable.OnTakenFromPool();
-                    pool.UsedPoolables.Enqueue(poolable);
+                    pool.UsedPoolables.Add(poolable);
                     poolable.gameObject.SetActive(true);
                     return poolable;
                 }
@@ -80,16 +80,19 @@ namespace COD.Core
             {
                 if (pool.UsedPoolables.Contains(poolable))
                 {
+                    CODDebug.Log($"Returning {poolable.name}, ID: {poolable.UniqueId}");
+
                     poolable.OnReturnedToPool();
                     poolable.gameObject.SetActive(false);
 
-                    pool.UsedPoolables.Dequeue();
+                    pool.UsedPoolables.Remove(poolable);
+                    //pool.UsedPoolables.Dequeue();
                     pool.AvailablePoolables.Enqueue(poolable);
-                    Debug.Log($"Returned {poolable.name} to pool. Available: {pool.AvailablePoolables.Count}");
+                    CODDebug.Log($"Returned {poolable.name} to pool. Available: {pool.AvailablePoolables.Count}, ID: {poolable.UniqueId}");
                 }
                 else
                 {
-                    CODDebug.LogException($"Trying to return a poolable that isn't marked as used: {poolable.name}");
+                    CODDebug.LogException($"Trying to return a poolable that isn't marked as used: {poolable.name}, ID: {poolable.UniqueId}");
                 }
 
             }
@@ -136,7 +139,7 @@ namespace COD.Core
     public class CODPool
     {
         public Queue<CODPoolable> AllPoolables = new();
-        public Queue<CODPoolable> UsedPoolables = new();
+        public List<CODPoolable> UsedPoolables = new();
         public Queue<CODPoolable> AvailablePoolables = new();
         public int MaxPoolables = 100;
     }

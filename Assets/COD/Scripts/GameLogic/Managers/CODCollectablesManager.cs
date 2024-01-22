@@ -109,7 +109,7 @@ namespace COD.GameLogic
                 minSpawnTime = Mathf.Max(originalMinSpawnTime / speedFactor, 0.05f); 
                 maxSpawnTime = Mathf.Max(originalMaxSpawnTime / speedFactor, 0.3f); 
 
-                //Debug.Log($"Updated spawn times - Min: {minSpawnTime}, Max: {maxSpawnTime}");
+                //CODDebug.Log($"Updated spawn times - Min: {minSpawnTime}, Max: {maxSpawnTime}");
             }
         }
         private void InitCollectableHandlers()
@@ -173,6 +173,7 @@ namespace COD.GameLogic
 
         public void HandleCollectableCollected(CODCollectableGraphics collectableGraphics)
         {
+            CODDebug.Log("HandleCollectableCollected");
             // This function can be called from CODShipCollisionHandler
             activeCollectables.Remove(collectableGraphics);
 
@@ -194,7 +195,7 @@ namespace COD.GameLogic
             if (toast != null)
             {
                 toast.Initialize(message, startPosition, targetPosition);
-                CODDebug.Log("Toast shown: " + message);
+                //CODDebug.Log("Toast shown: " + message);
             }
             else
             {
