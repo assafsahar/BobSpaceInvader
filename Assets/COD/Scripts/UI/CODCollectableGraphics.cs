@@ -3,6 +3,7 @@ using COD.Shared;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using System.Collections;
 
 namespace COD.UI
 {
@@ -31,7 +32,7 @@ namespace COD.UI
         [SerializeField] private float blinkDuration = 1f;
         [SerializeField] private float minAlpha = 0.2f;
         [SerializeField] private float maxAlpha = 1f;
-        [SerializeField] private GameObject collectableParticlePrefab;
+        [SerializeField] private PoolNames particleEffectPoolName;
 
         private float speed;
         private ICollectable collectable;
@@ -99,10 +100,16 @@ namespace COD.UI
         }
         public void PlayCollectionEffect()
         {
-            if (collectableParticlePrefab)
+            CODPoolable pooledParticleEffect = CODManager.Instance.PoolManager.GetPoolable(particleEffectPoolName);
+            if (pooledParticleEffect != null)
             {
-                GameObject effect = Instantiate(collectableParticlePrefab, transform.position, Quaternion.identity);
-                effect.gameObject.GetComponentInParent<ParticleSystem>().Play();
+                ParticleSystem particleSystem = pooledParticleEffect.GetComponent<ParticleSystem>();
+                pooledParticleEffect.transform.position = transform.position;
+                pooledParticleEffect.gameObject.SetActive(true);
+                particleSystem.Play();
+
+                // Invoke the event with the pooled particle effect
+                CODManager.Instance.EventsManager.InvokeEvent(CODEventNames.OnParticleEffectPlayed, pooledParticleEffect);
             }
         }
         public CollectableType GetCollectableType()

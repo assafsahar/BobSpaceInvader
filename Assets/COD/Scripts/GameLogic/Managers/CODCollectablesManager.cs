@@ -33,6 +33,9 @@ namespace COD.GameLogic
         [SerializeField] private float shieldDuration = 5.0f;
         [SerializeField] private float capsuleGlowEffectDuration = 0.5f;
         [SerializeField] private float coinGlowEffectDuration = 0.1f;
+        [SerializeField] private GameObject particleEffectPrefab;
+        [SerializeField] private int particlePoolSize = 20;
+        [SerializeField] private PoolNames particlePoolName = PoolNames.ParticleEffect;
         [SerializeField]
         private List<WeightedCollectable> weightedCollectables = new List<WeightedCollectable>();
 
@@ -51,7 +54,6 @@ namespace COD.GameLogic
         }
         private void Start()
         {
-            
             if (shipController == null)
             {
                 CODDebug.LogException("ShipController not found in scene!");
@@ -65,17 +67,20 @@ namespace COD.GameLogic
             CODManager.Instance.PoolManager.InitPool(normalCoinToastPrefab, initialToastPoolSize, maxPoolSize, PoolNames.NormalCoinToast);
             CODManager.Instance.PoolManager.InitPool(superCoinToastPrefab, initialToastPoolSize, maxPoolSize, PoolNames.SuperCoinToast);
             CODManager.Instance.PoolManager.InitPool(energyToastPrefab, initialToastPoolSize, maxPoolSize, PoolNames.EnergyToast);
+            CODManager.Instance.PoolManager.InitParticlePool(particleEffectPrefab, particlePoolSize, particlePoolName);
             InitCollectableHandlers();
             StartCoroutine(SpawnRoutine());
         }
 
         private void OnEnable()
         {
+            AddListener(CODEventNames.OnParticleEffectPlayed, HandleParticleEffect);
             AddListener(CODEventNames.OnSpeedChange, AdjustSpawnRate);
             AddListener(CODEventNames.OnGameStateChange, UpdateGameState);
         }
         private void OnDisable()
         {
+            RemoveListener(CODEventNames.OnParticleEffectPlayed, HandleParticleEffect);
             RemoveListener(CODEventNames.OnSpeedChange, AdjustSpawnRate);
             RemoveListener(CODEventNames.OnGameStateChange, UpdateGameState);
         }
@@ -91,6 +96,23 @@ namespace COD.GameLogic
             instance.Initialize(collectable);
             activeCollectables.Add(instance);
             return instance;
+        }
+        private void HandleParticleEffect(object obj)
+        {
+            if (obj is CODPoolable particleEffect)
+            {
+                StartCoroutine(ReturnParticleToPoolCoroutine(particleEffect.GetComponent<ParticleSystem>(), particleEffect));
+            }
+        }
+        private IEnumerator ReturnParticleToPoolCoroutine(ParticleSystem particleSystem, CODPoolable pooledEffect)
+        {
+            yield return new WaitWhile(() => particleSystem != null && particleSystem.isPlaying);
+
+            // Check if the pooledEffect is still valid before returning it to the pool
+            if (pooledEffect != null)
+            {
+                CODManager.Instance.PoolManager.ReturnPoolable(pooledEffect);
+            }
         }
         private void UpdateGameState(object gameStateObj)
         {

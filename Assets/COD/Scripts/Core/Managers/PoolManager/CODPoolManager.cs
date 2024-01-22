@@ -26,6 +26,37 @@ namespace COD.Core
             var original = Resources.Load<CODPoolable>(resourceName);
             InitPool(original, amount, maxAmount, poolName);
         }
+        public void InitParticlePool(GameObject particleEffectPrefab, int initialSize, PoolNames poolName)
+        {
+            List<CODPoolable> particlePoolables = new List<CODPoolable>();
+
+            for (int i = 0; i < initialSize; i++)
+            {
+                GameObject obj = GameObject.Instantiate(particleEffectPrefab);
+                obj.name = particleEffectPrefab.name;
+                obj.transform.parent = rootPools;
+                obj.SetActive(false);
+
+                CODPoolable poolableParticle = obj.GetComponent<CODPoolable>();
+                if (poolableParticle == null)
+                {
+                    poolableParticle = obj.AddComponent<CODPoolable>();
+                }
+
+                poolableParticle.PoolName = poolName;
+                particlePoolables.Add(poolableParticle);
+            }
+
+            var pool = new CODPool
+            {
+                AllPoolables = new Queue<CODPoolable>(particlePoolables),
+                UsedPoolables = new List<CODPoolable>(),
+                AvailablePoolables = new Queue<CODPoolable>(particlePoolables),
+                MaxPoolables = initialSize
+            };
+
+            pools.Add(poolName, pool);
+        }
         public void InitPool(CODPoolable original, int amount, int maxAmount, PoolNames poolName)
         {
             CODManager.Instance.FactoryManager.MultiCreateAsync(original, Vector3.zero, amount,
@@ -151,6 +182,7 @@ namespace COD.Core
         Collectable = 1,
         NormalCoinToast = 2,
         SuperCoinToast = 3,
-        EnergyToast = 4
+        EnergyToast = 4,
+        ParticleEffect = 5
     }
 }

@@ -97,6 +97,7 @@ namespace COD.Core
         OnLoadingStepComplete = 16,
         OnShipCrash = 17,
         OnMagnetActivated = 18,
-        OnShipPositionUpdated = 19
+        OnShipPositionUpdated = 19,
+        OnParticleEffectPlayed = 20
     }
 }

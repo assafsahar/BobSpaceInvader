@@ -3319,6 +3319,9 @@ MonoBehaviour:
   shieldDuration: 5
   capsuleGlowEffectDuration: 0.5
   coinGlowEffectDuration: 0.1
+  particleEffectPrefab: {fileID: 73434799378464030, guid: 20c96fc9a2fc17649a0080cddcddda99, type: 3}
+  particlePoolSize: 20
+  particlePoolName: 5
   weightedCollectables:
   - collectableType: 1
     weight: 50
