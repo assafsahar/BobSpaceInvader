@@ -1,10 +1,8 @@
 using COD.Core;
 using COD.Shared;
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
-using Codice.CM.Common;
 
 namespace COD.UI
 {

@@ -1,5 +1,7 @@
 using COD.Core;
+using DG.Tweening;
 using System;
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using static COD.Shared.GameEnums;
@@ -17,6 +19,9 @@ namespace COD.UI
         [SerializeField] private TMP_Text superCoinText;
         [SerializeField] private TMP_Text scoreText;
         [SerializeField] private TMP_Text distanceText;
+
+        [SerializeField] private float tweenFontSize = 50f;
+        [SerializeField] private float tweenFontDuration = 0.4f;
 
         private void OnEnable()
         {
@@ -47,10 +52,11 @@ namespace COD.UI
                 switch (scoreData.Item1)
                 {
                     case ScoreTags.Coin:
-                        coinText.text = $"{scoreData.Item2}";
+                        StartCoroutine(AnimateTextCoroutine(coinText, scoreData.Item2));
+
                         break;
                     case ScoreTags.SuperCoin:
-                        superCoinText.text = $"{scoreData.Item2}";
+                        StartCoroutine(AnimateTextCoroutine(superCoinText, scoreData.Item2));
                         break;
                     case ScoreTags.MainScore:
                         scoreText.text = $"{scoreData.Item2}";
@@ -60,6 +66,30 @@ namespace COD.UI
                         break;
                 }
             }
+        }
+       
+        private IEnumerator AnimateTextCoroutine(TMP_Text textComponent, int newValue)
+        {
+            textComponent.text = $"{newValue}";
+            float originalSize = textComponent.fontSize;
+            float elapsedTime = 0;
+
+            while (elapsedTime < tweenFontDuration / 2)
+            {
+                textComponent.fontSize = Mathf.Lerp(originalSize, tweenFontSize, elapsedTime / (tweenFontDuration / 2));
+                elapsedTime += Time.deltaTime;
+                yield return null;
+            }
+
+            elapsedTime = 0;
+            while (elapsedTime < tweenFontDuration / 2)
+            {
+                textComponent.fontSize = Mathf.Lerp(tweenFontSize, originalSize, elapsedTime / (tweenFontDuration / 2));
+                elapsedTime += Time.deltaTime;
+                yield return null;
+            }
+
+            textComponent.fontSize = originalSize;
         }
         private void UpdateDistanceDisplay(object data)
         {

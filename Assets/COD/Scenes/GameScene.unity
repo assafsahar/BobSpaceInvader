@@ -992,6 +992,8 @@ MonoBehaviour:
   superCoinText: {fileID: 1738743487}
   scoreText: {fileID: 2144181452}
   distanceText: {fileID: 101318929}
+  tweenFontSize: 50
+  tweenFontDuration: 0.1
 --- !u!114 &619045671
 MonoBehaviour:
   m_ObjectHideFlags: 0
