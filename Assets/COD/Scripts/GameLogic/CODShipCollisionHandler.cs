@@ -41,6 +41,7 @@ namespace COD.GameLogic
             {
                 CODCollectableGraphics collectableGraphics = other.GetComponent<CODCollectableGraphics>();
                 CODGameLogicManager.Instance.CollectablesManager.HandleCollectableCollected(collectableGraphics);
+                collectableGraphics.PlayCollectionEffect();
             }
         }
 

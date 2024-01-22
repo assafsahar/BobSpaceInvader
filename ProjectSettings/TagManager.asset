@@ -16,7 +16,7 @@ TagManager:
   - UI
   - UI Toasts
   - Ship
-  - 
+  - Effects
   - 
   - 
   - 
@@ -55,4 +55,7 @@ TagManager:
     locked: 0
   - name: Collectables
     uniqueID: 209016131
+    locked: 0
+  - name: Effects
+    uniqueID: 130048407
     locked: 0

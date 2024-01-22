@@ -65,6 +65,7 @@ MonoBehaviour:
   blinkDuration: 1
   minAlpha: 0.5
   maxAlpha: 1
+  collectableParticlePrefab: {fileID: 73434799378464030, guid: 20c96fc9a2fc17649a0080cddcddda99, type: 3}
 --- !u!212 &5875976451445845983
 SpriteRenderer:
   m_ObjectHideFlags: 0

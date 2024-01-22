@@ -31,6 +31,7 @@ namespace COD.UI
         [SerializeField] private float blinkDuration = 1f;
         [SerializeField] private float minAlpha = 0.2f;
         [SerializeField] private float maxAlpha = 1f;
+        [SerializeField] private GameObject collectableParticlePrefab;
 
         private float speed;
         private ICollectable collectable;
@@ -94,6 +95,14 @@ namespace COD.UI
             if (ShouldBlink(collectable.Type)) 
             {
                 StartBlinkEffect();
+            }
+        }
+        public void PlayCollectionEffect()
+        {
+            if (collectableParticlePrefab)
+            {
+                GameObject effect = Instantiate(collectableParticlePrefab, transform.position, Quaternion.identity);
+                effect.gameObject.GetComponentInParent<ParticleSystem>().Play();
             }
         }
         public CollectableType GetCollectableType()
