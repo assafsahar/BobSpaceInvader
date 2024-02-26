@@ -16,6 +16,7 @@ namespace COD.GameLogic
         public float EnergyDecreaseRate { get; private set; }
 
         private float defaultEnergyValue;
+        private float criticalEnergyTreshold = 5f;
 
 
         public CODEnergyManager(float? maxEnergy, float initialEnergy, float energyDecreaseRate, float defaultEnergyValue)
@@ -29,14 +30,18 @@ namespace COD.GameLogic
         public void UpdateEnergy(float deltaTime)
         {
             CurrentEnergy -= EnergyDecreaseRate * deltaTime;
-            if (MaxEnergy.HasValue && CurrentEnergy > MaxEnergy.Value)
+            /*if (MaxEnergy.HasValue && CurrentEnergy > MaxEnergy.Value)
             {
                 CurrentEnergy = MaxEnergy.Value;
-            }
-            /*else if (!MaxEnergy.HasValue && CurrentEnergy < 0)
-            {
-                CurrentEnergy = defaultEnergyValue; 
             }*/
+            if (CurrentEnergy <= criticalEnergyTreshold) // Assuming 5 is the critical threshold
+            {
+                CODManager.Instance.EventsManager.InvokeEvent(CODEventNames.OnEnergyCritical, true);
+            }
+            else
+            {
+                CODManager.Instance.EventsManager.InvokeEvent(CODEventNames.OnEnergyCritical, false);
+            }
             EnergyData energyData = new EnergyData(CurrentEnergy, MaxEnergy);
             CODManager.Instance.EventsManager.InvokeEvent(CODEventNames.OnEnergyChanged, energyData);
             if (CurrentEnergy <= 0)

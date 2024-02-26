@@ -98,6 +98,7 @@ namespace COD.Core
         OnShipCrash = 17,
         OnMagnetActivated = 18,
         OnShipPositionUpdated = 19,
-        OnParticleEffectPlayed = 20
+        OnParticleEffectPlayed = 20,
+        OnEnergyCritical = 21
     }
 }
