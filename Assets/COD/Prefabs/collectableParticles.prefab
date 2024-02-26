@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 6852212924090851037}
   - component: {fileID: 3479304795279987525}
   m_Layer: 8
-  m_Name: collectableParticles
+  m_Name: CollectableParticles
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

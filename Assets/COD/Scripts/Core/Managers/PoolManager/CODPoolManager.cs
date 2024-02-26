@@ -85,13 +85,12 @@ namespace COD.Core
         {
             if (pools.TryGetValue(poolName, out CODPool pool))
             {
-                if (pool.AvailablePoolables.TryDequeue(out CODPoolable poolable))
+                if (pool.AvailablePoolables.Count > 0)
                 {
-                    CODDebug.Log($"[GetPoolable] Taken: {poolable.name}, ID: {poolable.UniqueId}");
-
-                    poolable.OnTakenFromPool();
+                    CODPoolable poolable = pool.AvailablePoolables.Dequeue();
                     pool.UsedPoolables.Add(poolable);
                     poolable.gameObject.SetActive(true);
+                    poolable.OnTakenFromPool();
                     return poolable;
                 }
 
@@ -107,63 +106,38 @@ namespace COD.Core
 
         public void ReturnPoolable(CODPoolable poolable)
         {
-            if (pools.TryGetValue(poolable.PoolName, out CODPool pool))
+            if (poolable == null || !pools.ContainsKey(poolable.PoolName)) return;
+
+            CODPool pool = pools[poolable.PoolName];
+            if (pool.UsedPoolables.Remove(poolable))
             {
-                if (pool.UsedPoolables.Contains(poolable))
-                {
-                    CODDebug.Log($"Returning {poolable.name}, ID: {poolable.UniqueId}");
-
-                    poolable.OnReturnedToPool();
-                    poolable.gameObject.SetActive(false);
-
-                    pool.UsedPoolables.Remove(poolable);
-                    //pool.UsedPoolables.Dequeue();
-                    pool.AvailablePoolables.Enqueue(poolable);
-                    CODDebug.Log($"Returned {poolable.name} to pool. Available: {pool.AvailablePoolables.Count}, ID: {poolable.UniqueId}");
-                }
-                else
-                {
-                    CODDebug.LogException($"Trying to return a poolable that isn't marked as used: {poolable.name}, ID: {poolable.UniqueId}");
-                }
-
-            }
-            else
-            {
-                CODDebug.LogException($"Attempted to return a poolable of type {poolable.PoolName}, but no pool exists for this type.");
+                poolable.OnReturnedToPool();
+                poolable.gameObject.SetActive(false);
+                pool.AvailablePoolables.Enqueue(poolable);
             }
         }
 
         public void DestroyPool(PoolNames name)
         {
-            if (pools.TryGetValue(name, out CODPool pool))
+            if (!pools.TryGetValue(name, out CODPool pool)) return;
+
+            foreach (CODPoolable poolable in new List<CODPoolable>(pool.UsedPoolables))
             {
-                foreach (var poolable in pool.AllPoolables)
-                {
-                    poolable.PreDestroy();
-                    ReturnPoolable(poolable);
-                }
-
-                foreach (var poolable in pool.AllPoolables)
-                {
-                    UnityEngine.Object.Destroy(poolable);
-                }
-
-                pool.AllPoolables.Clear();
-                pool.AvailablePoolables.Clear();
-                pool.UsedPoolables.Clear();
-
-                pools.Remove(name);
+                ReturnPoolable(poolable);
             }
+            foreach (CODPoolable poolable in pool.AvailablePoolables)
+            {
+                UnityEngine.Object.Destroy(poolable.gameObject);
+            }
+            pools.Remove(name);
         }
         public void Cleanup()
         {
-            foreach (var poolName in Enum.GetValues(typeof(PoolNames)))
+            foreach (PoolNames poolName in Enum.GetValues(typeof(PoolNames)))
             {
-                DestroyPool((PoolNames)poolName);
+                DestroyPool(poolName);
             }
-
-            if (rootPools != null)
-                UnityEngine.Object.Destroy(rootPools.gameObject);
+            if (rootPools != null) UnityEngine.Object.Destroy(rootPools.gameObject);
         }
     }
 
@@ -183,6 +157,7 @@ namespace COD.Core
         NormalCoinToast = 2,
         SuperCoinToast = 3,
         EnergyToast = 4,
-        ParticleEffect = 5
+        ParticleEffect = 5,
+        Projectile = 6
     }
 }

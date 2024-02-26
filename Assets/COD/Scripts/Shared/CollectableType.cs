@@ -12,6 +12,7 @@ namespace COD.Shared
         Bomb = 3,
         SuperCoin = 4,
         Shield = 5,
-        Magnet = 6
+        Magnet = 6,
+        Shooting = 7
     }
 }

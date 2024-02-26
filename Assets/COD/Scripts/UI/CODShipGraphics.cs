@@ -19,6 +19,7 @@ namespace COD.UI
         [SerializeField] private Sprite glowSpriteNormal;
         [SerializeField] private Sprite glowSpriteUp;
         [SerializeField] private Sprite glowSpriteDown;
+        [SerializeField] private GameObject shootingEffect;
         [SerializeField] float glowEffectTime = 0.1f;
 
         private bool explosionIsActive;
@@ -33,6 +34,10 @@ namespace COD.UI
             currentShipState = ShipState.Straight;
             UpdateShipSprite();
             StartSineWaveMotion();
+            if (shootingEffect != null)
+            {
+                shootingEffect.SetActive(false);
+            }
         }
         private void OnDestroy()
         {
@@ -51,6 +56,13 @@ namespace COD.UI
         {
             this.upperLimit = upperLimit;
             this.lowerLimit = lowerLimit;
+        }
+        public void ActivateShootingEffect(bool activate)
+        {
+            if (shootingEffect != null)
+            {
+                shootingEffect.SetActive(activate);
+            }
         }
         public bool ExplosionIsActive()
         {

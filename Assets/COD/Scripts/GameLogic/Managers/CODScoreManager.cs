@@ -187,6 +187,11 @@ namespace COD.GameLogic
                 onCompleted?.Invoke();
             });
         }
+
+        internal void ChangeScoreByTagByAmount(ScoreTags mainScore, object scoreForHit)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     public class CODPlayerScoreData : ICODSaveData

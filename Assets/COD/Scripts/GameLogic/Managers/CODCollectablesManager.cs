@@ -20,6 +20,7 @@ namespace COD.GameLogic
         [SerializeField] private CODToastMessage normalCoinToastPrefab;
         [SerializeField] private CODToastMessage superCoinToastPrefab;
         [SerializeField] private CODToastMessage energyToastPrefab;
+        [SerializeField] private CODProjectileBehaviour projectilePrefab;
         [SerializeField] private Vector2 toastPosition;
         [SerializeField] private Transform spawnPoint;
         [SerializeField] private float minSpawnTime = 1.0f;
@@ -28,9 +29,12 @@ namespace COD.GameLogic
         [SerializeField] private float maxSpawnY = 2f;
         [SerializeField] private int initialPoolSize = 20;
         [SerializeField] private int initialToastPoolSize = 20;
+        [SerializeField] private int initialProjectilePoolSize = 20;
         [SerializeField] private int maxPoolSize = 50;
+        [SerializeField] private int maxProjectilePoolSize = 50;
         [SerializeField] private float magnetDuration = 5.0f;
         [SerializeField] private float shieldDuration = 5.0f;
+        [SerializeField] private float shootingDuration = 5.0f;
         [SerializeField] private float capsuleGlowEffectDuration = 0.5f;
         [SerializeField] private float coinGlowEffectDuration = 0.1f;
         [SerializeField] private GameObject particleEffectPrefab;
@@ -62,12 +66,15 @@ namespace COD.GameLogic
             originalMaxSpawnTime = maxSpawnTime;
             initialShipSpeed = 5f;
 
+            // Initialize pool for collectables
             CODManager.Instance.PoolManager.InitPool(prefab, initialPoolSize, maxPoolSize, PoolNames.Collectable);
             // Initialize pool for toast messages
             CODManager.Instance.PoolManager.InitPool(normalCoinToastPrefab, initialToastPoolSize, maxPoolSize, PoolNames.NormalCoinToast);
             CODManager.Instance.PoolManager.InitPool(superCoinToastPrefab, initialToastPoolSize, maxPoolSize, PoolNames.SuperCoinToast);
             CODManager.Instance.PoolManager.InitPool(energyToastPrefab, initialToastPoolSize, maxPoolSize, PoolNames.EnergyToast);
             CODManager.Instance.PoolManager.InitParticlePool(particleEffectPrefab, particlePoolSize, particlePoolName);
+            // Initialize pool for projectiles
+            CODManager.Instance.PoolManager.InitPool(projectilePrefab, initialProjectilePoolSize, maxProjectilePoolSize, PoolNames.Projectile);
             InitCollectableHandlers();
             StartCoroutine(SpawnRoutine());
         }
@@ -143,8 +150,21 @@ namespace COD.GameLogic
                 { CollectableType.Bomb, HandleBomb },
                 { CollectableType.Energy, HandleEnergy },
                 { CollectableType.Shield, HandleShield },
-                { CollectableType.Magnet, HandleMagnet }
+                { CollectableType.Magnet, HandleMagnet },
+                { CollectableType.Shooting, HandleShooting }
             };
+        }
+
+        private void HandleShooting(CODCollectableGraphics collectableGraphics)
+        {
+            StartCoroutine(ActivateShooting());
+        }
+
+        private IEnumerator ActivateShooting()
+        {
+            shipController.ActivateShooting(true);
+            yield return new WaitForSeconds(shootingDuration);
+            shipController.ActivateShooting(false);
         }
 
         private IEnumerator SpawnRoutine()

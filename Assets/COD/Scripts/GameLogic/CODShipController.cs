@@ -21,9 +21,13 @@ namespace COD.GameLogic
         [SerializeField] private float stateChangeThreshold = 0.05f;
         [SerializeField] private float blinkDuration = 1f;
         [SerializeField] private float blinkInterval = 0.2f;
+        [SerializeField] private GameObject projectilePrefab;
+        [SerializeField] private Transform firingPoint;
+        [SerializeField] private float firingRate = 0.5f;
 
         public bool IsShieldActive => isShieldActive;
 
+        private bool isShootingEnabled = false;
         private float stillnessDuration = 0.2f; 
         private float currentStillnessTime = 0f;
         private float fallingRotationSpeed = 50f;
@@ -66,6 +70,26 @@ namespace COD.GameLogic
             Vector3 shipPosition = transform.position;
             InvokeEvent(CODEventNames.OnShipPositionUpdated, shipPosition);
         }
+        public void ActivateShooting(bool activate)
+        {
+            isShootingEnabled = activate;
+            if (activate)
+            {
+                StartCoroutine(ShootingRoutine());
+            }
+            else
+            {
+                StopCoroutine(ShootingRoutine()); // Make sure to properly reference or stop the coroutine
+            }
+        }
+        private IEnumerator ShootingRoutine()
+        {
+            while (isShootingEnabled)
+            {
+                FireProjectile(); // Assuming FireProjectile is a method that instantiates and fires a projectile
+                yield return new WaitForSeconds(firingRate);
+            }
+        }
         public void EnableInput(bool enable)
         {
             inputEnabled = enable;
@@ -73,6 +97,16 @@ namespace COD.GameLogic
         public bool GetInputEnabled()
         {
             return inputEnabled;    
+        }
+        public void FireProjectile()
+        {
+            var projectile = CODManager.Instance.PoolManager.GetPoolable(PoolNames.Projectile);
+            if (projectile != null)
+            {
+                projectile.transform.position = firingPoint.position; 
+                projectile.transform.rotation = Quaternion.identity; 
+                projectile.gameObject.SetActive(true);
+            }
         }
         private void ActivateShield(object isActive)
         {

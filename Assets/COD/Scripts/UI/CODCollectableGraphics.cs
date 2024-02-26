@@ -3,7 +3,6 @@ using COD.Shared;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
-using System.Collections;
 
 namespace COD.UI
 {
@@ -137,6 +136,10 @@ namespace COD.UI
         {
             base.OnTakenFromPool();
             ResetCollectableState();
+        }
+        public ICollectable GetCollectable()
+        {
+            return collectable; 
         }
         private bool ShouldBlink(CollectableType type)
         {
