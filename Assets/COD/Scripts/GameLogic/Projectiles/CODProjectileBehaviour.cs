@@ -19,17 +19,16 @@ public class CODProjectileBehaviour : CODPoolable
             var collectableComponent = other.GetComponent<CODCollectableGraphics>();
             if (collectableComponent != null)
             {
-                var collectable = collectableComponent.GetCollectable(); // Assuming a method to get the ICollectable interface
-                int scoreForHit = collectable.ScoreValue; // Use the score value from the collectable
+                var collectable = collectableComponent.GetCollectable(); 
+                int scoreForHit = collectable.ScoreValue; 
 
-                // Update score using the score value from the collectable
                 CODGameLogicManager.Instance.ScoreManager.ChangeScoreByTagByAmount(COD.Shared.GameEnums.ScoreTags.MainScore, scoreForHit);
                 var otherPoolable = other.GetComponent<CODPoolable>();
                 if (otherPoolable != null)
                 {
                     CODManager.Instance.PoolManager.ReturnPoolable(otherPoolable);
+                    collectableComponent.PlayCollectionEffect();
                 }
-                // Assuming a method to update score exists in your ScoreManager
                 CODGameLogicManager.Instance.ScoreManager.ChangeScoreByTagByAmount(COD.Shared.GameEnums.ScoreTags.MainScore, scoreForHit); // Example score increment
                 ReturnToPool(this);
             }

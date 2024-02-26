@@ -1861,7 +1861,7 @@ MonoBehaviour:
   blinkInterval: 0.2
   projectilePrefab: {fileID: 8233178859568831456, guid: 81be1fa56e9b1a3428937a25675ab4ca, type: 3}
   firingPoint: {fileID: 1521771110}
-  firingRate: 0.5
+  firingRate: 0.3
   isShieldActive: 0
   inputEnabled: 1
 --- !u!114 &904223716
