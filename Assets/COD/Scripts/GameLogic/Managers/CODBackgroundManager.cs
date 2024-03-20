@@ -15,13 +15,12 @@ namespace GameLogic
         {
             public Transform image; 
             public float speed;
-            public float resetPoint; // This is where we'll reset to the original position
-            public float loopPoint;  // This is where the image should loop
         }
 
         public ParallaxLayer[] layers;
 
-        private Vector3[] initialPositions;
+        private float[] initialPositions;
+        private float[] singleTextures;
 
         private void OnEnable()
         {
@@ -33,11 +32,14 @@ namespace GameLogic
         }
         private void Start()
         {
-            // Store the initial positions
-            initialPositions = new Vector3[layers.Length];
+            // Store the initial positions and texture width
+            initialPositions = new float[layers.Length];
+            singleTextures = new float[layers.Length];
             for (int i = 0; i < layers.Length; i++)
             {
-                initialPositions[i] = layers[i].image.position;
+                Sprite sprite = layers[i].image.GetComponent<SpriteRenderer>().sprite;
+                singleTextures[i] = sprite.texture.width / sprite.pixelsPerUnit;
+                initialPositions[i] = layers[i].image.transform.position.x;
             }
         }
 
@@ -45,14 +47,16 @@ namespace GameLogic
         {
             for (int i = 0; i < layers.Length; i++)
             {
-                // Move the image to the left
-                layers[i].image.position += Vector3.left * layers[i].speed * Time.deltaTime;
+                float delta = layers[i].speed * Time.deltaTime;
 
-                // Check if the image has moved past the loop point
-                if (layers[i].image.position.x <= layers[i].loopPoint)
+                // Move the image to the left
+                layers[i].image.transform.position += Vector3.left * delta;
+
+                // Check if the image has moved past the initial position
+                if ((Mathf.Abs(layers[i].image.transform.position.x) - singleTextures[i]) > initialPositions[i])
                 {
-                    // Reset the image to its original position
-                    layers[i].image.position = initialPositions[i] + Vector3.left * layers[i].resetPoint;
+                    // Reset the image to its initial position
+                    layers[i].image.transform.position = new Vector3(-initialPositions[i], layers[i].image.transform.position.y, layers[i].image.transform.position.z);
                 }
             }
         }

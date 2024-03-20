@@ -10,6 +10,11 @@ namespace COD.Core
     /// </summary>
     public class CODFactoryManager
     {
+        public void CreateAsync<T>(string name, Vector3 pos, Action<T> onCreated) where T : Object
+        {
+            var original = Resources.Load<T>(name);
+            CreateAsync(original, pos, onCreated);
+        }
         public void CreateAsync<T>(T origin, Vector3 pos, Action<T> onCreated) where T : Object
         {
             var clone = Object.Instantiate(origin, pos, Quaternion.identity);

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -60,8 +61,19 @@ namespace COD.Core
         {
             // Final step logic
             SceneManager.LoadScene(1);
-            Destroy(gameObject);
+            ShowMessage();
+            
         }
+
+        private void ShowMessage()
+        {
+            WaitForFrame(() =>
+            {
+                Manager.PopupManager.AddPopupToQueue(CODPopupData.WelcomeMessage);
+                Destroy(gameObject);
+            });
+        }
+
         private void DelayStart()
         {
             var manager = new CODManager();

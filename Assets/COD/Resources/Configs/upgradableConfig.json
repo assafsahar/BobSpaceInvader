@@ -1,5 +1,5 @@
 {
-  "DefaultEnergyValue": 6,
+  "DefaultEnergyValue": 15,
   "UpgradeableConfigs": [
     {
       "UpgradableTypeID": "GetMoreEnergy",
@@ -11,7 +11,7 @@
           "CurrencyTag": "Coin",
           "Energy": 1,
           "MaxEnergy": null,
-          "EnergyDecreaseRate": 3.0
+          "EnergyDecreaseRate": 7.0
         },
         {
           "Level": 1,
@@ -19,7 +19,7 @@
           "CurrencyTag": "Coin",
           "Energy": 2,
           "MaxEnergy": 20.0,
-          "EnergyDecreaseRate": 4.0
+          "EnergyDecreaseRate": 12.0
         },
         {
           "Level": 2,
@@ -27,7 +27,7 @@
           "CurrencyTag": "Coin",
           "Energy": 3,
           "MaxEnergy": 20.0,
-          "EnergyDecreaseRate": 4.0
+          "EnergyDecreaseRate": 17.0
         },
         {
           "Level": 3,
@@ -35,7 +35,7 @@
           "CurrencyTag": "Coin",
           "Energy": 4,
           "MaxEnergy": 20.0,
-          "EnergyDecreaseRate": 4.0
+          "EnergyDecreaseRate": 22.0
         },
         {
           "Level": 4,
@@ -43,7 +43,7 @@
           "CurrencyTag": "Coin",
           "Energy": 5,
           "MaxEnergy": 20.0,
-          "EnergyDecreaseRate": 4.0
+          "EnergyDecreaseRate": 28.0
         }
       ]
     }

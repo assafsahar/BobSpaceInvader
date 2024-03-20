@@ -22,6 +22,7 @@ namespace COD.Core
         
         
         */
+        public CODPopupManager PopupManager;
 
         public Action onInitAction;
         //public InputManager InputManager;
@@ -56,6 +57,7 @@ namespace COD.Core
             
             
             */
+            PopupManager = new CODPopupManager();
             onInitAction.Invoke();
         }
 
